@@ -1,0 +1,53 @@
+<div class="relative flex min-h-screen w-full flex-col justify-center items-center bg-cover bg-center" 
+     style="background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop')">
+  
+  <div class="absolute inset-0 bg-background-light/90 dark:bg-background-dark/95 backdrop-blur-sm"></div>
+
+  <div class="relative z-10 w-full max-w-[480px] p-6">
+    <div class="bg-surface-light dark:bg-surface-dark shadow-2xl rounded-2xl p-8 border border-gray-100 dark:border-gray-800">
+      
+      <div class="flex flex-col gap-3 mb-8 text-center">
+        <div class="mx-auto bg-primary/20 w-16 h-16 rounded-full flex items-center justify-center mb-2">
+          <span class="material-symbols-outlined text-primary text-4xl">graphic_eq</span>
+        </div>
+        <p class="text-3xl font-black leading-tight text-gray-900 dark:text-white">Admin Login</p>
+        <p class="text-text-muted text-sm font-normal">Welcome back to Audio Store Admin</p>
+      </div>
+
+      <div *ngIf="showError" class="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 rounded-lg p-3 mb-6 flex items-start gap-3">
+        <span class="material-symbols-outlined text-red-500 text-sm mt-0.5">error</span>
+        <p class="text-red-600 dark:text-red-400 text-sm">Invalid credentials.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+        
+        <label class="flex flex-col gap-1.5">
+          <p class="text-sm font-medium text-gray-900 dark:text-gray-200">Email</p>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted material-symbols-outlined text-[20px]">mail</span>
+            <input formControlName="email" 
+                   class="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-background-light dark:bg-[#1a140c] h-12 pl-11 pr-4 text-base placeholder:text-text-muted focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" 
+                   placeholder="admin@audiostore.com" type="email"/>
+          </div>
+        </label>
+
+        <label class="flex flex-col gap-1.5">
+          <div class="flex justify-between items-center">
+            <p class="text-sm font-medium text-gray-900 dark:text-gray-200">Password</p>
+            <a class="text-xs text-primary font-medium hover:underline cursor-pointer">Forgot password?</a>
+          </div>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted material-symbols-outlined text-[20px]">lock</span>
+            <input formControlName="password"
+                   class="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-background-light dark:bg-[#1a140c] h-12 pl-11 pr-4 text-base placeholder:text-text-muted focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" 
+                   placeholder="••••••••" type="password"/>
+          </div>
+        </label>
+
+        <button type="submit" class="mt-2 flex w-full items-center justify-center rounded-lg h-12 px-5 bg-primary hover:bg-primary-dark text-white text-base font-bold transition-colors shadow-lg shadow-primary/25">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
