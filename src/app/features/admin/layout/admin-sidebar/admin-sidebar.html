@@ -1,0 +1,39 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <span class="material-icons logo">graphic_eq</span>
+    </div>
+    <h2 class="brand-name">Audio Store</h2>
+    <p class="brand-subtitle">Admin Panel</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a
+      *ngFor="let item of navigation"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="nav-item"
+    >
+      <span class="material-icons nav-icon">{{ item.icon }}</span>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">
+        <span class="material-icons">account_circle</span>
+      </div>
+      <div class="user-details">
+        <p class="user-name">Admin User</p>
+        <p class="user-email">admin@audiostore.com</p>
+      </div>
+    </div>
+    
+    <button class="logout-btn" (click)="onLogout()">
+      <span class="material-icons">logout</span>
+      <span>Sign Out</span>
+    </button>
+  </div>
+</aside>

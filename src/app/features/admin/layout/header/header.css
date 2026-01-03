@@ -1,0 +1,170 @@
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 280px;
+  right: 0;
+  height: 80px;
+  background: white;
+  border-bottom: 1px solid #e8ddce;
+  z-index: 999;
+  padding: 0 2.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.page-info {
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1c160d;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.5px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #9c7a49;
+
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .separator {
+        color: #e8ddce;
+      }
+    }
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-box {
+  position: relative;
+  width: 350px;
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9c7a49;
+    font-size: 1.25rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 2px solid #e8ddce;
+    border-radius: 0.75rem;
+    font-size: 0.9375rem;
+    transition: all 0.3s;
+    background: #f8f7f5;
+
+    &:focus {
+      outline: none;
+      border-color: #f49d25;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.1);
+    }
+
+    &::placeholder {
+      color: #9c7a49;
+    }
+  }
+}
+
+.icon-btn {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f7f5;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  .material-icons {
+    color: #1c160d;
+    font-size: 1.5rem;
+  }
+
+  &:hover {
+    background-color: #e8ddce;
+    transform: translateY(-2px);
+  }
+
+  &.notification-btn {
+    .notification-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+  }
+}
+
+.user-menu {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  .material-icons {
+    color: white;
+    font-size: 2rem;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 157, 37, 0.4);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-header {
+    left: 0;
+    padding: 0 1rem;
+  }
+
+  .search-box {
+    width: 200px;
+  }
+
+  .breadcrumb {
+    display: none;
+  }
+}
