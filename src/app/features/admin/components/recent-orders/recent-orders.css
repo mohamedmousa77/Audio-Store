@@ -1,0 +1,170 @@
+.orders-table-container {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  thead {
+    background: #f8f7f5;
+    
+    tr {
+      border-bottom: 2px solid #e8ddce;
+    }
+    
+    th {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #9c7a49;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+  }
+  
+  tbody {
+    .order-row {
+      border-bottom: 1px solid #e8ddce;
+      transition: all 0.2s;
+      
+      &:hover {
+        background: #f8f7f5;
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    td {
+      padding: 1.25rem;
+      font-size: 0.875rem;
+      color: #1c160d;
+      vertical-align: middle;
+    }
+  }
+}
+
+.order-id {
+  font-weight: 600;
+  color: #f49d25;
+  text-decoration: none;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: #d68310;
+    text-decoration: underline;
+  }
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  .customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+  
+  .customer-details {
+    .customer-name {
+      font-weight: 600;
+      color: #1c160d;
+      margin: 0 0 0.125rem 0;
+      font-size: 0.875rem;
+    }
+    
+    .customer-email {
+      color: #9c7a49;
+      margin: 0;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.order-total {
+  font-weight: 700;
+  color: #1c160d;
+  font-size: 0.9375rem;
+}
+
+.order-time {
+  color: #9c7a49;
+  font-size: 0.8125rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  
+  .action-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    .material-icons {
+      font-size: 1.125rem;
+    }
+    
+    &.view-btn {
+      background: #e0f2fe;
+      color: #0284c7;
+      
+      &:hover {
+        background: #0284c7;
+        color: white;
+        transform: translateY(-2px);
+      }
+    }
+    
+    &.edit-btn {
+      background: #fef3c7;
+      color: #d97706;
+      
+      &:hover {
+        background: #d97706;
+        color: white;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .orders-table {
+    font-size: 0.8125rem;
+    
+    thead th {
+      padding: 0.75rem;
+    }
+    
+    tbody td {
+      padding: 0.875rem;
+    }
+  }
+  
+  .customer-email {
+    display: none;
+  }
+}

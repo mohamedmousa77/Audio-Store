@@ -1,0 +1,208 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  background: linear-gradient(180deg, #1a140c 0%, #2d2418 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  .logo-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(244, 157, 37, 0.3);
+    
+    .logo {
+      font-size: 3rem;
+      color: white;
+    }
+  }
+
+  .brand-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-subtitle {
+    font-size: 0.75rem;
+    color: #9c7a49;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 0;
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    position: relative;
+
+    .nav-icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      transition: transform 0.3s;
+    }
+
+    .nav-label {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: rgba(244, 157, 37, 0.1);
+      transition: width 0.3s;
+    }
+
+    &:hover {
+      color: white;
+      background-color: rgba(244, 157, 37, 0.08);
+
+      .nav-icon {
+        transform: scale(1.1);
+      }
+    }
+
+    &.active {
+      background-color: rgba(244, 157, 37, 0.15);
+      color: #f49d25;
+      border-left-color: #f49d25;
+
+      &::before {
+        width: 100%;
+      }
+
+      .nav-icon {
+        color: #f49d25;
+      }
+    }
+  }
+}
+
+.sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons {
+        font-size: 2rem;
+        color: white;
+      }
+    }
+
+    .user-details {
+      flex: 1;
+
+      .user-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.125rem;
+      }
+
+      .user-email {
+        font-size: 0.75rem;
+        color: #9c7a49;
+      }
+    }
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.875rem;
+    background: transparent;
+    border: 2px solid #f49d25;
+    color: #f49d25;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    gap: 0.5rem;
+
+    .material-icons {
+      font-size: 1.25rem;
+    }
+
+    &:hover {
+      background-color: #f49d25;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 157, 37, 0.4);
+    }
+  }
+}
+
+/* Scrollbar personalizzata */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(244, 157, 37, 0.5);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(244, 157, 37, 0.7);
+  }
+}

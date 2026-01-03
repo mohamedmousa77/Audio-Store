@@ -1,197 +1,40 @@
-<div class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark">
+<div class="admin-layout">
+  <app-admin-sidebar/>
   
-  <app-admin-sidebar></app-admin-sidebar>
-
-  <main class="flex-1 flex flex-col h-full overflow-hidden relative md:ml-64 transition-all duration-300">
+  <div class="main-content">
+    <app-admin-header />
     
-    <header class="flex items-center justify-between px-6 py-4 bg-surface-light dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800 sticky top-0 z-20">
-      <h2 class="text-xl font-bold text-gray-900 dark:text-white">Dashboard Overview</h2>
-      
-      <div class="flex items-center gap-4">
-        <div class="hidden sm:flex items-center bg-background-light dark:bg-[#1a140c] rounded-lg px-3 py-2 border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors">
-          <span class="material-symbols-outlined text-text-muted text-sm mr-2">calendar_today</span>
-          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Last 30 Days</span>
-          <span class="material-symbols-outlined text-text-muted text-sm ml-2">expand_more</span>
-        </div>
-
-        <div class="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
-
-        <div class="flex items-center gap-3">
-          <div class="flex flex-col items-end hidden sm:flex">
-            <p class="text-sm font-bold text-gray-900 dark:text-white">Admin User</p>
-            <p class="text-xs text-text-muted">Super Admin</p>
-          </div>
-          <img class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" 
-               src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200" 
-               alt="Admin Profile">
-        </div>
+    <div class="content-area">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <app-stat-card
+          *ngFor="let stat of stats"
+          [stat]="stat"
+        />
       </div>
-    </header>
 
-    <div class="flex-1 overflow-y-auto p-6 md:p-8 no-scrollbar">
-      <div class="max-w-[1400px] mx-auto space-y-6">
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-              <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <span class="material-symbols-outlined text-green-600 dark:text-green-400">payments</span>
-              </div>
-              <span class="flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">+12.5% ↗</span>
-            </div>
-            <p class="text-text-muted text-sm font-medium">Total Sales</p>
-            <h3 class="text-2xl font-black text-gray-900 dark:text-white mt-1">$48,250</h3>
+      <!-- Charts and Tables Row -->
+      <div class="dashboard-grid">
+        <!-- Recent Orders -->
+        <div class="dashboard-card orders-card">
+          <div class="card-header">
+            <h2 class="card-title">Recent Orders</h2>
+            <a href="#" class="view-all-link">
+              View All
+              <span class="material-icons">arrow_forward</span>
+            </a>
           </div>
-
-          <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-              <div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">shopping_bag</span>
-              </div>
-              <span class="flex items-center text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">+5.2% ↗</span>
-            </div>
-            <p class="text-text-muted text-sm font-medium">Total Orders</p>
-            <h3 class="text-2xl font-black text-gray-900 dark:text-white mt-1">1,245</h3>
-          </div>
-
-          <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-              <div class="p-2 bg-primary/10 rounded-lg">
-                <span class="material-symbols-outlined text-primary">group</span>
-              </div>
-              <span class="flex items-center text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">0.0% →</span>
-            </div>
-            <p class="text-text-muted text-sm font-medium">Active Customers</p>
-            <h3 class="text-2xl font-black text-gray-900 dark:text-white mt-1">892</h3>
-          </div>
-
-          <div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-            <div class="flex justify-between items-start mb-4">
-              <div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                <span class="material-symbols-outlined text-orange-500">reviews</span>
-              </div>
-              <span class="flex items-center text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">+3 New</span>
-            </div>
-            <p class="text-text-muted text-sm font-medium">Pending Reviews</p>
-            <h3 class="text-2xl font-black text-gray-900 dark:text-white mt-1">14</h3>
-          </div>
+          <app-recent-orders [orders]="recentOrders" />
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <div class="lg:col-span-2 bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-            <div class="flex justify-between items-center mb-6">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white">Orders by Status</h3>
-              <button class="text-primary text-sm font-medium hover:underline">View Report</button>
-            </div>
-            <div class="space-y-5">
-              <div>
-                <div class="flex justify-between text-sm mb-1">
-                  <span class="font-medium text-gray-700 dark:text-gray-300">Delivered</span>
-                  <span class="font-bold text-gray-900">65% (810)</span>
-                </div>
-                <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                  <div class="h-full bg-green-500 rounded-full" style="width: 65%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-sm mb-1">
-                  <span class="font-medium text-gray-700 dark:text-gray-300">Shipped</span>
-                  <span class="font-bold text-gray-900">20% (250)</span>
-                </div>
-                <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                  <div class="h-full bg-blue-500 rounded-full" style="width: 20%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-sm mb-1">
-                  <span class="font-medium text-gray-700 dark:text-gray-300">Pending</span>
-                  <span class="font-bold text-gray-900">10% (125)</span>
-                </div>
-                <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full" style="width: 10%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-sm mb-1">
-                  <span class="font-medium text-gray-700 dark:text-gray-300">Returned</span>
-                  <span class="font-bold text-gray-900">5% (60)</span>
-                </div>
-                <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                  <div class="h-full bg-red-400 rounded-full" style="width: 5%"></div>
-                </div>
-              </div>
-            </div>
+        <!-- Category Statistics -->
+        <div class="dashboard-card stats-card">
+          <div class="card-header">
+            <h2 class="card-title">Sales by Category</h2>
           </div>
-
-          <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Top Categories</h3>
-            <div class="flex flex-col gap-6">
-              <div *ngFor="let cat of topCategories" class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-gray-600">{{cat.icon}}</span>
-                </div>
-                <div class="flex-1">
-                  <div class="flex justify-between mb-1">
-                    <p class="text-sm font-semibold text-gray-900 dark:text-white">{{cat.name}}</p>
-                    <p class="text-sm text-text-muted">{{cat.value}}</p>
-                  </div>
-                  <div class="h-1.5 w-full bg-gray-100 rounded-full">
-                    <div class="h-full bg-primary rounded-full" [style.width]="cat.percent"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- <app-category-stats [categories]="categoryStats" /> -->
         </div>
-
-        <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-          <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Top Selling Products</h3>
-            <button class="text-sm text-text-muted hover:text-primary transition-colors flex items-center gap-1">
-              View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-gray-600 dark:text-gray-400">
-              <thead class="bg-background-light dark:bg-[#1a140c] text-xs uppercase font-semibold text-text-muted">
-                <tr>
-                  <th class="px-6 py-4">Product Name</th>
-                  <th class="px-6 py-4">Category</th>
-                  <th class="px-6 py-4 text-center">Stock Status</th>
-                  <th class="px-6 py-4 text-right">Price</th>
-                  <th class="px-6 py-4 text-right">Sales</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                <tr *ngFor="let product of topProducts" class="hover:bg-gray-50 transition-colors">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                      <div class="h-10 w-10 rounded bg-gray-100 flex items-center justify-center text-xl">
-                        {{product.icon}}
-                      </div>
-                      <span class="font-medium text-gray-900 dark:text-white">{{ product.name }}</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">{{ product.category }}</td>
-                  <td class="px-6 py-4 text-center">
-                    <span [ngClass]="{
-                      'bg-green-100 text-green-800': product.status === 'In Stock',
-                      'bg-yellow-100 text-yellow-800': product.status === 'Low Stock',
-                      'bg-red-100 text-red-800': product.status === 'Out of Stock'
-                    }" class="px-2.5 py-0.5 rounded-full text-xs font-medium">
-                      {{ product.status }}
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 text-right">${{ product.price }}</td>
-                  <td class="px-6 py-4 text-right font-medium text-gray-900">{{ product.sales }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
       </div>
     </div>
-  </main>
+  </div>
 </div>

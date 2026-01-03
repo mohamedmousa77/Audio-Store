@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 @Component({
-  selector: 'app-header',
+  selector: 'app-admin-header',
   imports: [CommonModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class AdminHeader {
 private router = inject(Router);
   
   pageTitle = 'Dashboard Overview';

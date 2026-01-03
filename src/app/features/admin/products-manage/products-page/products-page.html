@@ -1,0 +1,161 @@
+<div class="admin-layout">
+  <app-admin-sidebar />
+  
+  <div class="main-content">
+    <app-admin-header />
+    
+    <div class="content-area">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="header-info">
+          <h1 class="page-title">Product Inventory</h1>
+          <p class="page-subtitle">Manage your audio equipment catalog</p>
+        </div>
+        <button class="btn btn-primary" (click)="openAddProduct()">
+          <span class="material-icons">add</span>
+          Add New Product
+        </button>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filters-card">
+        <div class="filters-row">
+          <div class="search-box">
+            <span class="material-icons">search</span>
+            <input
+              type="text"
+              placeholder="Search by name or SKU..."
+              [(ngModel)]="searchTerm"
+              (input)="applyFilters()"
+              class="search-input"
+            />
+          </div>
+
+          <select 
+            [(ngModel)]="selectedCategory" 
+            (change)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">All Categories</option>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+
+          <select 
+            [(ngModel)]="selectedStatus" 
+            (change)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">All Status</option>
+            <option value="Available">Available</option>
+            <option value="Low Stock">Low Stock</option>
+            <option value="Unavailable">Unavailable</option>
+          </select>
+
+          <button class="btn btn-secondary" (click)="clearFilters()">
+            <span class="material-icons">clear</span>
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Products Table -->
+      <div class="products-table-card">
+        <div class="table-header">
+          <h3>Products List</h3>
+          <span class="results-count">{{ filteredProducts.length }} products</span>
+        </div>
+
+        <div class="table-container">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Flags</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of filteredProducts" class="product-row">
+                <td>
+                  <div class="product-info">
+                    <img [src]="product.image" [alt]="product.name" class="product-image" />
+                    <div class="product-details">
+                      <p class="product-name">{{ product.name }}</p>
+                      <p class="product-meta">{{ product.brand }} • SKU: {{ product.sku }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="category-tag">{{ product.category }}</span>
+                </td>
+                <td>
+                  <span class="product-price">${{ product.price.toFixed(2) }}</span>
+                </td>
+                <td>
+                  <span class="stock-count" [ngClass]="{
+                    'stock-low': product.stock < 10 && product.stock > 0,
+                    'stock-out': product.stock === 0
+                  }">
+                    {{ product.stock }}
+                  </span>
+                </td>
+                <td>
+                  <app-badge [status]="product.status" />
+                </td>
+                <td>
+                  <div class="flags">
+                    <span *ngIf="product.isFeatured" class="flag featured">FEAT</span>
+                    <span *ngIf="product.isNew" class="flag new">NEW</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn view-btn" title="View">
+                      <span class="material-icons">visibility</span>
+                    </button>
+                    <button class="action-btn edit-btn" (click)="editProduct(product)" title="Edit">
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button class="action-btn delete-btn" (click)="deleteProduct(product)" title="Delete">
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <p>Showing 1-{{ filteredProducts.length }} of {{ products.length }} results</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" *ngIf="showProductModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ editingProduct ? 'Edit Product' : 'Add New Product' }}</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <p class="modal-placeholder">Product form will be implemented with backend API</p>
+      <p class="modal-info">Fields: Name, Brand, SKU, Category, Price, Stock, Image, Featured, New</p>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-primary" (click)="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>

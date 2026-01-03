@@ -1,0 +1,102 @@
+.stat-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e8ddce;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.stat-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .material-icons {
+    font-size: 2rem;
+    color: white;
+  }
+}
+
+.stat-content {
+  flex: 1;
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: #9c7a49;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1c160d;
+    margin: 0 0 0.5rem 0;
+    line-height: 1;
+  }
+
+  .stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    .trend-icon {
+      font-size: 1rem;
+    }
+
+    .trend-period {
+      color: #9c7a49;
+      font-weight: 400;
+      margin-left: 0.25rem;
+    }
+
+    &.positive {
+      color: #10b981;
+
+      .trend-icon {
+        color: #10b981;
+      }
+    }
+
+    &.negative {
+      color: #6b7280;
+
+      .trend-icon {
+        color: #6b7280;
+      }
+    }
+  }
+}
+
+/* Color Variants */
+.stat-green .stat-icon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.stat-blue .stat-icon {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.stat-orange .stat-icon {
+  background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+}
+
+.stat-purple .stat-icon {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}

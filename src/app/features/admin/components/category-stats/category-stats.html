@@ -1,0 +1,51 @@
+<div class="category-stats">
+  <!-- Donut Chart Visualization -->
+  <div class="chart-container">
+    <svg viewBox="0 0 200 200" class="donut-chart">
+      <circle
+        *ngFor="let category of categories; let i = index"
+        cx="100"
+        cy="100"
+        r="70"
+        fill="none"
+        [attr.stroke]="category.color"
+        stroke-width="35"
+        [attr.stroke-dasharray]="category.percentage * 4.4 + ' 440'"
+        [attr.stroke-dashoffset]="getStrokeDashOffset(i)"
+        class="chart-segment"
+      />
+      
+      <!-- Center Text -->
+      <text x="100" y="95" text-anchor="middle" class="chart-total-label">
+        Total Sales
+      </text>
+      <text x="100" y="115" text-anchor="middle" class="chart-total-value">
+        {{ getTotalSales() }}
+      </text>
+    </svg>
+  </div>
+
+  <!-- Legend -->
+  <div class="stats-legend">
+    <div 
+      *ngFor="let category of categories" 
+      class="legend-item"
+    >
+      <div class="legend-marker" [style.background]="category.color"></div>
+      <div class="legend-content">
+        <div class="legend-info">
+          <span class="legend-name">{{ category.name }}</span>
+          <span class="legend-value">{{ category.value }} units</span>
+        </div>
+        <div class="progress-bar">
+          <div 
+            class="progress-fill" 
+            [style.width.%]="category.percentage"
+            [style.background]="category.color"
+          ></div>
+        </div>
+        <span class="legend-percentage">{{ category.percentage }}%</span>
+      </div>
+    </div>
+  </div>
+</div>
