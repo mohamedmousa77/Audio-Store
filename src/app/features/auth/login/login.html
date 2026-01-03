@@ -1,1 +1,69 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="material-icons logo-icon">graphic_eq</span>
+      <h1>Admin Login</h1>
+      <p class="subtitle">Welcome back to Audio Store Management</p>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="error">
+      <span class="material-icons">warning</span>
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <span class="material-icons input-icon">mail</span>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="admin@audiostore.com"
+            [class.is-invalid]="email?.invalid && email?.touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
+          Please enter a valid email address
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">
+          Password
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </label>
+        <div class="input-group">
+          <span class="material-icons input-icon">lock</span>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            placeholder="Enter your password"
+            [class.is-invalid]="password?.invalid && password?.touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="password?.invalid && password?.touched">
+          Password must be at least 6 characters
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="loginForm.invalid || loading"
+      >
+        <span *ngIf="loading">Signing In...</span>
+        <span *ngIf="!loading">Sign In</span>
+      </button>
+    </form>
+
+    <div class="scroll-hint">
+      <p>Scroll to Explore Panel</p>
+      <span class="material-icons">keyboard_arrow_down</span>
+    </div>
+  </div>
+</div>
