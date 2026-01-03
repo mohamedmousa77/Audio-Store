@@ -9,7 +9,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        router.navigate(['/auth/login']);
+        router.navigate(['/auth/login']).catch(err => console.error('Navigation error:', err));
       }
       
       const errorMessage = error.error?.message || error.message || 'An error occurred';
