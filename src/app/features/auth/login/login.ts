@@ -9,6 +9,7 @@ import { AuthApi} from '../services/auth-api';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
+  standalone: true
 })
 export class  LoginForm implements OnInit {
 private fb = inject(FormBuilder);
