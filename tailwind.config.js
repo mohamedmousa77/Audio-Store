@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "primary": "#f49d25",
+        "primary": "#f49d25",        // L'arancione del tuo design
         "primary-dark": "#d68310",
         "background-light": "#f8f7f5",
         "background-dark": "#221a10",
