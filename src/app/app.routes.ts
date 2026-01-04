@@ -58,8 +58,8 @@ export const routes: Routes = [
       {
         path: 'categories',
         loadComponent: () =>
-          import('./features/admin/categories-manage/categories-manage')
-            .then(m => m.CategoriesManage)
+          import('./features/admin/categories-manage/categories-page/categories-page')
+            .then(m => m.CategoriesPage)
       },
       {
         path: '',

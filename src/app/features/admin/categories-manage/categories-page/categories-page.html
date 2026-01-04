@@ -1,1 +1,234 @@
-<p>categories-page works!</p>
+<div class="admin-layout">
+  <app-admin-sidebar />
+
+  <div class="main-content">
+    <app-admin-header />
+
+    <div class="content-area">
+      <!-- <div class="page-header">
+        <div class="header-info">
+          <h1 class="page-title">Categories Management</h1>
+          <nav class="breadcrumb">Admin / Categories</nav>
+        </div>
+        <button class="btn btn-primary" (click)="openAddCategory()">
+          <span class="material-icons">add</span>
+          Add New Category
+        </button>
+      </div> -->
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-icon-square">
+            <span class="material-icons">category</span>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Total Categories</p>
+            <h3 class="stat-value">{{ categories.length }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-icon-square">
+            <span class="material-icons">inventory_2</span>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Total Products</p>
+            <h3 class="stat-value">{{ getTotalProducts() }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-icon-square">
+            <span class="material-icons">trending_up</span>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Avg Products/Category</p>
+            <h3 class="stat-value">{{ getAverageProducts() }}</h3>
+          </div>
+        </div>
+
+        <div class="stat-box" *ngIf="getTopCategory()">
+          <div class="stat-icon-square">
+            <span class="material-icons">star</span>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">Top Category</p>
+            <h3 class="stat-value top-cat-name">{{ getTopCategory()?.name }}</h3>
+          </div>
+        </div>
+      </div>
+
+        <!-- Controls Section -->
+      <div class="controls-card">
+        <div class="controls-row">
+          <div class="search-box">
+            <span class="material-icons">search</span>
+            <input
+              type="text"
+              placeholder="Search categories by name or description..."
+              [(ngModel)]="searchTerm"
+              (input)="applySearch()"
+              class="search-input"
+            />
+          </div>
+
+          <div class="sort-controls">
+            <select
+              [(ngModel)]="sortBy"
+              (change)="applySort()"
+              class="sort-select"
+            >
+              <option value="name">Sort by Name</option>
+              <option value="products">Sort by Products</option>
+            </select>
+
+            <button
+              class="sort-toggle-btn"
+              (click)="toggleSortOrder()"
+              [title]="'Sort ' + (sortOrder === 'asc' ? 'Descending' : 'Ascending')"
+            >
+              <span class="material-icons">
+                {{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+              </span>
+            </button>
+
+            <button class="view-toggle-btn" (click)="toggleViewMode()">
+              <span class="material-icons">
+                {{ viewMode === 'grid' ? 'view_agenda' : 'apps' }}
+              </span>
+            </button>
+
+            <button class="btn btn-secondary" (click)="clearSearch()" *ngIf="searchTerm">
+              <span class="material-icons">clear</span>
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="results-info">
+          <p>
+            Showing <strong>{{ filteredCategories.length }}</strong> of
+            <strong>{{ categories.length }}</strong> categories
+          </p>
+        </div>
+      </div>
+
+      <div class="categories-list-container" *ngIf="viewMode === 'table'">
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th>ICON</th>
+              <th>NAME & DESCRIPTION</th>
+              <th>PRODUCTS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of filteredCategories">
+              <td><div class="table-icon-box"><span class="material-icons">{{category.icon}}</span></div></td>
+              <td>
+                <div class="name-desc-cell">
+                  <strong>{{category.name}}</strong>
+                  <p>{{category.description}}</p>
+                </div>
+              </td>
+              <td><span class="prod-count-badge">{{category.productCount}}</span></td>
+              <td>
+                <div class="action-row">
+                  <button class="text-btn edit" (click)="editCategory(category)"><span class="material-icons">edit</span></button>
+                  <button class="text-btn delete" (click)="deleteCategory(category)"><span class="material-icons">delete</span></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="categories-grid" *ngIf="viewMode === 'grid'">
+        <div
+          *ngFor="let category of filteredCategories"
+          class="category-card"
+        >
+          <div class="card-icon">
+            <span class="material-icons">{{ category.icon }}</span>
+          </div>
+
+          <div class="card-content">
+            <h3 class="category-name">{{ category.name }}</h3>
+            <p class="category-description">{{ category.description }}</p>
+
+            <div class="category-meta">
+              <div class="meta-item">
+                <span class="material-icons">inventory_2</span>
+                <span class="meta-value">{{ category.productCount }} products</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button
+              class="action-btn edit-btn"
+              (click)="editCategory(category)"
+              title="Edit Category"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+            <button
+              class="action-btn delete-btn"
+              (click)="deleteCategory(category)"
+              title="Delete Category"
+            >
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="filteredCategories.length === 0">
+          <span class="empty-icon material-icons">category</span>
+          <h3>No Categories Found</h3>
+          <p>Try adjusting your search or filters</p>
+        </div>
+
+      </div>
+
+      <div id="category-form-section" class="form-section-card" *ngIf="isFormOpen">
+        <div class="form-header">
+          <h2>{{ editingCategory?.id ? 'Edit' : 'Add New' }} Category</h2>
+          <button class="close-btn" (click)="closeForm()"><span class="material-icons">close</span></button>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-inputs">
+            <div class="form-group">
+              <label>Category Name</label>
+              <input type="text" [(ngModel)]="formCategory.name" placeholder="e.g. Headphones" />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea [(ngModel)]="formCategory.description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Icon Name (Material Icons)</label>
+                <input type="text" [(ngModel)]="formCategory.icon" />
+            </div>
+          </div>
+          
+          <div class="form-preview">
+            <p class="preview-label">Icon Preview</p>
+            <div class="preview-box">
+              <span class="material-icons">{{ formCategory.icon || 'category' }}</span>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" (click)="closeForm()">Clear</button>
+                <button class="btn btn-primary" (click)="saveCategory()">
+                  <span class="material-icons">save</span> Save Category
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
