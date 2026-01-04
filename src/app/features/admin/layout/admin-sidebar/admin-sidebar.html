@@ -13,8 +13,7 @@
       [routerLink]="item.path"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: false }"
-      class="nav-item"
-    >
+      class="nav-item">
       <span class="material-icons nav-icon">{{ item.icon }}</span>
       <span class="nav-label">{{ item.label }}</span>
     </a>
@@ -26,8 +25,8 @@
         <span class="material-icons">account_circle</span>
       </div>
       <div class="user-details">
-        <p class="user-name">Admin User</p>
-        <p class="user-email">admin@audiostore.com</p>
+        <p class="user-name">{{ adminName }}</p>
+        <p class="user-email">{{ adminEmail }}</p>
       </div>
     </div>
     

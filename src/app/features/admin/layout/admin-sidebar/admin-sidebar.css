@@ -3,7 +3,7 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 280px;
+  width: 240px;
   background: linear-gradient(180deg, #1a140c 0%, #2d2418 100%);
   color: white;
   display: flex;
@@ -15,22 +15,22 @@
 
 .sidebar-header {
   text-align: center;
-  padding: 2rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   .logo-container {
-    width: 80px;
-    height: 80px;
+    width: 40px;
+    height: 40px;
     margin: 0 auto 1rem;
     background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
-    border-radius: 20px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 8px 24px rgba(244, 157, 37, 0.3);
     
     .logo {
-      font-size: 3rem;
+      font-size: 2rem;
       color: white;
     }
   }
@@ -54,12 +54,12 @@
 
 .sidebar-nav {
   flex: 1;
-  padding: 1.5rem 0;
+  padding: 1rem 0;
 
   .nav-item {
     display: flex;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: 0.7rem 1.5rem;
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -116,7 +116,7 @@
 }
 
 .sidebar-footer {
-  padding: 1.5rem;
+  padding: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 
   .user-info {
@@ -124,13 +124,13 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
-    padding: 0.75rem;
+    padding: 0.5rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 0.75rem;
 
     .user-avatar {
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
       border-radius: 50%;
       display: flex;
@@ -165,7 +165,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 0.875rem;
+    padding: 0.6rem;
     background: transparent;
     border: 2px solid #f49d25;
     color: #f49d25;
@@ -203,6 +203,6 @@
   border-radius: 3px;
 
   &:hover {
-    background: rgba(244, 157, 37, 0.7);
+    background-color: rgba(244, 157, 37, 0.7);
   }
 }

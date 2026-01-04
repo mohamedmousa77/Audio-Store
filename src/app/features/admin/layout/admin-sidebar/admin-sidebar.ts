@@ -16,6 +16,8 @@ interface NavigationItem {
   styleUrl: './admin-sidebar.css',
 })
 export class AdminSidebar {
+   adminName = 'Admin User';
+   adminEmail = 'admin@audiostore.com';
   private authService = inject(AuthApi);
   private router = inject(Router);
 
