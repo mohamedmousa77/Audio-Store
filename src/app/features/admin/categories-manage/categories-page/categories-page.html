@@ -22,7 +22,7 @@
             <span class="material-icons">category</span>
           </div>
           <div class="stat-info">
-            <p class="stat-label">Total Categories</p>
+            <p class="stat-label">Categories</p>
             <h3 class="stat-value">{{ categories.length }}</h3>
           </div>
         </div>
@@ -32,18 +32,8 @@
             <span class="material-icons">inventory_2</span>
           </div>
           <div class="stat-info">
-            <p class="stat-label">Total Products</p>
+            <p class="stat-label">Products</p>
             <h3 class="stat-value">{{ getTotalProducts() }}</h3>
-          </div>
-        </div>
-
-        <div class="stat-box">
-          <div class="stat-icon-square">
-            <span class="material-icons">trending_up</span>
-          </div>
-          <div class="stat-info">
-            <p class="stat-label">Avg Products/Category</p>
-            <h3 class="stat-value">{{ getAverageProducts() }}</h3>
           </div>
         </div>
 
@@ -106,10 +96,11 @@
         </div>
 
         <div class="results-info">
-          <p>
-            Showing <strong>{{ filteredCategories.length }}</strong> of
-            <strong>{{ categories.length }}</strong> categories
-          </p>
+            <p> Showing <strong>{{ filteredCategories.length }}</strong> of <strong>{{ categories.length }}</strong> categories </p>
+            <button class="btn btn-primary" (click)="openAddCategory()">
+                <span class="material-icons">add</span>
+                Add New Category
+            </button>
         </div>
       </div>
 
@@ -134,10 +125,15 @@
               </td>
               <td><span class="prod-count-badge">{{category.productCount}}</span></td>
               <td>
-                <div class="action-row">
-                  <button class="text-btn edit" (click)="editCategory(category)"><span class="material-icons">edit</span></button>
-                  <button class="text-btn delete" (click)="deleteCategory(category)"><span class="material-icons">delete</span></button>
-                </div>
+                <!-- <div class="card-actions">
+                  <button class="action-btn edit-btn" (click)="editCategory(category)"><span class="material-icons">edit</span></button>
+                  <button class="action-btn delete-btn" (click)="deleteCategory(category)"><span class="material-icons">delete</span></button>
+                </div> -->
+
+                    <div class="actions">
+                        <span class="material-icons view" (click)="editCategory(category)">visibility</span>
+                        <span class="material-icons edit" (click)="deleteCategory(category)">edit</span>
+                    </div>
               </td>
             </tr>
           </tbody>

@@ -116,31 +116,31 @@
   display: flex;
   gap: 1.25rem;
   margin-bottom: 2.5rem;
-  overflow-x: auto;
+  width: 100%; /* Ensures it spans the full content area */
 }
 
 .stat-box {
-  flex: 1;
-  min-width: 200px;
+  flex: 1; /* Makes all cards equal width in the row */
   background: white;
   padding: 1.25rem;
   border-radius: 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  border: 1px solid #f0e6d6;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e8ddce;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .stat-icon-square {
-  width: 60px;
-  height: 60px;
-  background: #f49d25;
-  border-radius: 0.75rem;
+  width: 64px; /* Fixed size for all icon boxes */
+  height: 64px;
+  background: #f49d25; /* Consistent orange background */
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  flex-shrink: 0;
 }
 
 .stat-value {
@@ -267,6 +267,9 @@
   }
 
   .results-info {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
     padding-top: 1rem;
     border-top: 1px solid #e8ddce;
 
@@ -386,50 +389,54 @@
     }
   }
 
-  .card-actions {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.5rem;
+    .card-actions {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: flex;
+        gap: 0.5rem;
 
-    .action-btn {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background: white;
-      border-radius: 0.625rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        .action-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: white;
+        border-radius: 0.625rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-      .material-icons {
-        font-size: 1.125rem;
-      }
-
-      &.edit-btn {
-        color: #d97706;
-
-        &:hover {
-          background-color: #fef3c7;
-          transform: translateY(-2px);
+        .material-icons {
+            font-size: 1.125rem;
         }
-      }
 
-      &.delete-btn {
-        color: #dc2626;
+        &.edit-btn {
+            color: #d97706;
 
-        &:hover {
-          background-color: #fee2e2;
-          transform: translateY(-2px);
+            &:hover {
+            background-color: #fef3c7;
+            transform: translateY(-2px);
+            }
         }
-      }
+
+        &.delete-btn {
+            color: #dc2626;
+
+            &:hover {
+            background-color: #fee2e2;
+            transform: translateY(-2px);
+            }
+        }
+        }
     }
-  }
 }
+
+/* ============================================
+   CATEGORIES LIST TABLE
+   ============================================ */
 
 .categories-list-container {
   background: white;
@@ -490,6 +497,17 @@
   border-radius: 1rem;
   font-size: 0.8125rem;
   font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  color: #95a5a6;
+}
+
+.actions .material-icons {
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 /* ============================================
