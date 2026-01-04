@@ -9,7 +9,7 @@ import { Order } from '../../../core/models/order';
 import { StatCard } from '../components/stat-card/stat-card';
 import { adminGuard } from '../../../core/guards/admin-guard';
 import { RecentOrders } from '../components/recent-orders/recent-orders';
-// import { CategoryStatsComponent } from './components/category-stats/category-stats.component';
+import { CategoryStats } from '../components/category-stats/category-stats';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -18,7 +18,7 @@ import { RecentOrders } from '../components/recent-orders/recent-orders';
     AdminHeader,
     StatCard,
     RecentOrders,
-    // CategoryStatsComponent
+    CategoryStats
 
   ],
   templateUrl: './dashboard.html',

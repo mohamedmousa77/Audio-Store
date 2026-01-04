@@ -16,7 +16,7 @@ interface NavigationItem {
   styleUrl: './admin-sidebar.css',
 })
 export class AdminSidebar {
-    private authService = inject(AuthApi);
+  private authService = inject(AuthApi);
   private router = inject(Router);
 
   navigation: NavigationItem[] = [

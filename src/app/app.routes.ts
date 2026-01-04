@@ -43,24 +43,24 @@ export const routes: Routes = [
           import('./features/admin/products-manage/products-page/products-page')
             .then(m => m.ProductsPage)
       },
-    //   {
-    //     path: 'orders',
-    //     loadComponent: () =>
-    //       import('./features/admin/orders-manage/orders-page.component')
-    //         .then(m => m.OrdersPageComponent)
-    //   },
-    //   {
-    //     path: 'customers',
-    //     loadComponent: () =>
-    //       import('./features/admin/customers-manage/customers-page.component')
-    //         .then(m => m.CustomersPageComponent)
-    //   },
-    //   {
-    //     path: 'categories',
-    //     loadComponent: () =>
-    //       import('./features/admin/categories-manage/categories-page.component')
-    //         .then(m => m.CategoriesPageComponent)
-    //   },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/admin/orders-manage/orders-page/orders-page')
+            .then(m => m.OrdersPage)
+      },
+      {
+        path: 'customers',
+        loadComponent: () =>
+          import('./features/admin/customers-manage/customers-page/customers-page')
+            .then(m => m.CustomersPage)
+      },
+      {
+        path: 'categories',
+        loadComponent: () =>
+          import('./features/admin/categories-manage/categories-manage')
+            .then(m => m.CategoriesManage)
+      },
       {
         path: '',
         redirectTo: 'dashboard',
