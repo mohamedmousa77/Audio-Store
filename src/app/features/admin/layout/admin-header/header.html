@@ -3,33 +3,24 @@
     <div class="page-info">
       <h1 class="page-title">{{ pageTitle }}</h1>
       <p class="page-subtitle">{{pageSubtitle}}</p>
-      <nav class="breadcrumb">
-        <!-- <span *ngFor="let crumb of breadcrumbs; let last = last" class="breadcrumb-item">
-          {{ crumb }}
-          <span *ngIf="!last" class="separator">/</span>
-        </span> -->
-      </nav>
     </div>
     
-    <div class="header-actions">
+    <div class="header-actions">   
 
-      <div class="search-box">
-        <span class="material-icons search-icon">search</span>
-        <input 
-          type="text" 
-          placeholder="Search products, orders..." 
-          class="search-input"
-        />
+      <div class="user-info">        
+        <div class="user-details">
+          <p class="user-name">{{ adminName }}</p>
+          <p class="user-email">{{ adminEmail }}</p>
+        </div>
+        <div class="user-avatar">
+        <span class="material-icons">account_circle</span>
+        </div>
       </div>
 
       <button class="icon-btn notification-btn">
         <span class="material-icons">notifications</span>
         <span class="notification-badge">3</span>
       </button>
-
-      <div class="user-menu">
-        <span class="material-icons">account_circle</span>
-      </div>
 
     </div>
   </div>

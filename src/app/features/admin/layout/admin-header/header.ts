@@ -10,7 +10,8 @@ import { filter, map } from 'rxjs/operators';
 })
 export class AdminHeader {
 private router = inject(Router);
-  
+  adminName = 'Admin User';
+  adminEmail = 'admin@audiostore.com';
   pageTitle = 'Dashboard Overview';
   pageSubtitle = '';
   breadcrumbs: string[] = [];

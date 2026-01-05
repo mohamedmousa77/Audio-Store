@@ -80,7 +80,7 @@
 
       <div id="order-detail-section">
         <app-order-form 
-          *ngIf="selectedOrder" 
+          *ngIf="showDetail" 
           [order]="selectedOrder"
           (statusUpdate)="updateStatus($event)"
           (cancel)="handleCancel()">

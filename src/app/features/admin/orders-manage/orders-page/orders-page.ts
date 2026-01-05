@@ -78,6 +78,7 @@ orders: Order[] = [
     }
   ];
 
+  showDetail = false;
   selectedOrder: any = null;
   filteredOrders: Order[] = [];
   searchTerm = '';
@@ -91,6 +92,7 @@ orders: Order[] = [
 
   selectOrder(order: any): void {
     this.selectedOrder = order;
+    this.showDetail = true;
     this.scrollToDetail();
   }
 
@@ -153,7 +155,7 @@ orders: Order[] = [
 
   handleCancel(): void {
     this.selectedOrder = null; // Nasconde il form
-    
+    this.showDetail = false;
     // Scorrimento fluido verso l'inizio della pagina
     window.scrollTo({
       top: 0,
