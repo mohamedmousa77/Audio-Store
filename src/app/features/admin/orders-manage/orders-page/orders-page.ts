@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
+import { OrderForm } from '../order-form/order-form';
 import { Badge } from '../../../../shared/components/badge/badge';
 import { Order } from '../../../../core/models/order';
 
@@ -13,6 +14,7 @@ import { Order } from '../../../../core/models/order';
     FormsModule,
     AdminSidebar,
     AdminHeader,
+    OrderForm,
     Badge
   ],
   templateUrl: './orders-page.html',
@@ -76,6 +78,7 @@ orders: Order[] = [
     }
   ];
 
+  selectedOrder: any = null;
   filteredOrders: Order[] = [];
   searchTerm = '';
   selectedStatus = '';
@@ -83,6 +86,28 @@ orders: Order[] = [
 
   ngOnInit(): void {
     this.filteredOrders = [...this.orders];
+    this.selectOrder(this.orders[0]);
+  }
+
+  selectOrder(order: any): void {
+    this.selectedOrder = order;
+    this.scrollToDetail();
+  }
+
+  private scrollToDetail(): void {
+    setTimeout(() => {
+      const element = document.getElementById('order-detail-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+
+  updateStatus(newStatus: string) {
+    if (this.selectedOrder) {
+      this.selectedOrder.status = newStatus;
+      // Qui andrebbe la chiamata API per salvare
+    }
   }
 
   onStatusChange(order: Order, event: any): void {
@@ -124,6 +149,16 @@ orders: Order[] = [
       this.orders = this.orders.filter(o => o.id !== order.id);
       this.applyFilters();
     }
+  }
+
+  handleCancel(): void {
+    this.selectedOrder = null; // Nasconde il form
+    
+    // Scorrimento fluido verso l'inizio della pagina
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
 }

@@ -5,150 +5,86 @@
     <app-admin-header />
     
     <div class="content-area">
-      <!-- Page Header -->
-      <div class="page-header">
-        <div class="header-info">
-          <h1 class="page-title">Order Management</h1>
-          <p class="page-subtitle">Track and manage customer orders</p>
-        </div>
-        <div class="header-stats">
-          <div class="stat-chip">
-            <span class="material-icons">receipt</span>
-            <div>
-              <p class="label">Total Orders</p>
-              <p class="value">{{ orders.length }}</p>
-            </div>
-          </div>
-          <div class="stat-chip">
-            <span class="material-icons">local_shipping</span>
-            <div>
-              <p class="label">In Transit</p>
-              <p class="value">{{ getShippedCount() }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Filters Section -->
-      <div class="filters-card">
-        <div class="filters-row">
+      <div class="controls-card">
+        <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input
-              type="text"
-              placeholder="Search by Order ID or Customer..."
-              [(ngModel)]="searchTerm"
-              (input)="applyFilters()"
-              class="search-input"
-            />
+            <input type="text" placeholder="Search by Order ID or Customer..." 
+                   [(ngModel)]="searchTerm" (input)="applyFilters()" class="search-input" />
           </div>
 
-          <select 
-            [(ngModel)]="selectedStatus" 
-            (change)="applyFilters()"
-            class="filter-select"
-          >
-            <option value="">All Status</option>
-            <option value="Processing">Processing</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Canceled">Canceled</option>
-          </select>
+          <div class="filter-controls">
+            <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="filter-select">
+              <option value="">All Status</option>
+              <option value="Processing">Processing</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Delivered">Delivered</option>
+            </select>
+            <button class="btn btn-secondary" (click)="clearFilters()" *ngIf="searchTerm || selectedStatus">
+              <span class="material-icons">clear</span> Clear
+            </button>
+          </div>
+        </div>
 
-          <select 
-            [(ngModel)]="selectedDateRange" 
-            class="filter-select"
-          >
-            <option value="">All Dates</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-          </select>
-
-          <button class="btn btn-secondary" (click)="clearFilters()">
-            <span class="material-icons">clear</span>
-            Clear
-          </button>
+        <div class="results-info">
+            <div class="summary-chips">
+                <span class="summary-chip">Total Orders: <strong>{{ orders.length }}</strong></span>
+                <span class="summary-chip">In Transit: <strong>{{ getShippedCount() }}</strong></span>
+            </div>
+            <p class="results-count">Showing <strong>{{ filteredOrders.length }}</strong> orders</p>
         </div>
       </div>
 
-      <!-- Orders Table -->
       <div class="orders-table-card">
-        <div class="table-header">
-          <h3>Orders</h3>
-          <span class="results-count">{{ filteredOrders.length }} orders</span>
-        </div>
-
         <div class="table-container">
-          <table class="orders-table">
+          <table class="model-table">
             <thead>
               <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Customer</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>ORDER ID</th>
+                <th>DATE</th>
+                <th>CUSTOMER</th>
+                <th>TOTAL</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let order of filteredOrders" class="order-row">
+              <tr *ngFor="let order of filteredOrders" 
+                  class="order-row"
+                  (click)="selectOrder(order)"
+                  [class.active-row]="selectedOrder?.id === order.id">
+                <td><span class="order-id-label">{{ order.id }}</span></td>
+                <td><span class="text-secondary">{{ order.date | date:'shortDate' }}</span></td>
                 <td>
-                  <span class="order-id">{{ order.id }}</span>
-                </td>
-                <td>
-                  <span class="order-date">{{ order.date | date: 'short' }}</span>
-                </td>
-                <td>
-                  <div class="customer-info">
-                    <div class="customer-avatar">
-                      {{ order.customerName.charAt(0) }}
-                    </div>
-                    <div class="customer-details">
-                      <p class="customer-name">{{ order.customerName }}</p>
-                      <p class="customer-email">{{ order.customerEmail }}</p>
+                  <div class="customer-cell">
+                    <div class="avatar-small">{{ order.customerName.charAt(0) }}</div>
+                    <div class="cell-texts">
+                        <p class="name">{{ order.customerName }}</p>
+                        <p class="sub">{{ order.customerEmail }}</p>
                     </div>
                   </div>
                 </td>
+                <td><span class="order-price">{{ order.total }}</span></td>
+                <td><app-badge [status]="order.status" /></td>
                 <td>
-                  <span class="order-total">{{ order.total }}</span>
-                </td>
-                <td>
-                  <div class="status-selector">
-                    <app-badge [status]="order.status" />
-                    <select 
-                       [value]="order.status"
-                        (change)="onStatusChange(order, $event)"
-                        class="status-select"
-                        title="Change status">
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Canceled">Canceled</option>
-                    </select>
-                  </div>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn view-btn" title="View Details">
-                      <span class="material-icons">visibility</span>
-                    </button>
-                    <button class="action-btn edit-btn" title="Edit Order">
-                      <span class="material-icons">edit</span>
-                    </button>
-                    <button class="action-btn delete-btn" (click)="deleteOrder(order)" title="Delete">
-                      <span class="material-icons">delete</span>
-                    </button>
+                  <div class="actions">
+                    <span class="material-icons view">visibility</span>
+                    <span class="material-icons edit">edit</span>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div class="table-footer">
-          <p>Showing 1-{{ filteredOrders.length }} of {{ orders.length }} results</p>
-        </div>
+      <div id="order-detail-section">
+        <app-order-form 
+          *ngIf="selectedOrder" 
+          [order]="selectedOrder"
+          (statusUpdate)="updateStatus($event)"
+          (cancel)="handleCancel()">
+        </app-order-form>
       </div>
     </div>
   </div>
