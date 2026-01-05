@@ -5,13 +5,14 @@ import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
 import { Badge } from '../../../../shared/components/badge/badge';
 import { Product } from '../../../../core/models/product';
+import { ProductForm } from '../product-form/product-form';
 @Component({
   selector: 'app-products-page',
-  imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, Badge],
+  imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, Badge, ProductForm],
   templateUrl: './products-page.html',
   styleUrl: './products-page.css',
 })
-export class ProductsPage {
+export class ProductsPage implements OnInit{
   products: Product[] = [
     {
       id: '1',
@@ -80,6 +81,7 @@ export class ProductsPage {
     }
   ];
 
+  isFormOpen = false;
   filteredProducts: Product[] = [];
   searchTerm = '';
   selectedCategory = '';
@@ -91,6 +93,42 @@ export class ProductsPage {
 
   ngOnInit(): void {
     this.filteredProducts = [...this.products];
+  }
+  // Metodo per scorrere al form
+  private scrollToForm(): void {
+    setTimeout(() => {
+      const element = document.getElementById('product-form-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+  
+  openAddProduct(): void {
+    this.isFormOpen = true;
+    this.editingProduct = {
+      id: '', name: '', brand: '', category: '', price: 0, 
+      stock: 1, sku: '', description: '', 
+      specs: '', image: '', gallery: [], isNew: false, 
+      isFeatured: false, status: 'Available'
+    };
+    this.scrollToForm();
+  }
+
+  editProduct(product: any): void {
+    this.isFormOpen = true;
+    this.editingProduct = { ...product }; // Copia per non modificare l'originale subito
+    this.scrollToForm();
+  }
+
+  closeForm(): void {
+    this.isFormOpen = false;
+    this.editingProduct = null;
+  }
+
+  saveProduct(): void {
+    // Logica di salvataggio futura
+    this.closeForm();
   }
 
   applyFilters(): void {
@@ -111,16 +149,6 @@ export class ProductsPage {
     this.filteredProducts = [...this.products];
   }
 
-  openAddProduct(): void {
-    this.editingProduct = null;
-    this.showProductModal = true;
-  }
-
-  editProduct(product: Product): void {
-    this.editingProduct = { ...product };
-    this.showProductModal = true;
-  }
-
   deleteProduct(product: Product): void {
     if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
       this.products = this.products.filter(p => p.id !== product.id);
@@ -129,12 +157,6 @@ export class ProductsPage {
   }
 
   closeModal(): void {
-    this.showProductModal = false;
-    this.editingProduct = null;
-  }
-
-  saveProduct(): void {
-    // In futuro: chiamata API
     this.showProductModal = false;
     this.editingProduct = null;
   }

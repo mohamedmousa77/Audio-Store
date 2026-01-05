@@ -27,23 +27,10 @@
     margin: 0 0 0.25rem 0;
     letter-spacing: -0.5px;
   }
-
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
+  .page-subtitle {
     color: #9c7a49;
-
-    .breadcrumb-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      .separator {
-        color: #e8ddce;
-      }
-    }
+    font-size: 0.9375rem;
+    margin: 0;
   }
 }
 

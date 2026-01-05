@@ -12,6 +12,7 @@ export class AdminHeader {
 private router = inject(Router);
   
   pageTitle = 'Dashboard Overview';
+  pageSubtitle = '';
   breadcrumbs: string[] = [];
 
   ngOnInit(): void {
@@ -29,6 +30,7 @@ private router = inject(Router);
     const segments = url.split('/').filter(s => s);
     this.breadcrumbs = segments.map(s => this.capitalize(s));
     this.pageTitle = this.getPageTitle(url);
+    this.pageSubtitle = this.getPageSubtitle(url);
   }
 
   private getPageTitle(url: string): string {
@@ -37,6 +39,15 @@ private router = inject(Router);
     if (url.includes('/orders')) return 'Orders Management';
     if (url.includes('/customers')) return 'Customers Management';
     if (url.includes('/categories')) return 'Categories Management';
+    return 'Admin Panel';
+  }
+
+    private getPageSubtitle(url: string): string {
+    if (url.includes('/dashboard')) return '';
+    if (url.includes('/products')) return 'Manage your audio equipment catalog';
+    if (url.includes('/orders')) return 'Track and manage customer orders';
+    if (url.includes('/customers')) return '';
+    if (url.includes('/categories')) return '';
     return 'Admin Panel';
   }
 

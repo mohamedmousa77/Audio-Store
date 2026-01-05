@@ -1,0 +1,124 @@
+<div class="product-edit-container">
+  <div class="form-page-header">
+    <div class="header-left">
+      <h2 class="form-title">{{ productData.id ? 'Edit Product' : 'Create Product' }}</h2>
+      <p class="form-subtitle">Add a new item to your catalog. Fill in the details below.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      <button class="btn btn-primary" (click)="onSave()">Save Product</button>
+    </div>
+  </div>
+
+  <div class="form-grid-layout">
+        <div class="form-column-main">
+                      <div class="form-column-main">
+            <div class="form-card">
+              <h3>General Information</h3>
+              <div class="form-group">
+                <label>Product Name *</label>
+                <input type="text" [(ngModel)]="productData!.name" placeholder="e.g. Sony WH-1000XM5">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Brand</label>
+                  <input type="text" [(ngModel)]="productData!.brand" placeholder="e.g. Sony">
+                </div>
+                <div class="form-group">
+                  <label>Model Number / SKU</label>
+                  <input type="text" [(ngModel)]="productData!.sku" placeholder="e.g. SNY-XM5-BLK">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Description</label>
+                <textarea rows="6" [(ngModel)]="productData!.description" placeholder="Describe the product features..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <h3>Technical Specifications</h3>
+              <div class="form-group">
+                <label>Key Specs</label>
+                <textarea rows="4" [(ngModel)]="productData!.specs" placeholder="Battery Life: 30 hours..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <h3>Pricing & Inventory</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Base Price *</label>
+                  <input type="number" [(ngModel)]="productData!.price" placeholder="$ 0.00">
+                </div>
+                <div class="form-group">
+                  <label>Discount Price</label>
+                  <input type="number" [(ngModel)]="productData!.price" placeholder="$ 0.00">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Stock Quantity *</label>
+                  <input type="number" [(ngModel)]="productData!.stock">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-column-side">
+            <div class="form-card">
+              <h3>Organization</h3>
+              <div class="form-group">
+                <label>Category *</label>
+                <select [(ngModel)]="productData!.category">
+                  <option value="">Select category</option>
+                  <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <h3>Product Media</h3>
+              <label>Main Image</label>
+              <div class="upload-area">
+                <span class="material-icons">cloud_upload</span>
+                <p>Click to upload or drag & drop</p>
+              </div>
+              <label class="mt-1">Gallery (Max 3)</label>
+              <div class="gallery-upload">
+                <div class="gallery-slot add-slot"><span class="material-icons">add</span></div>
+                <div class="gallery-slot" *ngIf="productData!.image">
+                    <img [src]="productData!.image">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <h3>Visibility</h3>
+              <div class="toggle-group">
+                <div class="toggle-item">
+                  <div class="toggle-text">
+                    <p class="toggle-label">Publish</p>
+                    <p class="toggle-desc">Visible on store</p>
+                  </div>
+                  <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-text">
+                    <p class="toggle-label">New Arrival</p>
+                    <p class="toggle-desc">Mark as 'New'</p>
+                  </div>
+                  <label class="switch"><input type="checkbox" [(ngModel)]="productData!.isNew"><span class="slider round"></span></label>
+                </div>
+                <div class="toggle-item">
+                  <div class="toggle-text">
+                    <p class="toggle-label">Featured</p>
+                    <p class="toggle-desc">Show on homepage</p>
+                  </div>
+                  <label class="switch"><input type="checkbox" [(ngModel)]="productData!.isFeatured"><span class="slider round"></span></label>
+                </div>
+              </div>
+            </div>
+        </div>
+  </div>
+</div>
