@@ -1,0 +1,145 @@
+/* Container principale */
+.top-selling-card {
+  width: 100%;
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid #e8ddce;
+  margin-top: 1.5rem;
+  overflow: hidden;
+}
+
+/* Header Tabella: Titolo a sinistra, Conteggio a destra */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid #e8ddce; /* Match esatto con cx-table */
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1c160d;
+    margin: 0;
+  }
+
+  .results-count {
+    color: #9c7a49;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+      .view-all-link {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #f49d25;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.3s;
+
+      .material-icons {
+        font-size: 1.125rem;
+        transition: transform 0.3s;
+      }
+
+      &:hover {
+        color: #d68310;
+
+        .material-icons {
+          transform: translateX(4px);
+        }
+      }
+    }
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.model-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Configurazione Header Beige/Marrone */
+.model-table thead tr {
+  background-color: #f8f7f5; /* Sfondo beige esatto */
+  border-bottom: 2px solid #e8ddce;
+}
+
+.model-table th {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9c7a49; /* Colore marrone intestazione */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Celle e Righe */
+.model-table td {
+  padding: 1.25rem 1.5rem;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #f2eee9;
+  vertical-align: middle;
+}
+
+.product-row:hover {
+  background-color: #fdfaf5; /* Effetto hover cx-page */
+}
+
+/* Immagine Prodotto */
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-image {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  border: 1px solid #e8ddce;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-weight: 700;
+  color: #1a1510;
+}
+
+.product-brand {
+  font-size: 0.75rem;
+  color: #9c7a49;
+}
+
+.text-secondary {
+  color: #9c7a49;
+}
+
+.product-price {
+  font-weight: 700;
+  color: #1c160d;
+}
+
+/* Badge Stock Status sincronizzati con cx-style */
+.stock-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.stock-badge.in-stock { background: #e8f5e9; color: #2e7d32; }
+.stock-badge.low-stock { background: #fff8e1; color: #f57f17; }
+.stock-badge.out-of-stock { background: #fee2e2; color: #dc2626; }

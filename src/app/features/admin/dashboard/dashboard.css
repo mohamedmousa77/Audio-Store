@@ -6,7 +6,7 @@
 
 .main-content {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 240px;
   padding-top: 80px;
 }
 
@@ -18,15 +18,18 @@
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 0.5fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .dashboard-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
+  gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 1200px) {
     grid-template-columns: 1fr;
@@ -34,6 +37,8 @@
 }
 
 .dashboard-card {
+  min-width: 0; 
+  overflow: hidden;
   background: white;
   border-radius: 1rem;
   padding: 1.5rem;

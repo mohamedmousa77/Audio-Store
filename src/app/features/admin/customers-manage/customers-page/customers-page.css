@@ -245,19 +245,6 @@
   }
 }
 
-/* .customers-table th {
-  text-align: left;
-  padding: 1rem 1.5rem;
-  font-size: 0.75rem;
-  color: #9c7a49;
-  border-bottom: 1px solid #f8f7f5;
-}
-
-.customers-table td {
-  padding: 1.2rem 1.5rem;
-  border-bottom: 1px solid #f8f7f5;
-} */
-
 .customer-row {
   cursor: pointer;
   transition: all 0.2s ease;

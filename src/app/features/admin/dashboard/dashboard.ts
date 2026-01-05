@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminSidebar } from '../layout/admin-sidebar/admin-sidebar';
-import { AdminHeader } from '../layout/header/header';
+import { AdminHeader } from '../layout/admin-header/header';
 
 import { DashboardStats } from '../../../core/models/DashboardStats';
-import { Order } from '../../../core/models/order';
+
 
 import { StatCard } from '../components/stat-card/stat-card';
-import { adminGuard } from '../../../core/guards/admin-guard';
-import { RecentOrders } from '../components/recent-orders/recent-orders';
-import { CategoryStats } from '../components/category-stats/category-stats';
+import { RecentOrders } from '../orders-manage/recent-orders/recent-orders';
+import { CategoryStats } from '../categories-manage/category-stats/category-stats';
+import { TopProductsDashboardManage } from '../../admin/products-manage/top-products-dashboard/products-manage';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -18,8 +18,8 @@ import { CategoryStats } from '../components/category-stats/category-stats';
     AdminHeader,
     StatCard,
     RecentOrders,
-    CategoryStats
-
+    CategoryStats,
+    TopProductsDashboardManage
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
@@ -32,7 +32,7 @@ export class DashboardPageComponent implements OnInit {
       value: '$48,250', 
       trend: '+12.5%', 
       icon: 'payments', 
-      color: 'green' 
+      color: 'green'      
     },
     { 
       label: 'Total Orders', 
@@ -47,60 +47,64 @@ export class DashboardPageComponent implements OnInit {
       trend: '0.0%', 
       icon: 'group', 
       color: 'orange' 
-    },
-    { 
-      label: 'Pending Reviews', 
-      value: '14', 
-      trend: '+3 New', 
-      icon: 'reviews', 
-      color: 'purple' 
     }
   ];
 
-  recentOrders: Order[] = [
-    { 
-      id: '#ORD-7752', 
-      date: 'Oct 24, 2023',
-      customerName: 'Alex Morgan', 
-      customerEmail: 'alex.m@example.com',
-      total: '$478.95', 
-      status: 'Shipped',
-      time: '2 mins ago' 
-    },
-    { 
-      id: '#ORD-7751', 
-      date: 'Oct 23, 2023',
-      customerName: 'Sarah Jenkins', 
-      customerEmail: 's.jenkins@test.com',
-      total: '$129.99', 
-      status: 'Delivered',
-      time: '1 hour ago' 
-    },
-    { 
-      id: '#ORD-7750', 
-      date: 'Oct 23, 2023',
-      customerName: 'Michael Chen', 
-      customerEmail: 'mchen88@gmail.com',
-      total: '$1,299.00', 
-      status: 'Processing',
-      time: '3 hours ago' 
-    },
-    { 
-      id: '#ORD-7749', 
-      date: 'Oct 22, 2023',
-      customerName: 'Emily Miller', 
-      customerEmail: 'emily.m@studio.com',
-      total: '$59.95', 
-      status: 'Delivered',
-      time: '5 hours ago' 
-    }
+  ordersStatusData = [
+    { label: 'Delivered', percentage: 65, count: 810, color: '#10b981' },
+    { label: 'Shipped', percentage: 20, count: 250, color: '#3b82f6' },
+    { label: 'Pending', percentage: 10, count: 125, color: '#f49d25' },
+    { label: 'Returned', percentage: 5, count: 60, color: '#ef4444' }
   ];
 
   categoryStats = [
     { name: 'Headphones', value: 435, percentage: 35, color: '#f49d25' },
-    { name: 'Speakers', value: 298, percentage: 24, color: '#3b82f6' },
+    { name: 'Speakers', value: 298, percentage: 50, color: '#3b82f6' },
     { name: 'Microphones', value: 186, percentage: 15, color: '#10b981' },
-    { name: 'Accessories', value: 326, percentage: 26, color: '#8b5cf6' }
+  ];
+
+  topProducts = [
+    { 
+      name: 'Sony WH-1000XM5', 
+      category: 'Headphones', 
+      stockStatus: 'In Stock', 
+      price: '$349.00', 
+      sales: 124, 
+      icon: 'headphones',
+      brand: 'Apple',
+      image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop'
+
+    },
+    { 
+      name: 'Yeti Blue Mic', 
+      category: 'Microphones', 
+      stockStatus: 'Low Stock', 
+      price: '$129.99', 
+      sales: 89, 
+      icon: 'mic',
+      brand: 'KRK Systems',
+      image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&h=400&fit=crop'
+    },
+    { 
+      name: 'JBL Flip 6', 
+      category: 'Speakers', 
+      stockStatus: 'In Stock', 
+      price: '$99.95', 
+      sales: 76, 
+      icon: 'speaker',
+      brand: 'Logitech',
+      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&h=400&fit=crop'
+    },
+    { 
+      name: 'AirPods Pro 2', 
+      category: 'Headphones', 
+      stockStatus: 'Out of Stock', 
+      price: '$249.00', 
+      sales: 54, 
+      icon: 'headphones' ,
+      brand: 'Sony',
+      image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=400&fit=crop'
+    }
   ];
 
   ngOnInit(): void {

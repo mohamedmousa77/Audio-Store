@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
-import { AdminHeader } from '../../layout/header/header';
+import { AdminHeader } from '../../layout/admin-header/header';
 import { Customer } from '../../../../core/models/user';
 @Component({
   selector: 'app-customers-page',

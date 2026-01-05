@@ -1,18 +1,19 @@
 <div class="stat-card" [ngClass]="colorClass">
-  <div class="stat-icon">
-    <span class="material-icons">{{ stat.icon }}</span>
+  <div class="header-row">
+    <div class="stat-icon">
+      <span class="material-icons">{{ stat.icon }}</span>
+    </div>
+    
+    <div class="stat-trend" [ngClass]="{'positive': isPositiveTrend, 'negative': !isPositiveTrend}">
+      <span class="trend-text">{{ stat.trend }}</span>
+      <span class="material-icons trend-icon">
+        {{ isPositiveTrend ? 'trending_up' : 'trending_flat' }}
+      </span>
+    </div>
   </div>
   
   <div class="stat-content">
     <p class="stat-label">{{ stat.label }}</p>
     <h3 class="stat-value">{{ stat.value }}</h3>
-    
-    <div class="stat-trend" [ngClass]="{'positive': isPositiveTrend, 'negative': !isPositiveTrend}">
-      <span class="material-icons trend-icon">
-        {{ isPositiveTrend ? 'trending_up' : 'trending_flat' }}
-      </span>
-      <span class="trend-text">{{ stat.trend }}</span>
-      <span class="trend-period">vs last month</span>
-    </div>
   </div>
 </div>

@@ -1,0 +1,46 @@
+<div class="category-stats">
+  <div class="chart-container">
+    <svg viewBox="0 0 200 200" class="donut-chart">
+      <circle
+        *ngFor="let category of categories; let i = index"
+        cx="100"
+        cy="100"
+        r="70"
+        fill="none"
+        [attr.stroke]="category.color"
+        stroke-width="28"
+        [attr.stroke-dasharray]="getDashArray(category.percentage)"
+        [attr.stroke-dashoffset]="getStrokeDashOffset(i)"
+        class="chart-segment"
+        [class.active]="hoveredCategory?.name === category.name"
+        (mouseenter)="onHover(category)"
+        (mouseleave)="onLeave()"
+      />
+      
+      <g class="chart-center-text">
+        <text x="100" y="92" text-anchor="middle" class="chart-label">
+          {{ hoveredCategory ? hoveredCategory.name : 'Total Sales' }}
+        </text>
+        <text x="100" y="118" text-anchor="middle" class="chart-value">
+          {{ hoveredCategory ? hoveredCategory.percentage + '%' : getTotalSales() }}
+        </text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="stats-legend">
+    <div 
+      *ngFor="let category of categories" 
+      class="legend-item"
+      [class.active]="hoveredCategory?.name === category.name"
+      (mouseenter)="onHover(category)"
+      (mouseleave)="onLeave()"
+    >
+      <div class="legend-left">
+        <div class="legend-marker" [style.background]="category.color"></div>
+        <span class="legend-name">{{ category.name }}</span>
+      </div>
+      <span class="legend-value">{{ category.value }} units</span>
+    </div>
+  </div>
+</div>

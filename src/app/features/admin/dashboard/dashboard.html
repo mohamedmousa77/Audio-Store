@@ -12,22 +12,20 @@
           [stat]="stat"
         />
       </div>
-
-      <!-- Charts and Tables Row -->
+      <!-- Dashboard Grid -->
       <div class="dashboard-grid">
-        <!-- Recent Orders -->
-        <div class="dashboard-card orders-card">
+        <!-- Orders by Status Section -->
+        <div class="dashboard-card status-card-wrapper">
           <div class="card-header">
-            <h2 class="card-title">Recent Orders</h2>
+            <h2 class="card-title">Orders by Status</h2>
             <a href="#" class="view-all-link">
-              View All
+              View Report
               <span class="material-icons">arrow_forward</span>
             </a>
           </div>
-          <app-recent-orders [orders]="recentOrders" />
+          <app-recent-orders [orders]="ordersStatusData" />
         </div>
-
-        <!-- Category Statistics -->
+        <!-- Sales by Category Section -->
         <div class="dashboard-card stats-card">
           <div class="card-header">
             <h2 class="card-title">Sales by Category</h2>
@@ -35,6 +33,8 @@
           <app-category-stats [categories]="categoryStats" />
         </div>
       </div>
+      <!-- Top Selling Products Section -->
+      <top-products-dashboard-manage [products]="topProducts" />
     </div>
   </div>
 </div>

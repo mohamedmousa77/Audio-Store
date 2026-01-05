@@ -1,0 +1,17 @@
+<div class="status-container">
+  <div *ngFor="let item of orders" class="status-item">
+    <div class="status-header">
+      <span class="status-label">{{ item.label }}</span>
+      <span class="status-value">
+        <strong>{{ item.percentage }}%</strong> ({{ item.count }})
+      </span>
+    </div>
+    <div class="progress-bar-bg">
+      <div 
+        class="progress-bar-fill" 
+        [style.width.%]="item.percentage"
+        [style.background-color]="item.color">
+      </div>
+    </div>
+  </div>
+</div>

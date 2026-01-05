@@ -3,100 +3,94 @@
   border-radius: 1rem;
   padding: 1.5rem;
   display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  flex-direction: column;
+  gap: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e8ddce;
+  border: 1px solid #f0f0f0;
   transition: all 0.3s;
-  cursor: pointer;
+  position: relative;
+  min-width: 240px;
+}
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .stat-icon {
-  width: 70px;
-  height: 70px;
-  border-radius: 1rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
 
-  .material-icons {
-    font-size: 2rem;
-    color: white;
-  }
+.stat-icon .material-icons {
+  font-size: 1.5rem;
 }
 
 .stat-content {
-  flex: 1;
-
   .stat-label {
     font-size: 0.875rem;
     color: #9c7a49;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
     font-weight: 500;
   }
 
   .stat-value {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #1c160d;
-    margin: 0 0 0.5rem 0;
-    line-height: 1;
-  }
-
-  .stat-trend {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-
-    .trend-icon {
-      font-size: 1rem;
-    }
-
-    .trend-period {
-      color: #9c7a49;
-      font-weight: 400;
-      margin-left: 0.25rem;
-    }
-
-    &.positive {
-      color: #10b981;
-
-      .trend-icon {
-        color: #10b981;
-      }
-    }
-
-    &.negative {
-      color: #6b7280;
-
-      .trend-icon {
-        color: #6b7280;
-      }
-    }
+    margin: 0;
+    line-height: 1.2;
   }
 }
 
-/* Color Variants */
+.stat-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  .trend-icon {
+    font-size: 1rem;
+  }
+
+  &.positive {
+    background-color: #ecfdf5;
+    color: #10b981;
+  }
+
+  &.negative {
+    background-color: #f3f4f6;
+    color: #6b7280;
+  }
+}
+
+/* Color Variants for Icons */
 .stat-green .stat-icon {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background-color: #f0fdf4;
+  color: #10b981;
 }
 
 .stat-blue .stat-icon {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background-color: #eff6ff;
+  color: #3b82f6;
 }
 
 .stat-orange .stat-icon {
-  background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+  background-color: #fffaf0;
+  color: #f49d25;
 }
 
 .stat-purple .stat-icon {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background-color: #f5f3ff;
+  color: #8b5cf6;
 }
