@@ -20,8 +20,8 @@
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 30px;
+  height: 30px;
   border-radius: 0.75rem;
   display: flex;
   align-items: center;
@@ -30,10 +30,15 @@
 }
 
 .stat-icon .material-icons {
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .stat-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  
   .stat-label {
     font-size: 0.875rem;
     color: #9c7a49;
@@ -42,7 +47,7 @@
   }
 
   .stat-value {
-    font-size: 1.75rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #1c160d;
     margin: 0;

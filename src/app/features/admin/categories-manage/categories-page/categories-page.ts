@@ -13,8 +13,7 @@ import { Category } from '../../../../core/models/category';
     CommonModule, 
     FormsModule, 
     AdminSidebar, 
-    AdminHeader,
-    // Badge
+    AdminHeader
   ],
   templateUrl: './categories-page.html',
   styleUrl: './categories-page.css',
@@ -85,7 +84,7 @@ categories: Category[] = [
   searchTerm = '';
   sortBy: 'name' | 'products' = 'name';
   sortOrder: 'asc' | 'desc' = 'asc';
-  viewMode: 'grid' | 'table' = 'grid';
+  viewMode: 'grid' | 'table' = 'table';
   showCategoryModal = false;
   editingCategory: Category | null = null;
 
