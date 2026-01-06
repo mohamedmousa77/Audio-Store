@@ -44,11 +44,11 @@ private router = inject(Router);
   }
 
     private getPageSubtitle(url: string): string {
-    if (url.includes('/dashboard')) return '';
+    if (url.includes('/dashboard')) return 'Monitor your store performance and key business metrics';
     if (url.includes('/products')) return 'Manage your audio equipment catalog';
     if (url.includes('/orders')) return 'Track and manage customer orders';
-    if (url.includes('/customers')) return '';
-    if (url.includes('/categories')) return '';
+    if (url.includes('/customers')) return 'Manage your customer base and track their engagement';
+    if (url.includes('/categories')) return 'Organize and structure your product inventory groups';
     return 'Admin Panel';
   }
 

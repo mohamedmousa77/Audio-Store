@@ -10,7 +10,7 @@
 
 .main-content {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 240px;
   padding-top: 80px;
 }
 
@@ -523,6 +523,16 @@
   scroll-margin-bottom: 2rem;
 }
 
+.form-header{
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.detail-title { font-size: 1.75rem; color: #1c160d; margin: 0; }
+.detail-title span { color: #f49d25; }
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -562,4 +572,15 @@
 .preview-box .material-icons {
   font-size: 4rem;
   color: #f49d25;
+}
+
+.header-actions{
+  display: flex;
+  gap: 1rem;
+}
+
+.form-actions{
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }

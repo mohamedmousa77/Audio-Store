@@ -187,9 +187,14 @@ export class CustomersPage implements OnInit {
       ]
     }
   ];
-
-
+  
   filteredCustomers: any[] = [];
+  
+  selectedRegistrationSort = 'newest';
+  selectedOrdersRange = 'all';
+  selectedLastOrderFilter = 'any';
+
+  
   searchTerm = '';
   selectedSort = 'recent';
   showDetailModal = false;
@@ -231,11 +236,50 @@ export class CustomersPage implements OnInit {
 
 
   applyFilters(): void {
-    this.filteredCustomers = this.customersList.filter(customer => {
-      return customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-             customer.email.toLowerCase().includes(this.searchTerm.toLowerCase());
+    // this.filteredCustomers = this.customersList.filter(customer => {
+    //   return customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+    //          customer.email.toLowerCase().includes(this.searchTerm.toLowerCase());
+    // });
+    // this.applySort();
+
+    this.filteredCustomers = this.customersList.filter(customer => 
+    {
+      // 1. Filtro Ricerca (Search Bar)
+      const matchesSearch = 
+        customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        customer.email.toLowerCase().includes(this.searchTerm.toLowerCase());
+
+      // 2. Filtro Range Ordini (Total Orders)
+      let matchesOrders = true;
+      if (this.selectedOrdersRange === 'none') matchesOrders = customer.totalOrders === 0;
+      else if (this.selectedOrdersRange === '1-10') matchesOrders = customer.totalOrders >= 1 && customer.totalOrders <= 10;
+      else if (this.selectedOrdersRange === '10+') matchesOrders = customer.totalOrders > 10;
+
+      // 3. Filtro Ultimo Ordine (Last Order)
+      let matchesLastOrder = true;
+      const now = new Date();
+      const lastOrderDate = new Date(customer.lastOrderDate);
+      if (this.selectedLastOrderFilter === 'recent') {
+        const thirtyDaysAgo = new Date().setDate(now.getDate() - 30);
+        matchesLastOrder = lastOrderDate.getTime() >= thirtyDaysAgo;
+      } else if (this.selectedLastOrderFilter === 'inactive') {
+        const sixMonthsAgo = new Date().setMonth(now.getMonth() - 6);
+        matchesLastOrder = lastOrderDate.getTime() < sixMonthsAgo || !customer.lastOrderDate;
+      }
+
+      return matchesSearch && matchesOrders && matchesLastOrder;
     });
-    this.applySort();
+
+  // 4. Ordinamento per Data Registrazione
+  this.applyRegistrationSort();
+}
+
+  applyRegistrationSort(): void {
+    if (this.selectedRegistrationSort === 'newest') {
+      this.filteredCustomers.sort((a, b) => new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime());
+    } else {
+      this.filteredCustomers.sort((a, b) => new Date(a.registrationDate).getTime() - new Date(b.registrationDate).getTime());
+    }
   }
 
   applySort(): void {

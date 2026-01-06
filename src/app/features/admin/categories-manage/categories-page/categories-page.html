@@ -185,8 +185,16 @@
 
       <div id="category-form-section" class="form-section-card" *ngIf="isFormOpen">
         <div class="form-header">
-          <h2>{{ editingCategory?.id ? 'Edit' : 'Add New' }} Category</h2>
-          <button class="close-btn" (click)="closeForm()"><span class="material-icons">close</span></button>
+          <div class="header-info">
+            <h2 class="detail-title">{{ editingCategory?.id ? 'Edit Category: ' : 'Add New Category' }} 
+              <span>{{ editingCategory?.id ? editingCategory?.name : '' }} </span>
+            </h2>
+          </div>
+          <div class="header-actions">            
+            <button 
+              class="btn btn-secondary" (click)="closeForm()">
+              <span class="material-icons">close</span>Cancel</button>
+          </div>
         </div>
         
         <div class="form-grid">

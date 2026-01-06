@@ -7,8 +7,9 @@
 
 .main-content {
   flex: 1;
-  margin-left: 280px; 
+  margin-left: 240px; 
   margin-top: 40px; 
+  min-width: 0;
 }
 
 .content-area {
@@ -101,8 +102,10 @@
 
 .filters-row {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
   align-items: center;
+  /* margin-bottom: 1.25rem; */
+  flex-wrap: nowrap; /* Impedisce che gli elementi vadano a capo */
 
   .search-box {
     flex: 1;
@@ -126,6 +129,7 @@
       font-size: 0.9375rem;
       background: white;
       transition: all 0.3s;
+      margin-right: 3rem;
 
       &:focus {
         outline: none;
@@ -154,11 +158,23 @@
 }
 
 .filter-select {
-  padding: 0.6rem 1rem;
-  border: 1px solid #eeeae5;
-  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e8ddce;
+  border-radius: 0.75rem;
   background: white;
-  font-size: 0.85rem;
+  min-width: 200px;
+  font-weight: 600;
+  color: #1c160d;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #f49d25; /* Colore primario arancione invece di nero */
+  box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.1); /* Effetto alone opzionale */
+}
+.filter-select:hover{
+  border-color: #f49d25;
+  cursor: pointer;
 }
 
 /* Table Section */

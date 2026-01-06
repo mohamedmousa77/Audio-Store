@@ -64,83 +64,100 @@
                 />
             </div>
             <div class="filter-controls">
-            <span class="filter-label">FILTER BY:</span>
-            <select class="filter-select"><option>Registration Date</option></select>
-            <select class="filter-select"><option>Total Orders: All</option></select>
-            <select class="filter-select"><option>Last Order: Any</option></select>
+                <select 
+                class="filter-select" 
+                [(ngModel)]="selectedRegistrationSort" 
+                (change)="applyFilters()"
+                >
+                    <option value="newest">Registration: Newest</option>
+                    <option value="oldest">Registration: Oldest</option>
+                </select>
+
+                <select 
+                class="filter-select" 
+                [(ngModel)]="selectedOrdersRange" 
+                (change)="applyFilters()"
+                >
+                    <option value="all">Total Orders: All</option>
+                    <option value="10+">High Spenders (>10)</option>
+                    <option value="1-10">Regular (1-10)</option>
+                    <option value="none">No Orders (0)</option>
+                </select>
+
+                <select 
+                class="filter-select" 
+                [(ngModel)]="selectedLastOrderFilter" 
+                (change)="applyFilters()"
+                >
+                    <option value="any">Last Order: Any</option>
+                    <option value="recent">Recent (Last 30 days)</option>
+                    <option value="inactive">Inactive (> 6 months)</option>
+                </select>
             </div>
         </div>
         </div>
 
-        <div class="customers-table-container">
-        <div class="table-header">
-            <h3>Customers List</h3>
-            <span class="results-count">{{ filteredCustomers.length }} customers</span>
-            <!-- <button class="btn btn-primary">
-            <span class="material-icons">person_add</span> Add New Customer
-            </button> -->
-        </div>
-        
-        <div class="table-container">
-            <table class="customers-table">
-                <thead>
-                <tr>
-                    <th>CUSTOMER</th>
-                    <th>EMAIL</th>
-                    <th>REGISTRATION</th>
-                    <th>ORDERS</th>
-                    <th>LAST ORDER</th>
-                    <th>ACTIONS</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let customer of filteredCustomers",            
-                (click)="selectCustomer(customer)"
-                [class.active-row]="selectedCustomer?.id === customer.id"
-                class="customer-row">
-                    <td>
-                    <div class="customer-cell">
-                        <div class="avatar">{{ customer.initials }}</div>
-                        <span class="name">{{ customer.name }}</span>
-                    </div>
-                    </td>
-                    <td><span class="email">{{ customer.email }}</span></td>
-                    <td><span class="date">{{ customer.registrationDate }}</span></td>
-                    <td><span class="order-badge">{{ customer.totalOrders }}</span></td>
-                    <td>
-                    <div class="last-order-cell">
-                        <span class="date">{{ customer.lastOrderDate }}</span>
-                        <span class="relative-time" [class.highlight]="customer.lastOrderRelative === 'Just now'">
-                        {{ customer.lastOrderRelative }}
-                        </span>
-                    </div>
-                    </td>
-                    <td>
-                    <div class="actions">
-                        <span class="material-icons view" (click)="$event.stopPropagation(); selectCustomer(customer)">visibility</span>
-                        <span class="material-icons edit" (click)="$event.stopPropagation()">edit</span>
-                    </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="table-footer">
-            <p>Showing 1-{{ filteredCustomers.length }} of {{ customersList.length }} results</p>
-            <div class="pagination">
-            <button class="page-btn" disabled>Previous</button>
-            <button class="page-btn">Next</button>
+        <div class="customers-table-container">        
+            <div class="table-container">
+                <table class="customers-table">
+                    <thead>
+                    <tr>
+                        <th>CUSTOMER</th>
+                        <th>EMAIL</th>
+                        <th>REGISTRATION</th>
+                        <th>ORDERS</th>
+                        <th>LAST ORDER</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let customer of filteredCustomers",            
+                    (click)="selectCustomer(customer)"
+                    [class.active-row]="selectedCustomer?.id === customer.id"
+                    class="customer-row">
+                        <td>
+                        <div class="customer-cell">
+                            <div class="avatar">{{ customer.initials }}</div>
+                            <span class="name">{{ customer.name }}</span>
+                        </div>
+                        </td>
+                        <td><span class="email">{{ customer.email }}</span></td>
+                        <td><span class="date">{{ customer.registrationDate }}</span></td>
+                        <td><span class="order-badge">{{ customer.totalOrders }}</span></td>
+                        <td>
+                        <div class="last-order-cell">
+                            <span class="date">{{ customer.lastOrderDate }}</span>
+                            <span class="relative-time" [class.highlight]="customer.lastOrderRelative === 'Just now'">
+                            {{ customer.lastOrderRelative }}
+                            </span>
+                        </div>
+                        </td>
+                        <td>
+                        <div class="actions">
+                            <span class="material-icons view" (click)="$event.stopPropagation(); selectCustomer(customer)">visibility</span>
+                            <span class="material-icons edit" (click)="$event.stopPropagation()">edit</span>
+                        </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
+            <div class="table-footer">
+                <p>Showing 1-{{ filteredCustomers.length }} of {{ customersList.length }} results</p>
+                <div class="pagination">
+                <button class="page-btn" disabled>Previous</button>
+                <button class="page-btn">Next</button>
+                </div>
+            </div>
         </div>
 
         <div class="detail-section" id="customer-detail-section" *ngIf="selectedCustomer">
             <div class="detail-header">
                 <h2 class="detail-title">Customer Detail: <span>{{ selectedCustomer.name }}</span></h2>
-                <div class="detail-actions">
+                <!-- <div class="detail-actions">
                 <button class="btn btn-outline">Reset Password</button>
                 <button class="btn btn-primary"><span class="material-icons">edit</span> Edit Data</button>
-                </div>
+                </div> -->
             </div>
 
             <div class="detail-grid-container">
