@@ -1,4 +1,4 @@
-export interface Customer {
+export interface User {
     id: string;
     name: string;
     email: string;
@@ -8,4 +8,10 @@ export interface Customer {
     lastOrderDate: string;
     initials?: string;
     color?: string;
+    ruole: 'Customer' | 'Admin';
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
 }

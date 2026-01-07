@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
-import { Customer } from '../../../../core/models/user';
+import { User } from '../../../../core/models/user';
 @Component({
   selector: 'app-customers-page',
   imports: [
@@ -18,7 +18,7 @@ import { Customer } from '../../../../core/models/user';
 })
 export class CustomersPage implements OnInit {
 
-  customers: Customer[] = [
+  customers: User[] = [
       {
         id: '1',
         name: 'Alex Morgan',
@@ -28,7 +28,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 12,
         lastOrderDate: '2024-01-15',
         initials: 'AM',
-        color: '#FF6B6B'
+        color: '#FF6B6B',
+        ruole: 'Customer'      
       },
       {
         id: '2',
@@ -39,7 +40,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 8,
         lastOrderDate: '2024-01-14',
         initials: 'SJ',
-        color: '#4ECDC4'
+        color: '#4ECDC4',
+        ruole: 'Customer'
       },
       {
         id: '3',
@@ -50,7 +52,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 15,
         lastOrderDate: '2024-01-14',
         initials: 'MC',
-        color: '#45B7D1'
+        color: '#45B7D1',
+        ruole: 'Customer'
       },
       {
         id: '4',
@@ -61,7 +64,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 5,
         lastOrderDate: '2024-01-13',
         initials: 'EM',
-        color: '#FFA07A'
+        color: '#FFA07A',
+        ruole: 'Customer'
       },
       {
         id: '5',
@@ -72,7 +76,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 3,
         lastOrderDate: '2024-01-13',
         initials: 'JW',
-        color: '#98D8C8'
+        color: '#98D8C8',
+        ruole: 'Customer'
       },
       {
         id: '6',
@@ -83,7 +88,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 22,
         lastOrderDate: '2024-01-12',
         initials: 'LB',
-        color: '#F7DC6F'
+        color: '#F7DC6F',
+        ruole: 'Customer'
       },
       {
         id: '7',
@@ -94,7 +100,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 9,
         lastOrderDate: '2024-01-10',
         initials: 'DK',
-        color: '#BB8FCE'
+        color: '#BB8FCE',
+        ruole: 'Customer'
       },
       {
         id: '8',
@@ -105,7 +112,8 @@ export class CustomersPage implements OnInit {
         totalOrders: 4,
         lastOrderDate: '2024-01-08',
         initials: 'JT',
-        color: '#85C1E2'
+        color: '#85C1E2',
+        ruole: 'Customer'
       }
   ];
 
@@ -309,7 +317,7 @@ export class CustomersPage implements OnInit {
     this.applySort();
   }
 
-  viewCustomerDetails(customer: Customer): void {
+  viewCustomerDetails(customer: User): void {
     this.selectedCustomer = customer;
     this.showDetailModal = true;
   }
@@ -319,7 +327,7 @@ export class CustomersPage implements OnInit {
     this.selectedCustomer = null;
   }
 
-  deleteCustomer(customer: Customer): void {
+  deleteCustomer(customer: User): void {
     if (confirm(`Are you sure you want to delete customer ${customer.name}?`)) {
       this.customersList = this.customersList.filter(c => c.id !== customer.id);
       this.applyFilters();

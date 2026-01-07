@@ -4,14 +4,15 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withHashLocation } from '@angular/router';
 
 import { routes } from './app.routes';
-import { jwtInterceptor } from './core/interceptors/jwt-interceptor';
+
 import { errorInterceptor } from './core/interceptors/error-interceptor';
+import { authInterceptor } from './core/interceptors/auth-interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withHashLocation()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(
-      withInterceptors([jwtInterceptor, errorInterceptor])
+      withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideAnimations()
   ]
