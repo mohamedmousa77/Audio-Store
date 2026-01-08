@@ -80,20 +80,20 @@ export const routes: Routes = [
         m => m.Homepage
       )
   },
-  // {
-  //   path: 'category/:id',
-  //   loadComponent: () =>
-  //     import('./pages/category-products/category-products-page.component').then(
-  //       m => m.CategoryProductsPageComponent
-  //     )
-  // },
-  // {
-  //   path: 'product/:id',
-  //   loadComponent: () =>
-  //     import('./pages/product-detail/product-detail-page.component').then(
-  //       m => m.ProductDetailPageComponent
-  //     )
-  // },
+  {
+    path: 'category/:id',
+    loadComponent: () =>
+      import('./features/Client/category-products/category-products-page/category-products-page').then(
+        m => m.CategoryProductsPage
+      )
+  },
+  {
+    path: 'product/:id',
+    loadComponent: () =>
+      import('./features/Client/product-details/product-details-page/product-details').then(
+        m => m.ProductDetails
+      )
+  },
   // Wildcard route - 404
   {
     path: '**',
