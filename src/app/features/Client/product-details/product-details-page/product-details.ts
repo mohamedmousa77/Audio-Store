@@ -1,13 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router  } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
-import { ProductCard } from '../../homepage/components/product-card/product-card';
-import { Badge } from '../../../../shared/components/badge/badge';
+import { ProductCard } from '../../layout/product-card/product-card';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { Product } from '../../../../core/models/product';
+import { CartServices } from '../../../../core/services/cart/cart-services';
 
 @Component({
   selector: 'app-product-detail',
@@ -23,8 +23,16 @@ import { Product } from '../../../../core/models/product';
   styleUrl: './product-details.css',
 })
 export class ProductDetails implements OnInit {
-  private productService = inject(ProductServices);
-  private route = inject(ActivatedRoute);
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductServices,
+    private cartService: CartServices
+  ) {}
+
+  // private productService = inject(ProductServices);
+  // private cartService = inject(CartServices);
+  // private route = inject(ActivatedRoute);
 
   product: Product | null = null;
   relatedProducts: Product[] = [];
@@ -33,6 +41,10 @@ export class ProductDetails implements OnInit {
   isWishlisted = false;
   loading = false;
   selectedImageIndex = 0;
+
+  notificationMessage: string = '';
+  showNotification: boolean = false;
+  addedToCart: boolean = false;
 
   productImages: string[] = [];
 
@@ -107,6 +119,38 @@ export class ProductDetails implements OnInit {
   addToCart(): void {
     console.log(`Added ${this.quantity} of ${this.product?.name} to cart`);
     // Implementazione aggiunta al carrello
+     if (!this.product) return;
+
+    this.cartService.addToCart(this.product, this.quantity);
+    this.addedToCart = true;
+    this.showNotification = true;
+    this.notificationMessage = `${this.product.name} added to cart!`;
+
+    // Reset notification after 3 seconds
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 3000);
+
+    // Reset button after 2 seconds
+    setTimeout(() => {
+      this.addedToCart = false;
+    }, 2000);
+  }
+
+  buyNow(): void {
+    this.addToCart();
+    setTimeout(() => {
+      this.router.navigate(['/client/cart']);
+    }, 500);
+  }
+
+  goToRelatedProduct(productId: string): void {
+    this.router.navigate(['/client/product', productId]);
+    window.scrollTo(0, 0);
+  }
+
+   goToCategory(): void {
+    this.router.navigate(['/client/category', this.product?.category]);
   }
 
   selectImage(index: number): void {

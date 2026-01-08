@@ -1,1 +1,208 @@
-<p>cart-page works!</p>
+<!-- 
+<div class="cart-container">
+  <div class="cart-header">
+    <h1>Shopping Cart</h1>
+    <p class="cart-info">{{ cart.totalItems }} items in cart</p>
+  </div>
+
+  <div class="cart-content">
+    Empty Cart Message
+    <div *ngIf="cart.items.length === 0" class="empty-cart">
+      <div class="empty-cart-icon">🛒</div>
+      <h2>Your cart is empty</h2>
+      <p>Add some products to get started</p>
+      <button class="btn-continue" (click)="continueShopping()">
+        Continue Shopping
+      </button>
+    </div>
+
+    Cart Items
+    <div *ngIf="cart.items.length > 0" class="cart-items-section">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cart.items" class="cart-item">
+            <td class="product-info">
+              <img [src]="item.image" [alt]="item.name" class="product-image">
+              <div class="product-details">
+                <h3>{{ item.name }}</h3>
+                <p class="category">{{ item.category }}</p>
+              </div>
+            </td>
+            <td class="price">€ {{ item.price.toFixed(2) }}</td>
+            <td class="quantity">
+              <div class="quantity-selector">
+                <button (click)="updateQuantity(item.id, item.quantity - 1)" class="qty-btn">−</button>
+                <input type="number" [(ngModel)]="item.quantity" 
+                       (change)="updateQuantity(item.id, item.quantity)" 
+                       min="1" class="qty-input">
+                <button (click)="updateQuantity(item.id, item.quantity + 1)" class="qty-btn">+</button>
+              </div>
+            </td>
+            <td class="total">€ {{ (item.price * item.quantity).toFixed(2) }}</td>
+            <td class="action">
+              <button class="btn-remove" (click)="removeItem(item.id)">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      Cart Summary
+      <div class="cart-summary">
+        <div class="summary-item">
+          <span>Subtotal:</span>
+          <span>€ {{ cart.totalPrice.toFixed(2) }}</span>
+        </div>
+        <div class="summary-item">
+          <span>Shipping:</span>
+          <span>€ 5.99</span>
+        </div>
+        <div class="summary-item">
+          <span>Tax (10%):</span>
+          <span>€ {{ (cart.totalPrice * 0.10).toFixed(2) }}</span>
+        </div>
+        <div class="summary-item total">
+          <span>Total:</span>
+          <span>€ {{ (cart.totalPrice + 5.99 + (cart.totalPrice * 0.10)).toFixed(2) }}</span>
+        </div>
+      </div>
+
+      Action Buttons
+      <div class="cart-actions">
+        <button class="btn-continue" (click)="continueShopping()">
+          Continue Shopping
+        </button>
+        <button class="btn-checkout" (click)="proceedToCheckout()">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<app-client-header />
+
+<main class="cart-screen">
+  <div class="cart-container">
+    <header class="cart-title-row">
+        <div class="title-group">
+            <h1 class="page-title">Your Shopping Cart</h1>
+            <span class="items-info">You have {{ cart.totalItems }} items in your cart</span>
+        </div>      
+        <button class="btn-continue-top" (click)="continueShopping()">
+            <span class="material-symbols-outlined">keyboard_backspace</span>
+            Continue Shopping
+        </button>
+        
+    </header>
+
+     <div *ngIf="cart.totalItems === 0" class="empty-cart-wrapper">
+            <div class="empty-state-content">
+                <div class="icon-circle">
+                <span class="material-symbols-outlined">shopping_basket</span>
+                </div>
+                <h2>Your shopping cart is empty</h2>
+                <p>Give it some love by adding premium audio equipment from our catalog.</p>
+                <button class="btn-primary-large" (click)="continueShopping()">
+                <span class="material-symbols-outlined">keyboard_backspace</span>
+                EXPLORE CATALOG
+                </button>
+            </div>
+        </div>
+    
+
+    <div class="cart-grid">
+      <section class="items-section">
+       
+        <table class="cart-table" *ngIf="cart.items.length > 0">
+          <thead>
+            <tr>
+              <th class="col-product">Product</th>
+              <th class="col-qty">Quantity</th>
+              <th class="col-total">Total</th>
+              <th class="col-action"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of cart.items" class="cart-row">
+              <td class="product-cell">
+                <div class="product-info-wrapper">
+                  <img [src]="item.image" [alt]="item.name" class="item-img">
+                  <div class="item-text">
+                    <p class="item-cat">{{ item.category }}</p>
+                    <h3 class="item-name">{{ item.name }}</h3>                    
+                    <p class="item-cat">Unit Price: € {{ item.price.toFixed(2) }}</p>
+                  </div>
+                </div>
+              </td>
+              <!-- <td class="price-cell">€ {{ item.price.toFixed(2) }}</td> -->
+              <td class="qty-cell">
+                <div class="qty-stepper">
+                  <button (click)="updateQuantity(item.id, item.quantity - 1)" 
+                          [disabled]="item.quantity <= 1" class="step-btn">
+                    <span class="material-symbols-outlined">remove</span>
+                  </button>
+                  <span class="qty-val">{{ item.quantity }}</span>
+                  <button (click)="updateQuantity(item.id, item.quantity + 1)" class="step-btn">
+                    <span class="material-symbols-outlined">add</span>
+                  </button>
+                </div>
+              </td>
+              <td class="total-cell">€ {{ (item.price * item.quantity).toFixed(2) }}</td>
+              <td class="action-cell">
+                <button class="remove-link" (click)="removeItem(item.id)">
+                  <span class="material-symbols-outlined">delete_outline</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        
+      </section>
+
+      <aside class="summary-section" *ngIf="cart.items.length > 0">
+        <div class="summary-card">
+          <h2 class="summary-header">Order Summary</h2>
+          
+          <div class="summary-details">
+            <div class="detail-row">
+              <span>Subtotal</span>
+              <span class="price-val">€ {{ cart.totalPrice.toFixed(2) }}</span>
+            </div>
+            <div class="detail-row">
+              <span>Shipping</span>
+              <span class="free-label">FREE</span>
+            </div>
+            <div class="detail-row">
+              <span>Tax (10%)</span>
+              <span class="price-val">€ {{ (cart.totalPrice * 0.10).toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <div class="total-divider"></div>
+
+          <div class="total-row">
+            <span>Estimated Total</span>
+            <span class="final-price">€ {{ (cart.totalPrice + (cart.totalPrice * 0.10)).toFixed(2) }}</span>
+          </div>
+
+          <button (click)="proceedToCheckout()" class="btn-checkout">
+            Proceed to Checkout
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<app-client-footer />

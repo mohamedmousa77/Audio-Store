@@ -1,0 +1,27 @@
+<a [routerLink]="['/client/product', product.id]" class="product-card">
+  
+  <div class="card-image-wrapper">
+    <img [src]="product.image" [alt]="product.name" class="product-img">
+    
+    <div class="card-badges">
+      <span *ngIf="product.isNew" class="badge badge-new">New</span>
+      <span *ngIf="product.isFeatured" class="badge badge-featured">Featured</span>
+      <span *ngIf="product.stock === 0" class="badge badge-out">Out of Stock</span>
+    </div>
+
+    <button class="btn-add-cart" (click)="buyNow()">
+      <span class="material-symbols-outlined">shopping_cart</span>
+    </button>
+  </div>
+
+  <div class="card-info">
+    <div class="text-content">
+      <span class="product-brand">{{ product.brand }}</span>
+      <h3 class="product-name">{{ product.name }}</h3>
+    </div>
+    
+    <div class="card-footer">
+      <span class="product-price">${{ product.price }}</span>
+    </div>
+  </div>
+</a>

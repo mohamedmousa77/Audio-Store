@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
-import { ProductCard } from '../../homepage/components/product-card/product-card';
+import { ProductCard } from '../../layout/product-card/product-card';
 import { ProductServices } from '../../../../core/services/product/product-services';
 
 

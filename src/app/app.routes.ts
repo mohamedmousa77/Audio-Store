@@ -74,25 +74,46 @@ export const routes: Routes = [
   },
   // Client Routes 
   {
-    path: '',
-    loadComponent: () =>
-      import('./features/Client/homepage/home-page/homepage').then(
-        m => m.Homepage
-      )
-  },
-  {
-    path: 'category/:id',
-    loadComponent: () =>
-      import('./features/Client/category-products/category-products-page/category-products-page').then(
-        m => m.CategoryProductsPage
-      )
-  },
-  {
-    path: 'product/:id',
-    loadComponent: () =>
-      import('./features/Client/product-details/product-details-page/product-details').then(
-        m => m.ProductDetails
-      )
+    path: 'client',
+    // canActivate: [authGuard],
+    children: [
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./features/Client/homepage/home-page/homepage')
+          .then(m => m.Homepage)
+      },
+      {
+        path: 'category/:id',
+        loadComponent: () =>
+          import('./features/Client/category-products/category-products-page/category-products-page')
+          .then(m => m.CategoryProductsPage)
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () =>
+          import('./features/Client/product-details/product-details-page/product-details')
+          .then(m => m.ProductDetails)
+      },
+      {
+        path: 'cart',
+        loadComponent: () =>
+          import('./features/Client/cart/cart-page/cart-page')
+          .then( m => m.CartPage)
+      },
+      {
+        path: 'checkout',
+        loadComponent: () => 
+          import('./features/Client/orders/checkout-page/order-page')
+          .then( m => m.OrderPage)  
+      },
+      {
+        path: 'order-confirmation/:id',
+        loadComponent: () => 
+          import('./features/Client/orders/order-confirmation-page/order-confirmation-page')
+          .then( m => m.OrderConfirmationPage)  
+      },
+    ]
   },
   // Wildcard route - 404
   {

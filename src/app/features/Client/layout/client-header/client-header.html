@@ -45,12 +45,12 @@
       </button>
 
       <!-- Cart -->
-      <a routerLink="/cart" class="action-btn cart-btn" title="Shopping Cart">
+      <div (click)="goToCart()" class="action-btn cart-btn" title="Shopping Cart">
         <span class="material-icons">shopping_cart</span>
         <span class="cart-badge" *ngIf="cartItemCount > 0">
           {{ cartItemCount }}
         </span>
-      </a>
+      </div>
 
       <!-- Mobile Menu Toggle -->
       <button

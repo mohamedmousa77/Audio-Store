@@ -135,9 +135,11 @@
           <button 
             class="add-to-cart-btn"
             (click)="addToCart()"
+            [class.added]="addedToCart"
             [disabled]="product.stock === 0"
           >
-            <span class="material-icons">shopping_bag</span>
+            <span class="material-icons">shopping_bag</span>            
+            <span *ngIf="addedToCart">✓ Added to Cart</span>
             Add to Cart
           </button>
 

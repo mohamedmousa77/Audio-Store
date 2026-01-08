@@ -26,8 +26,8 @@ export class HeroBanner {
     description: 'The ZX-900 Noise Cancelling Headphones offer premium audio quality for the true audiophile. Immerse yourself in pure acoustic bliss.',
     primaryButtonText: 'Shop Now',
     secondaryButtonText: 'Learn More',
-    primaryButtonLink: '/category/headphones',
-    secondaryButtonLink: '#featured',
+    primaryButtonLink: '/client/cart',
+    secondaryButtonLink: '/client/product/1',
     backgroundImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000&h=800&fit=crop'
   };
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ProductCard } from '../product-card/product-card';
+import { ProductCard } from '../../../layout/product-card/product-card';
 import { ProductServices } from '../../../../../core/services/product/product-services';
 
 @Component({

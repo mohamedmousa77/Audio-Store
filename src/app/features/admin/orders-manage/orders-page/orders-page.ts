@@ -28,8 +28,9 @@ orders: Order[] = [
       customerName: 'Alex Morgan',
       customerEmail: 'alex.m@example.com',
       total: '$478.95',
-      status: 'Shipped',
-      time: '2 mins ago'
+      status: 'shipped',
+      time: '2 mins ago',
+
     },
     {
       id: '#ORD-7751',
@@ -37,7 +38,7 @@ orders: Order[] = [
       customerName: 'Sarah Jenkins',
       customerEmail: 's.jenkins@test.com',
       total: '$129.99',
-      status: 'Delivered',
+      status: 'delivered',
       time: '1 hour ago'
     },
     {
@@ -46,7 +47,7 @@ orders: Order[] = [
       customerName: 'Michael Chen',
       customerEmail: 'mchen88@gmail.com',
       total: '$1,299.00',
-      status: 'Processing',
+      status: 'pending',
       time: '3 hours ago'
     },
     {
@@ -55,7 +56,7 @@ orders: Order[] = [
       customerName: 'Emily Miller',
       customerEmail: 'emily.m@studio.com',
       total: '$59.95',
-      status: 'Delivered',
+      status: 'delivered',
       time: '5 hours ago'
     },
     {
@@ -64,7 +65,7 @@ orders: Order[] = [
       customerName: 'James Wilson',
       customerEmail: 'james.w@music.com',
       total: '$899.50',
-      status: 'Processing',
+      status: 'pending',
       time: '8 hours ago'
     },
     {
@@ -73,7 +74,7 @@ orders: Order[] = [
       customerName: 'Lisa Brown',
       customerEmail: 'lisa.b@pro.com',
       total: '$249.99',
-      status: 'Canceled',
+      status: 'canceled',
       time: '1 day ago'
     }
   ];
@@ -118,13 +119,13 @@ orders: Order[] = [
   }
   
   getShippedCount(): number {
-    return this.orders.filter(order => order.status === 'Shipped').length;
+    return this.orders.filter(order => order.status === 'shipped').length;
   }
 
   applyFilters(): void {
     this.filteredOrders = this.orders.filter(order => {
       const matchesSearch = order.id.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                           order.customerName.toLowerCase().includes(this.searchTerm.toLowerCase());
+                           order.customerName!.toLowerCase().includes(this.searchTerm.toLowerCase());
       const matchesStatus = !this.selectedStatus || order.status === this.selectedStatus;
       
       return matchesSearch && matchesStatus;

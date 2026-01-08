@@ -4,6 +4,8 @@ import { Router, RouterModule } from '@angular/router';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { AuthServices } from '../../../../core/services/auth/auth-services';
 import { FormsModule } from '@angular/forms';
+import { CartServices } from '../../../../core/services/cart/cart-services';
+import { Cart } from '../../../../core/models/cart';
 
 @Component({
   selector: 'app-client-header',
@@ -12,9 +14,16 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './client-header.css',
 })
 export class ClientHeader {
+  private cartService = inject(CartServices);
   private productService = inject(ProductServices);
   private router = inject(Router);
 
+  cart: Cart = {
+    items: [],
+    totalItems: 0,
+    totalPrice: 0
+  };
+  
   searchTerm = '';
   mobileMenuOpen = false;
   cartItemCount = 2; // Mock
@@ -23,13 +32,25 @@ export class ClientHeader {
   categories = [
     { name: 'Headphones', path: '/category/Headphones' },
     { name: 'Speakers', path: '/category/Speakers' },
-    { name: 'Microphones', path: '/category/Microphones' },
+    // { name: 'Microphones', path: '/category/Microphones' },
     { name: 'Earphones', path: '/category/Earphones' }
   ];
 
   ngOnInit(): void {
     // Load categories
     this.productService.categories();
+    this.cartService.getCart().subscribe(cart => {
+      this.cart = cart;
+    });
+
+  }
+
+  goToCart(): void {
+    this.router.navigate(['/client/cart']);
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/client/home']);
   }
 
   onSearch(): void {
