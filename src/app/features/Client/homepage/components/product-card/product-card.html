@@ -1,0 +1,55 @@
+<a [routerLink]="['/product', product.id]" class="product-card">
+  <!-- Image Container -->
+  <div class="product-image-container">
+    <!-- Badge -->
+    <div class="product-badge-container" *ngIf="product.isFeatured || product.isNew">
+      <span
+        *ngIf="product.isFeatured"
+        class="badge badge-featured"
+      >
+        BEST SELLER
+      </span>
+      <span
+        *ngIf="product.isNew"
+        class="badge badge-new"
+      >
+        NEW
+      </span>
+    </div>
+
+    <!-- Image -->
+    <div class="product-image" [style.backgroundImage]="'url(' + productImageUrl + ')'">
+    </div>
+
+    <!-- Wishlist Button -->
+    <button
+      class="wishlist-btn"
+      [class.wishlisted]="isWishlisted"
+      (click)="toggleWishlist($event)"
+      type="button"
+    >
+      <span class="material-icons">
+        {{ isWishlisted ? 'favorite' : 'favorite_border' }}
+      </span>
+    </button>
+  </div>
+
+  <!-- Product Info -->
+  <div class="product-info">
+    <p class="product-brand">{{ product.brand }}</p>
+    <h3 class="product-name">{{ product.name }}</h3>
+    
+    <div class="product-meta">
+      <p class="product-description" *ngIf="product.description">
+        {{ product.description }}
+      </p>
+    </div>
+
+    <div class="product-footer">
+      <span class="product-price">${{ product.price.toFixed(2) }}</span>
+      <button class="view-btn">
+        View Details
+      </button>
+    </div>
+  </div>
+</a>

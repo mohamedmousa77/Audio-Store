@@ -1,0 +1,28 @@
+<section class="hero-banner">
+  <div class="hero-container">
+    <!-- Content -->
+    <div class="hero-content">
+      <h1 class="hero-title">{{ banner.title }}</h1>
+      <h2 class="hero-subtitle" *ngIf="banner.subtitle">{{ banner.subtitle }}</h2>
+      <p class="hero-description">{{ banner.description }}</p>
+
+      <div class="hero-actions">
+        <a [routerLink]="banner.primaryButtonLink" class="btn btn-primary">
+          <span class="material-icons">shopping_bag</span>
+          {{ banner.primaryButtonText }}
+        </a>
+        <a [routerLink]="banner.secondaryButtonLink" class="btn btn-secondary">
+          {{ banner.secondaryButtonText }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div class="hero-image-container">
+      <div
+        class="hero-image"
+        [style.backgroundImage]="'url(' + banner.backgroundImage + ')'"
+      ></div>
+    </div>
+  </div>
+</section>

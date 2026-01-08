@@ -1,0 +1,122 @@
+<app-client-header />
+
+<main class="category-page">
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <div class="breadcrumbs-container">
+      <a *ngFor="let breadcrumb of breadcrumbs; let last = last" 
+         [routerLink]="breadcrumb.path"
+         class="breadcrumb-link">
+        {{ breadcrumb.label }}
+        <span *ngIf="!last" class="separator">/</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="category-hero">
+    <div class="hero-content">
+      <span class="material-icons hero-icon">{{ categoryName === 'Headphones' ? 'headphones' : 'speaker' }}</span>
+      <h1 class="hero-title">{{ categoryName }}</h1>
+      <p class="hero-subtitle">Explore our collection of premium {{ categoryName | lowercase }}</p>
+    </div>
+  </section>
+
+  <!-- Filters & Products -->
+  <div class="products-section">
+    <div class="products-container">
+      <!-- Sidebar Filters -->
+      <aside class="filters-sidebar">
+        <div class="filters-header">
+          <h3>Filters</h3>
+          <button class="clear-btn" (click)="clearFilters()" *ngIf="searchTerm || sortBy !== 'featured'">
+            <span class="material-icons">clear</span>
+            Clear
+          </button>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-group">
+          <label class="filter-label">Search</label>
+          <div class="search-box">
+            <span class="material-icons">search</span>
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="applyFilters()"
+              placeholder="Search products..."
+              class="search-input"
+            />
+          </div>
+        </div>
+
+        <!-- Sort -->
+        <div class="filter-group">
+          <label class="filter-label">Sort By</label>
+          <select [(ngModel)]="sortBy" (change)="applySort()" class="filter-select">
+            <option value="featured">Featured</option>
+            <option value="newest">Newest</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+          </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group">
+          <label class="filter-label">Price Range</label>
+          <div class="price-inputs">
+            <input
+              type="number"
+              [(ngModel)]="priceRange.min"
+              (input)="applyFilters()"
+              placeholder="Min"
+              class="price-input"
+            />
+            <span class="price-separator">-</span>
+            <input
+              type="number"
+              [(ngModel)]="priceRange.max"
+              (input)="applyFilters()"
+              placeholder="Max"
+              class="price-input"
+            />
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="products-main">
+        <!-- Results Header -->
+        <div class="results-header">
+          <p class="results-count">{{ filteredProducts.length }} products found</p>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="loading">
+          <div class="spinner"></div>
+          <p>Loading products...</p>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" *ngIf="!loading">
+          <app-product-card
+            *ngFor="let product of filteredProducts"
+            [product]="product"
+          />
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!loading && filteredProducts.length === 0">
+          <span class="material-icons">search_off</span>
+          <h3>No products found</h3>
+          <p>Try adjusting your search or filters</p>
+          <button class="btn btn-primary" (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-client-footer />

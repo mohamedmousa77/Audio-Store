@@ -1,0 +1,70 @@
+<header class="sticky top-0 z-50 w-full bg-white border-b border-[#e8ddce] shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      
+      <div class="flex-shrink-0 flex items-center">
+        <a routerLink="/" class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#f49d25] text-4xl">audiotrack</span>
+          <span class="text-2xl font-black tracking-tighter text-[#1c160d]">AUDIO<span class="text-[#f49d25]">STORE</span></span>
+        </a>
+      </div>
+
+      <nav class="hidden md:flex space-x-8">
+        <a routerLink="/" class="text-sm font-bold text-[#1c160d] hover:text-[#f49d25] transition-colors">HOME</a>
+        
+        <div class="relative group">
+          <button class="flex items-center gap-1 text-sm font-bold text-[#1c160d] group-hover:text-[#f49d25] transition-colors uppercase">
+            Categories
+            <span class="material-symbols-outlined text-sm">expand_more</span>
+          </button>
+          
+          <div class="absolute left-0 mt-2 w-48 bg-white border border-[#e8ddce] rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="py-2">
+              <a *ngFor="let cat of categories()" 
+                 [routerLink]="['/category', cat.name]"
+                 class="block px-4 py-2 text-sm text-[#9c7a49] hover:bg-[#f8f7f5] hover:text-[#f49d25]">
+                {{ cat.name }}
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <a routerLink="/catalog" class="text-sm font-bold text-[#1c160d] hover:text-[#f49d25] transition-colors">SHOP</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <button class="p-2 text-[#1c160d] hover:text-[#f49d25] transition-colors">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+        
+        <a routerLink="/cart" class="relative p-2 text-[#1c160d] hover:text-[#f49d25] transition-colors">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <span *ngIf="cartCount() > 0" class="absolute top-0 right-0 bg-[#f49d25] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+            {{ cartCount() }}
+          </span>
+        </a>
+
+        <a [routerLink]="isLoggedIn() ? '/profile' : '/auth/login'" 
+           class="flex items-center gap-2 bg-[#f8f7f5] px-4 py-2 rounded-full border border-[#e8ddce] hover:border-[#f49d25] transition-all">
+          <span class="material-symbols-outlined text-sm">person</span>
+          <span class="hidden sm:inline text-xs font-bold uppercase">{{ isLoggedIn() ? 'Profile' : 'Login' }}</span>
+        </a>
+
+        <button (click)="toggleMobileMenu()" class="md:hidden p-2">
+          <span class="material-symbols-outlined">{{ isMobileMenuOpen() ? 'close' : 'menu' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isMobileMenuOpen()" class="md:hidden bg-white border-t border-[#e8ddce] animate-in slide-in-from-top duration-300">
+    <div class="px-4 pt-2 pb-6 space-y-1">
+      <a routerLink="/" class="block px-3 py-4 text-base font-bold border-b border-[#f8f7f5]">HOME</a>
+      <p class="px-3 py-4 text-xs font-black text-[#9c7a49] uppercase tracking-widest">Categories</p>
+      <a *ngFor="let cat of categories()" 
+         [routerLink]="['/category', cat.name]" 
+         class="block px-6 py-3 text-sm font-medium text-[#1c160d]">{{ cat.name }}</a>
+      <a routerLink="/catalog" class="block px-3 py-4 text-base font-bold border-t border-[#f8f7f5]">SHOP</a>
+    </div>
+  </div>
+</header>

@@ -2,13 +2,17 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 export const routes: Routes = [
-    {
+  // Homepage Route
+  {
     path: '',
-    redirectTo: 'auth/login',
-    pathMatch: 'full'
+    pathMatch: 'full', // Assicura che corrisponda esattamente alla root (/)
+    loadComponent: () =>
+      import('./features/Client/homepage/home-page/homepage').then(
+        m => m.Homepage
+      )
   },
   
-  // Auth Routes (non protette)
+  // Auth Routes
   {
     path: 'auth',
     children: [
@@ -26,7 +30,7 @@ export const routes: Routes = [
     ]
   },
   
-  // Admin Routes (protette da guards)
+  // Admin Routes
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
@@ -68,7 +72,28 @@ export const routes: Routes = [
       }
     ]
   },
-  
+  // Client Routes 
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/Client/homepage/home-page/homepage').then(
+        m => m.Homepage
+      )
+  },
+  // {
+  //   path: 'category/:id',
+  //   loadComponent: () =>
+  //     import('./pages/category-products/category-products-page.component').then(
+  //       m => m.CategoryProductsPageComponent
+  //     )
+  // },
+  // {
+  //   path: 'product/:id',
+  //   loadComponent: () =>
+  //     import('./pages/product-detail/product-detail-page.component').then(
+  //       m => m.ProductDetailPageComponent
+  //     )
+  // },
   // Wildcard route - 404
   {
     path: '**',

@@ -1,0 +1,54 @@
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Main Footer Content -->
+    <div class="footer-content">
+      <!-- Brand Info -->
+      <div class="footer-section brand-section">
+        <div class="brand-header">
+          <span class="material-icons brand-icon">graphic_eq</span>
+          <span class="brand-name">Audio Store</span>
+        </div>
+        <p class="brand-description">
+          Your premier destination for high-fidelity audio equipment. We bring
+          the studio experience to your home with curated premium products.
+        </p>
+        <div class="social-links">
+          <a
+            *ngFor="let social of socialLinks"
+            [href]="social.href"
+            [title]="social.label"
+            class="social-link"
+          >
+            <span class="material-icons">{{ social.icon }}</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer Sections -->
+      <div
+        *ngFor="let section of footerSections"
+        class="footer-section"
+      >
+        <h4 class="section-title">{{ section.title }}</h4>
+        <ul class="section-links">
+          <li *ngFor="let link of section.links">
+            <a [href]="link.href" [routerLink]="link.href.startsWith('/') ? link.href : null">
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {{ currentYear }} Audio Store Inc. All rights reserved.
+      </p>
+      <div class="footer-bottom-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>

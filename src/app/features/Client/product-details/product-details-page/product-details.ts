@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-product-detail',
   imports: [],
-  templateUrl: './product-detail.html',
-  styleUrl: './product-detail.css',
+  templateUrl: './product-details.html',
+  styleUrl: './product-details.css',
 })
-export class ProductDetail {
+export class ProductDetails {
 
 }
