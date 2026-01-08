@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -25,13 +25,19 @@ export class CategoryProductsPage {
   private productService = inject(ProductServices);
   private route = inject(ActivatedRoute);
 
-  categoryName = '';
+  isFiltersOpen = signal(false);
+  
   products: any[] = [];
+  loading = false;
+
+  categoryName = '';
+  categoryDescription = signal('Premium sound quality for your professional studio or home setup.');
+  categoryImage = signal('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1600&q=80');
   filteredProducts: any[] = [];
   searchTerm = '';
   sortBy: 'featured' | 'price-low' | 'price-high' | 'newest' = 'featured';
   priceRange = { min: 0, max: 1000 };
-  loading = false;
+  
 
   breadcrumbs: Array<{ label: string; path: string }> = [
     { label: 'Home', path: '/' }
@@ -91,6 +97,10 @@ export class CategoryProductsPage {
           (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
         );
     }
+  }
+
+  toggleFilters() {
+    this.isFiltersOpen.update(v => !v);
   }
 
   clearFilters(): void {

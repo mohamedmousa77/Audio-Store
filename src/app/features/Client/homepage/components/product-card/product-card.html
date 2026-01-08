@@ -1,7 +1,7 @@
-<a [routerLink]="['/product', product.id]" class="product-card">
-  <!-- Image Container -->
+<!-- <a [routerLink]="['/product', product.id]" class="product-card">
+  
   <div class="product-image-container">
-    <!-- Badge -->
+    
     <div class="product-badge-container" *ngIf="product.isFeatured || product.isNew">
       <span
         *ngIf="product.isFeatured"
@@ -17,11 +17,9 @@
       </span>
     </div>
 
-    <!-- Image -->
     <div class="product-image" [style.backgroundImage]="'url(' + productImageUrl + ')'">
     </div>
 
-    <!-- Wishlist Button -->
     <button
       class="wishlist-btn"
       [class.wishlisted]="isWishlisted"
@@ -34,7 +32,6 @@
     </button>
   </div>
 
-  <!-- Product Info -->
   <div class="product-info">
     <p class="product-brand">{{ product.brand }}</p>
     <h3 class="product-name">{{ product.name }}</h3>
@@ -50,6 +47,33 @@
       <button class="view-btn">
         View Details
       </button>
+    </div>
+  </div>
+</a> -->
+<a [routerLink]="['/product', product.id]" class="product-card">
+  
+  <div class="card-image-wrapper">
+    <img [src]="product.image" [alt]="product.name" class="product-img">
+    
+    <div class="card-badges">
+      <span *ngIf="product.isNew" class="badge badge-new">New</span>
+      <span *ngIf="product.isFeatured" class="badge badge-featured">Featured</span>
+      <span *ngIf="product.stock === 0" class="badge badge-out">Out of Stock</span>
+    </div>
+
+    <button class="btn-add-cart" (click)="$event.stopPropagation();">
+      <span class="material-symbols-outlined">shopping_cart</span>
+    </button>
+  </div>
+
+  <div class="card-info">
+    <div class="text-content">
+      <span class="product-brand">{{ product.brand }}</span>
+      <h3 class="product-name">{{ product.name }}</h3>
+    </div>
+    
+    <div class="card-footer">
+      <span class="product-price">${{ product.price }}</span>
     </div>
   </div>
 </a>

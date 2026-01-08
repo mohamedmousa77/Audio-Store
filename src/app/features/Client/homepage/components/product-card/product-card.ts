@@ -6,7 +6,7 @@ import { Product } from '../../../../../core/models/product';
 
 @Component({
   selector: 'app-product-card',
-  imports: [CommonModule, RouterModule, Badge],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',
 })

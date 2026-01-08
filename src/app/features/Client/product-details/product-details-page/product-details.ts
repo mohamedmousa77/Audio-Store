@@ -31,7 +31,7 @@ export class ProductDetails implements OnInit {
   quantity = 1;
   selectedColor: string = '';
   isWishlisted = false;
-  loading = this.productService.isLoading;
+  loading = false;
   selectedImageIndex = 0;
 
   productImages: string[] = [];
@@ -43,15 +43,23 @@ export class ProductDetails implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const productId = params['id'];
-      this.loadProduct(productId);
+      console.log('Product ID from URL:', productId); 
+      if (productId) {
+        this.loadProduct(productId);
+      }
     });
   }
 
   async loadProduct(id: string): Promise<void> {
-    // this.loading = true;
-    this.productService.loadCatalogData();
-    const allProducts = this.productService.products();
+    this.loading = true;
+    console.log('Loading product with ID:', id);
+    try{
+       this.productService.loadCatalogData();
+      const allProducts = this.productService.products();
+      console.log('All products:', allProducts);
+      
     this.product = allProducts.find(p => p.id === id) || null;
+    console.log('Found product:', this.product);
 
     if (this.product) {
       this.productImages = [
@@ -70,9 +78,14 @@ export class ProductDetails implements OnInit {
       this.relatedProducts = allProducts
         .filter(p => p.category === this.product?.category && p.id !== this.product?.id)
         .slice(0, 4);
+    }else {
+        console.error('Prodotto non trovato con ID:', id);
+      }       
+    } catch (error) {
+      console.error('Errore nel caricamento del prodotto:', error);
+    } finally {
+      this.loading = false;
     }
-
-    // this.loading = false;
   }
 
   toggleWishlist(): void {
