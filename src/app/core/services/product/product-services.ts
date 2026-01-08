@@ -6,6 +6,7 @@ import { CatalogStore } from '../../../features/Client/state/catalog-store';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { CatalogApiService } from '../catalog-api.service';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -60,7 +61,7 @@ constructor(
       // Eseguiamo entrambi i caricamenti in parallelo per velocità
       const [products, categories] = await Promise.all([
         firstValueFrom(this.catalogApi.getProducts()),
-        firstValueFrom(this.catalogApi.getCategories())
+        firstValueFrom(this.catalogApi.getCategories()),
       ]);
       
       this.catalogStore.setProducts(products);

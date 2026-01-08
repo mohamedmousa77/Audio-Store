@@ -4,6 +4,7 @@ import { Observable, of, delay } from 'rxjs';
 import { BaseApiServices } from './api/api-services';
 import { Product } from '../models/product';
 import { Category } from '../models/category';
+import { Order } from '../models/order';
 
 @Injectable({
   providedIn: 'root'
@@ -157,6 +158,340 @@ export class CatalogApiService extends BaseApiServices {
     ];
   }
 
+private getMockOrders(): Order[] {
+  return  [
+  {
+    id: 'ORD-001-2024',
+    orderNumber: '#100001',
+    customerName: 'Giovanni Rossi',
+    customerEmail: 'giovanni.rossi@email.com',
+    date: new Date('2024-01-15'),
+    time: '14:30',
+    status: 'delivered',
+    trackingNumber: 'IT123456789ABC',
+    estimatedDelivery: new Date('2024-01-22'),
+    shippingAddress: {
+      firstName: 'Giovanni',
+      lastName: 'Rossi',
+      email: 'giovanni.rossi@email.com',
+      phone: '+39 348 1234567',
+      address: 'Via Roma 123, Appartamento 5',
+      city: 'Rome',
+      zipCode: '00100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Giovanni Rossi',
+      cardNumber: '****1234',
+      expiryDate: '12/25',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Giovanni',
+        lastName: 'Rossi',
+        email: 'giovanni.rossi@email.com',
+        phone: '+39 348 1234567',
+        address: 'Via Roma 123, Appartamento 5',
+        city: 'Rome',
+        zipCode: '00100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-001',
+        productId: 'PROD-001',
+        name: 'Premium Wireless Headphones',
+        price: 299.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Headphones',
+        category: 'Electronics',
+        sku: 'HDN-2024-001'
+      },
+      {
+        id: 'ITEM-002',
+        productId: 'PROD-002',
+        name: 'Phone Case - Black',
+        price: 29.99,
+        quantity: 2,
+        image: 'https://via.placeholder.com/100x100?text=Case',
+        category: 'Accessories',
+        sku: 'CASE-2024-BLK'
+      }
+    ],
+    subtotal: 359.97,
+    shipping: 5.99,
+    tax: 36.00,
+    total: 401.96,
+    // notes: 'Delivered on 22/01/2024 at 10:45 AM'
+  },
+
+  {
+    id: 'ORD-002-2024',
+    orderNumber: '#100002',
+    customerName: 'Maria Bianchi',
+    customerEmail: 'maria.bianchi@email.com',
+    date: new Date('2024-02-03'),
+    time: '10:15',
+    status: 'shipped',
+    trackingNumber: 'IT987654321XYZ',
+    estimatedDelivery: new Date('2024-02-08'),
+    shippingAddress: {
+      firstName: 'Maria',
+      lastName: 'Bianchi',
+      email: 'maria.bianchi@email.com',
+      phone: '+39 333 9876543',
+      address: 'Via Milano 456',
+      city: 'Milan',
+      zipCode: '20100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Maria Bianchi',
+      cardNumber: '****5678',
+      expiryDate: '08/26',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Maria',
+        lastName: 'Bianchi',
+        email: 'maria.bianchi@email.com',
+        phone: '+39 333 9876543',
+        address: 'Via Milano 456',
+        city: 'Milan',
+        zipCode: '20100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-003',
+        productId: 'PROD-003',
+        name: 'Portable Bluetooth Speaker',
+        price: 79.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Speaker',
+        category: 'Electronics',
+        sku: 'SPKR-2024-001'
+      },
+      {
+        id: 'ITEM-004',
+        productId: 'PROD-004',
+        name: 'USB-C Charging Cable',
+        price: 19.99,
+        quantity: 3,
+        image: 'https://via.placeholder.com/100x100?text=Cable',
+        category: 'Accessories',
+        sku: 'CBL-USB-C'
+      }
+    ],
+    subtotal: 139.96,
+    shipping: 5.99,
+    tax: 14.40,
+    total: 160.35,
+    // notes: 'In transit - Expected delivery on 08/02/2024'
+  },
+
+  {
+    id: 'ORD-003-2024',
+    orderNumber: '#100003',
+    customerName: 'Marco Ferrari',
+    customerEmail: 'marco.ferrari@email.com',
+    date: new Date('2024-02-10'),
+    time: '16:45',
+    status: 'confirmed',
+    trackingNumber: null,
+    estimatedDelivery: new Date('2024-02-15'),
+    shippingAddress: {
+      firstName: 'Marco',
+      lastName: 'Ferrari',
+      email: 'marco.ferrari@email.com',
+      phone: '+39 345 5555666',
+      address: 'Corso Vittorio Emanuele 789, Piano 3',
+      city: 'Naples',
+      zipCode: '80100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Marco Ferrari',
+      cardNumber: '****9012',
+      expiryDate: '06/27',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Marco',
+        lastName: 'Ferrari',
+        email: 'marco.ferrari@email.com',
+        phone: '+39 345 5555666',
+        address: 'Corso Vittorio Emanuele 789, Piano 3',
+        city: 'Naples',
+        zipCode: '80100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-005',
+        productId: 'PROD-005',
+        name: 'Laptop Stand',
+        price: 49.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Stand',
+        category: 'Computer Accessories',
+        sku: 'STAND-2024-001'
+      },
+      {
+        id: 'ITEM-006',
+        productId: 'PROD-006',
+        name: 'Wireless Mouse',
+        price: 34.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Mouse',
+        category: 'Computer Accessories',
+        sku: 'MOUSE-WRL-001'
+      },
+      {
+        id: 'ITEM-007',
+        productId: 'PROD-007',
+        name: 'USB Hub - 7 Port',
+        price: 39.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Hub',
+        category: 'Computer Accessories',
+        sku: 'HUB-USB-7PORT'
+      }
+    ],
+    subtotal: 124.97,
+    shipping: 5.99,
+    tax: 13.00,
+    total: 143.96,
+    // notes: 'Payment confirmed - Processing for shipment'
+  },
+
+  {
+    id: 'ORD-004-2024',
+    orderNumber: '#100004',
+    customerName: 'Laura Conti',
+    customerEmail: 'laura.conti@email.com',
+    date: new Date('2024-02-15'),
+    time: '09:30',
+    status: 'pending',
+    trackingNumber: null,
+    estimatedDelivery: new Date('2024-02-20'),
+    shippingAddress: {
+      firstName: 'Laura',
+      lastName: 'Conti',
+      email: 'laura.conti@email.com',
+      phone: '+39 320 7777888',
+      address: 'Via Torino 321',
+      city: 'Turin',
+      zipCode: '10100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Laura Conti',
+      cardNumber: '****3456',
+      expiryDate: '03/25',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Laura',
+        lastName: 'Conti',
+        email: 'laura.conti@email.com',
+        phone: '+39 320 7777888',
+        address: 'Via Torino 321',
+        city: 'Turin',
+        zipCode: '10100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-008',
+        productId: 'PROD-008',
+        name: 'Smart Watch - Silver',
+        price: 199.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Watch',
+        category: 'Wearables',
+        sku: 'WATCH-SMART-SLV'
+      },
+      {
+        id: 'ITEM-009',
+        productId: 'PROD-009',
+        name: 'Watch Band Replacement',
+        price: 29.99,
+        quantity: 2,
+        image: 'https://via.placeholder.com/100x100?text=Band',
+        category: 'Wearables',
+        sku: 'BAND-WATCH-001'
+      }
+    ],
+    subtotal: 259.97,
+    shipping: 5.99,
+    tax: 26.60,
+    total: 292.56,
+    // notes: 'Order received - Awaiting payment confirmation'
+  },
+
+  {
+    id: 'ORD-005-2024',
+    orderNumber: '#100005',
+    customerName: 'Alessandro De Luca',
+    customerEmail: 'alex.deluca@email.com',
+    date: new Date('2024-01-20'),
+    time: '13:20',
+    status: 'canceled',
+    trackingNumber: null,
+    estimatedDelivery: null,
+    shippingAddress: {
+      firstName: 'Alessandro',
+      lastName: 'De Luca',
+      email: 'alex.deluca@email.com',
+      phone: '+39 371 1111222',
+      address: 'Via Venezia 654',
+      city: 'Venice',
+      zipCode: '30100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Alessandro De Luca',
+      cardNumber: '****7890',
+      expiryDate: '11/24',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Alessandro',
+        lastName: 'De Luca',
+        email: 'alex.deluca@email.com',
+        phone: '+39 371 1111222',
+        address: 'Via Venezia 654',
+        city: 'Venice',
+        zipCode: '30100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-010',
+        productId: 'PROD-010',
+        name: '4K Webcam',
+        price: 129.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Webcam',
+        category: 'Electronics',
+        sku: 'CAM-4K-001'
+      }
+    ],
+    subtotal: 129.99,
+    shipping: 5.99,
+    tax: 13.60,
+    total: 149.58,
+    // notes: 'Canceled on 21/01/2024 by customer request - Refund processed'
+  },
+];
+}
+
+
+
+  // private getMockOrders(): Order[] {
+  //   return 
+
   private getMockCategories(): Category[] {
     return [
         {
@@ -204,3 +539,331 @@ export class CatalogApiService extends BaseApiServices {
     ];
   }
 }
+
+export const MOCK_ORDERS: Order[] = 
+[
+  {
+    id: 'ORD-001-2024',
+    orderNumber: '#100001',
+    customerName: 'Giovanni Rossi',
+    customerEmail: 'giovanni.rossi@email.com',
+    date: new Date('2024-01-15'),
+    time: '14:30',
+    status: 'delivered',
+    trackingNumber: 'IT123456789ABC',
+    estimatedDelivery: new Date('2024-01-22'),
+    shippingAddress: {
+      firstName: 'Giovanni',
+      lastName: 'Rossi',
+      email: 'giovanni.rossi@email.com',
+      phone: '+39 348 1234567',
+      address: 'Via Roma 123, Appartamento 5',
+      city: 'Rome',
+      zipCode: '00100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Giovanni Rossi',
+      cardNumber: '****1234',
+      expiryDate: '12/25',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Giovanni',
+        lastName: 'Rossi',
+        email: 'giovanni.rossi@email.com',
+        phone: '+39 348 1234567',
+        address: 'Via Roma 123, Appartamento 5',
+        city: 'Rome',
+        zipCode: '00100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-001',
+        productId: 'PROD-001',
+        name: 'Premium Wireless Headphones',
+        price: 299.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Headphones',
+        category: 'Electronics',
+        sku: 'HDN-2024-001'
+      },
+      {
+        id: 'ITEM-002',
+        productId: 'PROD-002',
+        name: 'Phone Case - Black',
+        price: 29.99,
+        quantity: 2,
+        image: 'https://via.placeholder.com/100x100?text=Case',
+        category: 'Accessories',
+        sku: 'CASE-2024-BLK'
+      }
+    ],
+    subtotal: 359.97,
+    shipping: 5.99,
+    tax: 36.00,
+    total: 401.96,
+    // notes: 'Delivered on 22/01/2024 at 10:45 AM'
+  },
+
+  {
+    id: 'ORD-002-2024',
+    orderNumber: '#100002',
+    customerName: 'Maria Bianchi',
+    customerEmail: 'maria.bianchi@email.com',
+    date: new Date('2024-02-03'),
+    time: '10:15',
+    status: 'shipped',
+    trackingNumber: 'IT987654321XYZ',
+    estimatedDelivery: new Date('2024-02-08'),
+    shippingAddress: {
+      firstName: 'Maria',
+      lastName: 'Bianchi',
+      email: 'maria.bianchi@email.com',
+      phone: '+39 333 9876543',
+      address: 'Via Milano 456',
+      city: 'Milan',
+      zipCode: '20100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Maria Bianchi',
+      cardNumber: '****5678',
+      expiryDate: '08/26',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Maria',
+        lastName: 'Bianchi',
+        email: 'maria.bianchi@email.com',
+        phone: '+39 333 9876543',
+        address: 'Via Milano 456',
+        city: 'Milan',
+        zipCode: '20100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-003',
+        productId: 'PROD-003',
+        name: 'Portable Bluetooth Speaker',
+        price: 79.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Speaker',
+        category: 'Electronics',
+        sku: 'SPKR-2024-001'
+      },
+      {
+        id: 'ITEM-004',
+        productId: 'PROD-004',
+        name: 'USB-C Charging Cable',
+        price: 19.99,
+        quantity: 3,
+        image: 'https://via.placeholder.com/100x100?text=Cable',
+        category: 'Accessories',
+        sku: 'CBL-USB-C'
+      }
+    ],
+    subtotal: 139.96,
+    shipping: 5.99,
+    tax: 14.40,
+    total: 160.35,
+    // notes: 'In transit - Expected delivery on 08/02/2024'
+  },
+
+  {
+    id: 'ORD-003-2024',
+    orderNumber: '#100003',
+    customerName: 'Marco Ferrari',
+    customerEmail: 'marco.ferrari@email.com',
+    date: new Date('2024-02-10'),
+    time: '16:45',
+    status: 'confirmed',
+    trackingNumber: null,
+    estimatedDelivery: new Date('2024-02-15'),
+    shippingAddress: {
+      firstName: 'Marco',
+      lastName: 'Ferrari',
+      email: 'marco.ferrari@email.com',
+      phone: '+39 345 5555666',
+      address: 'Corso Vittorio Emanuele 789, Piano 3',
+      city: 'Naples',
+      zipCode: '80100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Marco Ferrari',
+      cardNumber: '****9012',
+      expiryDate: '06/27',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Marco',
+        lastName: 'Ferrari',
+        email: 'marco.ferrari@email.com',
+        phone: '+39 345 5555666',
+        address: 'Corso Vittorio Emanuele 789, Piano 3',
+        city: 'Naples',
+        zipCode: '80100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-005',
+        productId: 'PROD-005',
+        name: 'Laptop Stand',
+        price: 49.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Stand',
+        category: 'Computer Accessories',
+        sku: 'STAND-2024-001'
+      },
+      {
+        id: 'ITEM-006',
+        productId: 'PROD-006',
+        name: 'Wireless Mouse',
+        price: 34.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Mouse',
+        category: 'Computer Accessories',
+        sku: 'MOUSE-WRL-001'
+      },
+      {
+        id: 'ITEM-007',
+        productId: 'PROD-007',
+        name: 'USB Hub - 7 Port',
+        price: 39.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Hub',
+        category: 'Computer Accessories',
+        sku: 'HUB-USB-7PORT'
+      }
+    ],
+    subtotal: 124.97,
+    shipping: 5.99,
+    tax: 13.00,
+    total: 143.96,
+    // notes: 'Payment confirmed - Processing for shipment'
+  },
+
+  {
+    id: 'ORD-004-2024',
+    orderNumber: '#100004',
+    customerName: 'Laura Conti',
+    customerEmail: 'laura.conti@email.com',
+    date: new Date('2024-02-15'),
+    time: '09:30',
+    status: 'pending',
+    trackingNumber: null,
+    estimatedDelivery: new Date('2024-02-20'),
+    shippingAddress: {
+      firstName: 'Laura',
+      lastName: 'Conti',
+      email: 'laura.conti@email.com',
+      phone: '+39 320 7777888',
+      address: 'Via Torino 321',
+      city: 'Turin',
+      zipCode: '10100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Laura Conti',
+      cardNumber: '****3456',
+      expiryDate: '03/25',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Laura',
+        lastName: 'Conti',
+        email: 'laura.conti@email.com',
+        phone: '+39 320 7777888',
+        address: 'Via Torino 321',
+        city: 'Turin',
+        zipCode: '10100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-008',
+        productId: 'PROD-008',
+        name: 'Smart Watch - Silver',
+        price: 199.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Watch',
+        category: 'Wearables',
+        sku: 'WATCH-SMART-SLV'
+      },
+      {
+        id: 'ITEM-009',
+        productId: 'PROD-009',
+        name: 'Watch Band Replacement',
+        price: 29.99,
+        quantity: 2,
+        image: 'https://via.placeholder.com/100x100?text=Band',
+        category: 'Wearables',
+        sku: 'BAND-WATCH-001'
+      }
+    ],
+    subtotal: 259.97,
+    shipping: 5.99,
+    tax: 26.60,
+    total: 292.56,
+    // notes: 'Order received - Awaiting payment confirmation'
+  },
+
+  {
+    id: 'ORD-005-2024',
+    orderNumber: '#100005',
+    customerName: 'Alessandro De Luca',
+    customerEmail: 'alex.deluca@email.com',
+    date: new Date('2024-01-20'),
+    time: '13:20',
+    status: 'canceled',
+    trackingNumber: null,
+    estimatedDelivery: null,
+    shippingAddress: {
+      firstName: 'Alessandro',
+      lastName: 'De Luca',
+      email: 'alex.deluca@email.com',
+      phone: '+39 371 1111222',
+      address: 'Via Venezia 654',
+      city: 'Venice',
+      zipCode: '30100',
+      country: 'Italy'
+    },
+    paymentDetails: {
+      cardholderName: 'Alessandro De Luca',
+      cardNumber: '****7890',
+      expiryDate: '11/24',
+      cvv: '***',
+      billingAddress: {
+        firstName: 'Alessandro',
+        lastName: 'De Luca',
+        email: 'alex.deluca@email.com',
+        phone: '+39 371 1111222',
+        address: 'Via Venezia 654',
+        city: 'Venice',
+        zipCode: '30100',
+        country: 'Italy'
+      }
+    },
+    items: [
+      {
+        id: 'ITEM-010',
+        productId: 'PROD-010',
+        name: '4K Webcam',
+        price: 129.99,
+        quantity: 1,
+        image: 'https://via.placeholder.com/100x100?text=Webcam',
+        category: 'Electronics',
+        sku: 'CAM-4K-001'
+      }
+    ],
+    subtotal: 129.99,
+    shipping: 5.99,
+    tax: 13.60,
+    total: 149.58,
+    // notes: 'Canceled on 21/01/2024 by customer request - Refund processed'
+  },
+];

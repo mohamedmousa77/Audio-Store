@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { signal, computed } from '@angular/core';
 import { Category } from '../../../core/models/category';
 import { Product } from '../../../core/models/product';
+import { Order } from '../../../core/models/order';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class CatalogStore {
  // Signals
   productsSignal = signal<Product[]>([]);
   categoriesSignal = signal<Category[]>([]);
+  ordersSignal = signal<Order[]>([]);
   selectedCategorySignal = signal<string>('');
   searchTermSignal = signal<string>('');
   loadingSignal = signal<boolean>(false);
@@ -36,6 +38,11 @@ export class CatalogStore {
   );
 
   categories = computed(() => this.categoriesSignal());
+
+  setOrders(orders: Order[]): void {
+    this.ordersSignal.set(orders);
+  }
+
 
   setProducts(products: Product[]): void {
     this.productsSignal.set(products);

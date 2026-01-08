@@ -6,10 +6,11 @@ import { Cart } from '../../../../core/models/cart';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { OrderServices } from '../../../../core/services/order/order-services';
 import { ShippingAddress, PaymentDetails } from '../../../../core/models/order';
+import { ClientHeader } from "../../layout/client-header/client-header";
 
 @Component({
   selector: 'app-order-page',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ClientHeader],
   templateUrl: './order-page.html',
   styleUrl: './order-page.css',
 })
@@ -56,15 +57,6 @@ export class OrderPage implements OnInit {
       zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]],
       country: ['Italy', Validators.required]
     });
-
-    // Payment Form
-    this.paymentForm = this.formBuilder.group({
-      cardholderName: ['', [Validators.required, Validators.minLength(3)]],
-      cardNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{16}$/)]],
-      expiryDate: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
-      cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3}$/)]],
-      billingAddressSame: [true]
-    });
   }
 
   getTaxAmount(): number {
@@ -75,11 +67,6 @@ export class OrderPage implements OnInit {
     return this.cart.totalPrice + this.shippingCost + this.getTaxAmount();
   }
 
-  goToPayment(): void {
-    if (this.shippingForm.valid) {
-      this.currentStep = 'payment';
-    }
-  }
 
   goToReview(): void {
     if (this.paymentForm.valid) {
@@ -96,41 +83,36 @@ export class OrderPage implements OnInit {
   }
 
   placeOrder(): void {
-    if (this.shippingForm.valid && this.paymentForm.valid) {
-      const shippingData = this.shippingForm.value;
-      const paymentData = this.paymentForm.value;
-
-      const shippingAddress: ShippingAddress = {
-        firstName: shippingData.firstName,
-        lastName: shippingData.lastName,
-        email: shippingData.email,
-        phone: shippingData.phone,
-        address: shippingData.address,
-        city: shippingData.city,
-        zipCode: shippingData.zipCode,
-        country: shippingData.country
-      };
-
-      const paymentDetails: PaymentDetails = {
-        cardholderName: paymentData.cardholderName,
-        cardNumber: `****${paymentData.cardNumber.slice(-4)}`,
-        expiryDate: paymentData.expiryDate,
-        cvv: paymentData.cvv,
-        billingAddress: paymentData.billingAddressSame ? shippingAddress : shippingAddress
-      };
-
-      const order = this.orderService.createOrder(
-        shippingAddress,
-        paymentDetails,
-        this.cart.items,
-        this.cart.totalPrice,
-        this.shippingCost,
-        this.getTaxAmount()
-      );
-
+    console.log("Placing order...");
+    
       this.cartService.clearCart();
-      this.router.navigate(['/client/order-confirmation', order.id]);
-    }
+      this.router.navigate(['/client/order-confirmation','#100001']);
+    // this.shippingForm.valid
+    // if (true) {
+    //   const shippingData = this.shippingForm.value;
+
+    //   const shippingAddress: ShippingAddress = {
+    //     firstName: shippingData.firstName,
+    //     lastName: shippingData.lastName,
+    //     email: shippingData.email,
+    //     phone: shippingData.phone,
+    //     address: shippingData.address,
+    //     city: shippingData.city,
+    //     zipCode: shippingData.zipCode,
+    //     country: shippingData.country
+    //   };
+
+    //   const order = this.orderService.createOrder(
+    //     shippingAddress,
+    //     this.cart.items,
+    //     this.cart.totalPrice,
+    //     this.shippingCost,
+    //     this.getTaxAmount()
+    //   );
+
+    //   this.cartService.clearCart();
+    //   this.router.navigate(['/client/order-confirmation', order.id]);
+    // }
   }
 
   cancelCheckout(): void {

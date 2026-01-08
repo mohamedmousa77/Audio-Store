@@ -1,234 +1,130 @@
-<!-- src/app/features/client/screens/checkout-screen/checkout-screen.component.html -->
-
+<app-client-header />
 <div class="checkout-container">
-  <div class="checkout-header">
+  <header class="checkout-header">
     <h1>Checkout</h1>
-    <div class="progress-steps">
-      <div [class.step]="true" [class.active]="currentStep === 'shipping'">
-        <span class="step-number">1</span>
-        <span class="step-label">Shipping</span>
-      </div>
-      <div class="step-connector" [class.active]="currentStep !== 'shipping'"></div>
-      <div [class.step]="true" [class.active]="currentStep === 'payment' || currentStep === 'review'">
-        <span class="step-number">2</span>
-        <span class="step-label">Payment</span>
-      </div>
-      <div class="step-connector" [class.active]="currentStep === 'review'"></div>
-      <div [class.step]="true" [class.active]="currentStep === 'review'">
-        <span class="step-number">3</span>
-        <span class="step-label">Review</span>
-      </div>
-    </div>
-  </div>
+    <p class="login-prompt">Already have an account? <a href="#">Log in to pre-fill your details.</a></p>
+  </header>
 
   <div class="checkout-content">
-    <div class="checkout-form">
-      <!-- Shipping Step -->
-      <div *ngIf="currentStep === 'shipping'" class="form-section">
-        <h2>Shipping Address</h2>
+    <div class="checkout-forms-area">
+      
+      <section class="form-section">
+        <div class="section-header">
+          <span class="step-badge">1</span>
+          <h2>Shipping Details</h2>
+        </div>
+        
         <form [formGroup]="shippingForm" class="form-grid">
           <div class="form-group">
             <label>First Name</label>
-            <input type="text" formControlName="firstName" placeholder="John">
-            <span class="error" *ngIf="shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched">
-              First name is required and must be at least 2 characters
-            </span>
+            <input type="text" formControlName="firstName" placeholder="e.g. Alex">
           </div>
-
           <div class="form-group">
             <label>Last Name</label>
-            <input type="text" formControlName="lastName" placeholder="Doe">
-            <span class="error" *ngIf="shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched">
-              Last name is required and must be at least 2 characters
-            </span>
+            <input type="text" formControlName="lastName" placeholder="e.g. Doe">
           </div>
-
           <div class="form-group full-width">
-            <label>Email</label>
-            <input type="email" formControlName="email" placeholder="john@example.com">
-            <span class="error" *ngIf="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched">
-              Valid email is required
-            </span>
+            <label>Email Address</label>
+            <input type="email" formControlName="email" placeholder="alex@example.com">
           </div>
-
           <div class="form-group full-width">
             <label>Phone Number</label>
-            <input type="tel" formControlName="phone" placeholder="+39 123 456 7890">
-            <span class="error" *ngIf="shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched">
-              Valid phone number is required
-            </span>
+            <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
           </div>
-
           <div class="form-group full-width">
             <label>Street Address</label>
-            <input type="text" formControlName="address" placeholder="Via Roma 123">
-            <span class="error" *ngIf="shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched">
-              Address is required and must be at least 5 characters
-            </span>
+            <input type="text" formControlName="address" placeholder="123 Audio Lane, Apt 4B">
           </div>
-
+          <div class="form-group">
+            <label>ZIP / Postal Code</label>
+            <input type="text" formControlName="zipCode" placeholder="10001">
+          </div>
           <div class="form-group">
             <label>City</label>
-            <input type="text" formControlName="city" placeholder="Rome">
-            <span class="error" *ngIf="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched">
-              City is required
-            </span>
+            <input type="text" formControlName="city" placeholder="New York">
           </div>
-
-          <div class="form-group">
-            <label>Zip Code</label>
-            <input type="text" formControlName="zipCode" placeholder="00100">
-            <span class="error" *ngIf="shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched">
-              Valid 5-digit zip code is required
-            </span>
-          </div>
-
-          <div class="form-group">
+          <div class="form-group full-width">
             <label>Country</label>
             <select formControlName="country">
+              <option value="United States">United States</option>
               <option value="Italy">Italy</option>
-              <option value="Spain">Spain</option>
-              <option value="France">France</option>
-              <option value="Germany">Germany</option>
-              <option value="Austria">Austria</option>
             </select>
           </div>
         </form>
+      </section>
 
-        <div class="form-actions">
-          <button class="btn-cancel" (click)="cancelCheckout()">Cancel</button>
-          <button class="btn-next" (click)="goToPayment()" [disabled]="!shippingForm.valid">
-            Continue to Payment
-          </button>
+      <section class="form-section">
+        <div class="section-header Payment-Method">
+          <span class="step-badge">2</span>
+          <h2>Payment Method</h2>
         </div>
-      </div>
-
-      <!-- Payment Step -->
-      <div *ngIf="currentStep === 'payment'" class="form-section">
-        <h2>Payment Information</h2>
-        <form [formGroup]="paymentForm" class="form-grid">
-          <div class="form-group full-width">
-            <label>Cardholder Name</label>
-            <input type="text" formControlName="cardholderName" placeholder="John Doe">
-            <span class="error" *ngIf="paymentForm.get('cardholderName')?.invalid && paymentForm.get('cardholderName')?.touched">
-              Cardholder name is required
-            </span>
-          </div>
-
-          <div class="form-group full-width">
-            <label>Card Number</label>
-            <input type="text" formControlName="cardNumber" placeholder="1234 5678 9101 1121" maxlength="16">
-            <span class="error" *ngIf="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched">
-              Valid 16-digit card number is required
-            </span>
-          </div>
-
-          <div class="form-group">
-            <label>Expiry Date</label>
-            <input type="text" formControlName="expiryDate" placeholder="MM/YY">
-            <span class="error" *ngIf="paymentForm.get('expiryDate')?.invalid && paymentForm.get('expiryDate')?.touched">
-              Valid expiry date (MM/YY) is required
-            </span>
-          </div>
-
-          <!-- <div class="form-group">
-            <label>CVV</label>
-            <input type="text" formControlName="cvv" placeholder="123" maxlength="3">
-            <span class="error" *ngIf="paymentForm.get('cvv')?.invalid && paymentForm
-              Valid CVV (3 digits) is required
-            </span>
-          </div>
-
-          <div class="form-group full-width checkbox">
-            <input type="checkbox" formControlName="billingAddressSame" id="billingAddressSame">
-            <label for="billingAddressSame">Billing address same as shipping</label>
-          </div> -->
-        </form>
-
-        <div class="form-actions">
-          <button class="btn-back" (click)="goBackToShipping()">Back</button>
-          <button class="btn-next" (click)="goToReview()" [disabled]="!paymentForm.valid">
-            Review Order
-          </button>
-        </div>
-      </div>
-
-      <!-- Review Step -->
-      <div *ngIf="currentStep === 'review'" class="form-section">
-        <h2>Order Review</h2>
         
-        <div class="review-section">
-          <h3>Shipping Address</h3>
-          <div class="review-content">
-            <p><strong>{{ shippingForm.get('firstName')?.value }} {{ shippingForm.get('lastName')?.value }}</strong></p>
-            <p>{{ shippingForm.get('address')?.value }}</p>
-            <p>{{ shippingForm.get('zipCode')?.value }} {{ shippingForm.get('city')?.value }}, {{ shippingForm.get('country')?.value }}</p>
-            <p>Email: {{ shippingForm.get('email')?.value }}</p>
-            <p>Phone: {{ shippingForm.get('phone')?.value }}</p>
-          </div>
-          <button class="btn-edit" (click)="goBackToShipping()">Edit</button>
-        </div>
-
-        <div class="review-section">
-          <h3>Payment Information</h3>
-          <div class="review-content">
-            <p><strong>{{ paymentForm.get('cardholderName')?.value }}</strong></p>
-            <p>Card: •••• •••• •••• {{ paymentForm.get('cardNumber')?.value?.slice(-4) }}</p>
-            <p>Expires: {{ paymentForm.get('expiryDate')?.value }}</p>
-          </div>
-          <button class="btn-edit" (click)="goBackToPayment()">Edit</button>
-        </div>
-
-        <div class="review-section">
-          <h3>Order Items</h3>
-          <div class="review-items">
-            <div *ngFor="let item of cart.items" class="review-item">
-              <img [src]="item.image" [alt]="item.name">
-              <div class="item-details">
-                <p><strong>{{ item.name }}</strong></p>
-                <p>Qty: {{ item.quantity }} × €{{ item.price.toFixed(2) }}</p>
-              </div>
-              <p class="item-total">€{{ (item.quantity * item.price).toFixed(2) }}</p>
+        <div class="payment-card-selector selected">
+          <div class="payment-info">
+            <div class="payment-icon">
+              <span class="material-symbols-outlined">payments</span>
+            </div>
+            <div class="payment-text">
+              <h3>Cash on Delivery</h3>
+              <p>Pay securely when your order arrives at your doorstep.</p>
             </div>
           </div>
+          <span class="status-badge">SELECTED</span>
         </div>
-
-        <div class="form-actions">
-          <button class="btn-back" (click)="goBackToPayment()">Back</button>
-          <button class="btn-place-order" (click)="placeOrder()">
-            Place Order
-          </button>
-        </div>
-      </div>
+      </section>
     </div>
 
-    <!-- Order Summary Sidebar -->
-    <div class="order-summary">
+    <aside class="order-summary-card">
       <h3>Order Summary</h3>
-      <div class="summary-items">
-        <div *ngFor="let item of cart.items" class="summary-item">
-          <span>{{ item.name }} ({{ item.quantity }})</span>
-          <span>€{{ (item.quantity * item.price).toFixed(2) }}</span>
+      
+      <div class="summary-product-list">
+        <div *ngFor="let item of cart.items" class="summary-product-item">
+          <img [src]="item.image" [alt]="item.name" class="mini-thumb">
+          <div class="mini-details">
+            <p class="mini-name">{{ item.name }}</p>
+            <p class="mini-meta">{{ item.category }} • Qty: {{ item.quantity }}</p>
+          </div>
+          <span class="mini-price">€{{ (item.price * item.quantity).toFixed(2) }}</span>
         </div>
       </div>
+
       <div class="summary-divider"></div>
-      <div class="summary-line">
-        <span>Subtotal</span>
-        <span>€{{ cart.totalPrice.toFixed(2) }}</span>
+
+      <div class="cost-breakdown">
+        <div class="cost-row">
+          <span>Subtotal</span>
+          <span class="cost-val">€{{ cart.totalPrice.toFixed(2) }}</span>
+        </div>
+        <div class="cost-row">
+          <span>Shipping</span>
+          <span class="cost-val text-green">Free</span>
+        </div>
+        <div class="cost-row">
+          <span>VAT (20%)</span>
+          <span class="cost-val">€{{ getTaxAmount().toFixed(2) }}</span>
+        </div>
       </div>
-      <div class="summary-line">
-        <span>Shipping</span>
-        <span>€{{ shippingCost.toFixed(2) }}</span>
+
+      <div class="total-section">
+        <div class="total-row">
+          <span class="total-label">Order Total</span>
+          <div class="total-amount-group">
+            <span class="total-price">€{{ getTotalAmount().toFixed(2) }}</span>
+            <span class="tax-note">USD, taxes included</span>
+          </div>
+        </div>
+        
+        <button class="btn-confirm-order" (click)="placeOrder()" >
+          Confirm Order
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
       </div>
-      <div class="summary-line">
-        <span>Tax (10%)</span>
-        <span>€{{ getTaxAmount().toFixed(2) }}</span>
+
+      <div class="trust-footer">
+        <div class="trust-item"><span class="material-symbols-outlined">shield_with_heart</span> Secure</div>
+        <div class="trust-item"><span class="material-symbols-outlined">package_2</span> Insured</div>
+        <div class="trust-item"><span class="material-symbols-outlined">support_agent</span> 24/7 Help</div>
       </div>
-      <div class="summary-line total">
-        <span>Total</span>
-        <span>€{{ getTotalAmount().toFixed(2) }}</span>
-      </div>
-    </div>
-    
+    </aside>
   </div>
 </div>

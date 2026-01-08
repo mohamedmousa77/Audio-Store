@@ -16,6 +16,8 @@ export interface Order {
   customerEmail?: string;
   date?: string | Date;
   time?: string;
+  estimatedDelivery?: Date | string | null;
+  trackingNumber?: string | null;
   shippingAddress?: ShippingAddress;
   paymentDetails?: PaymentDetails;
   items?: any[];
