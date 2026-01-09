@@ -25,7 +25,8 @@ export interface Order {
   shipping?: number;
   tax?: number;
   total?: number | string;
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled';
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled' |
+   'Available' | 'Low Stock' | 'Unavailable' | 'Processing' | 'Shipped' | 'Delivered' | 'Canceled';
 }
 
 export interface ShippingAddress {

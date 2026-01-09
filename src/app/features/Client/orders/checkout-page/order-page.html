@@ -4,7 +4,11 @@
     <h1>Checkout</h1>
     <p class="login-prompt">Already have an account? <a href="#">Log in to pre-fill your details.</a></p>
   </header>
-
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-banner">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ errorMessage }}</span>
+  </div>
   <div class="checkout-content">
     <div class="checkout-forms-area">
       
@@ -18,30 +22,58 @@
           <div class="form-group">
             <label>First Name</label>
             <input type="text" formControlName="firstName" placeholder="e.g. Alex">
+            <span class="error" *ngIf="shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched">
+              <!-- Il nome è obbligatorio e deve avere almeno 2 caratteri -->
+               The first name is required and must have at least 2 characters.
+            </span>
           </div>
           <div class="form-group">
             <label>Last Name</label>
             <input type="text" formControlName="lastName" placeholder="e.g. Doe">
+            <span class="error" *ngIf="shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched">
+              <!-- Il cognome è obbligatorio e deve avere almeno 2 caratteri -->
+               The last name is required and must have at least 2 characters.
+            </span>
           </div>
           <div class="form-group full-width">
             <label>Email Address</label>
             <input type="email" formControlName="email" placeholder="alex@example.com">
+            <span class="error" *ngIf="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched">
+              <!-- Un indirizzo email valido è obbligatorio -->
+               A valid email address is required.
+            </span>
           </div>
           <div class="form-group full-width">
             <label>Phone Number</label>
             <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
+            <span class="error" *ngIf="shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched">
+              <!-- Un numero di telefono valido è obbligatorio -->
+               A valid phone number is required.
+            </span>
           </div>
           <div class="form-group full-width">
             <label>Street Address</label>
             <input type="text" formControlName="address" placeholder="123 Audio Lane, Apt 4B">
+            <span class="error" *ngIf="shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched">
+              <!-- L'indirizzo è obbligatorio e deve avere almeno 5 caratteri -->
+              The address is required and must have at least 5 characters.
+            </span>
           </div>
           <div class="form-group">
             <label>ZIP / Postal Code</label>
             <input type="text" formControlName="zipCode" placeholder="10001">
+            <span class="error" *ngIf="shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched">
+              <!-- Un codice postale valido (5 cifre) è obbligatorio -->
+               The postal code is required and must have 5 digits.
+            </span>
           </div>
           <div class="form-group">
             <label>City</label>
             <input type="text" formControlName="city" placeholder="New York">
+            <span class="error" *ngIf="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched">
+              <!-- La città è obbligatoria -->
+              The city is required.
+            </span>
           </div>
           <div class="form-group full-width">
             <label>Country</label>
@@ -52,7 +84,7 @@
           </div>
         </form>
       </section>
-
+      <!-- Payment Section -->
       <section class="form-section">
         <div class="section-header Payment-Method">
           <span class="step-badge">2</span>

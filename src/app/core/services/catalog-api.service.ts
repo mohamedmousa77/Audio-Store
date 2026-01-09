@@ -544,7 +544,7 @@ export const MOCK_ORDERS: Order[] =
 [
   {
     id: 'ORD-001-2024',
-    orderNumber: '#100001',
+    orderNumber: '1',
     customerName: 'Giovanni Rossi',
     customerEmail: 'giovanni.rossi@email.com',
     date: new Date('2024-01-15'),
@@ -609,7 +609,7 @@ export const MOCK_ORDERS: Order[] =
 
   {
     id: 'ORD-002-2024',
-    orderNumber: '#100002',
+    orderNumber: '2',
     customerName: 'Maria Bianchi',
     customerEmail: 'maria.bianchi@email.com',
     date: new Date('2024-02-03'),
@@ -674,7 +674,7 @@ export const MOCK_ORDERS: Order[] =
 
   {
     id: 'ORD-003-2024',
-    orderNumber: '#100003',
+    orderNumber: '3',
     customerName: 'Marco Ferrari',
     customerEmail: 'marco.ferrari@email.com',
     date: new Date('2024-02-10'),
@@ -749,7 +749,7 @@ export const MOCK_ORDERS: Order[] =
 
   {
     id: 'ORD-004-2024',
-    orderNumber: '#100004',
+    orderNumber: '4',
     customerName: 'Laura Conti',
     customerEmail: 'laura.conti@email.com',
     date: new Date('2024-02-15'),
@@ -814,7 +814,7 @@ export const MOCK_ORDERS: Order[] =
 
   {
     id: 'ORD-005-2024',
-    orderNumber: '#100005',
+    orderNumber: '5',
     customerName: 'Alessandro De Luca',
     customerEmail: 'alex.deluca@email.com',
     date: new Date('2024-01-20'),

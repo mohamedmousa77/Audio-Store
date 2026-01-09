@@ -22,11 +22,13 @@ export class OrderPage implements OnInit {
   };
 
   shippingForm!: FormGroup;
-  paymentForm!: FormGroup;
   
   currentStep: 'shipping' | 'payment' | 'review' = 'shipping';
   shippingCost = 5.99;
   taxRate = 0.10;
+
+  isProcessing: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -68,11 +70,11 @@ export class OrderPage implements OnInit {
   }
 
 
-  goToReview(): void {
-    if (this.paymentForm.valid) {
-      this.currentStep = 'review';
-    }
-  }
+  // goToReview(): void {
+  //   if (this.paymentForm.valid) {
+  //     this.currentStep = 'review';
+  //   }
+  // }
 
   goBackToShipping(): void {
     this.currentStep = 'shipping';
@@ -84,35 +86,58 @@ export class OrderPage implements OnInit {
 
   placeOrder(): void {
     console.log("Placing order...");
-    
+    this.shippingForm.valid
+    if (!this.shippingForm.valid ) {
+       this.errorMessage = 'Per favore completa tutti i campi obbligatori';
+      return;
+    }
+      // Imposta il flag di processing
+      this.isProcessing = true;
+      this.errorMessage = '';
+
+      try {
+const shippingData = this.shippingForm.value;
+
+      const shippingAddress: ShippingAddress = {
+        firstName: shippingData.firstName,
+        lastName: shippingData.lastName,
+        email: shippingData.email,
+        phone: shippingData.phone,
+        address: shippingData.address,
+        city: shippingData.city,
+        zipCode: shippingData.zipCode,
+        country: shippingData.country
+      };
+
+      // Calcola gli importi
+      const subtotal = this.cart.totalPrice;
+      const shipping = this.shippingCost;
+      const tax = this.getTaxAmount();
+
+      // 
+      const order = this.orderService.createOrder(
+        shippingAddress,
+        this.cart.items,
+        subtotal,
+        shipping,
+        tax
+      );
+      console.log('✅ Ordine creato con successo:', order);
+
+      // Reindirizza alla pagina di conferma con l'ID dell'ordine
+      this.isProcessing = false;
+      this.errorMessage = '';
+      
       this.cartService.clearCart();
-      this.router.navigate(['/client/order-confirmation','#100001']);
-    // this.shippingForm.valid
-    // if (true) {
-    //   const shippingData = this.shippingForm.value;
-
-    //   const shippingAddress: ShippingAddress = {
-    //     firstName: shippingData.firstName,
-    //     lastName: shippingData.lastName,
-    //     email: shippingData.email,
-    //     phone: shippingData.phone,
-    //     address: shippingData.address,
-    //     city: shippingData.city,
-    //     zipCode: shippingData.zipCode,
-    //     country: shippingData.country
-    //   };
-
-    //   const order = this.orderService.createOrder(
-    //     shippingAddress,
-    //     this.cart.items,
-    //     this.cart.totalPrice,
-    //     this.shippingCost,
-    //     this.getTaxAmount()
-    //   );
-
-    //   this.cartService.clearCart();
-    //   this.router.navigate(['/client/order-confirmation', order.id]);
-    // }
+      this.router.navigate(['/client/order-confirmation', order.id]);
+    } catch (error) {
+      console.error('❌ Errore nella creazione dell\'ordine:', error);
+      // this.errorMessage = 'Si è verificato un errore durante la creazione dell\'ordine. Per favore riprova.';
+      this.errorMessage = 'An error occured while creating the order. Please try again.'
+      this.isProcessing = false;
+    }
+      
+    
   }
 
   cancelCheckout(): void {

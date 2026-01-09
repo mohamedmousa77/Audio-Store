@@ -57,7 +57,7 @@
                 <td><span class="text-secondary">{{ order.date | date:'shortDate' }}</span></td>
                 <td>
                   <div class="customer-cell">
-                    <div class="avatar-small">{{ order.customerName.charAt(0) }}</div>
+                    <div class="avatar-small">{{ order.customerName!.charAt(0) }}</div>
                     <div class="cell-texts">
                         <p class="name">{{ order.customerName }}</p>
                         <p class="sub">{{ order.customerEmail }}</p>

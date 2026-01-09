@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './badge.css',
 })
 export class Badge {
-@Input() status: 'Available' | 'Low Stock' | 'Unavailable' | 'Processing' | 'Shipped' | 'Delivered' | 'Canceled' = 'Available';
+@Input() status: 'Available' | 'Low Stock' | 'Unavailable' |  'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled'| 'Processing' | 'Shipped' | 'Delivered' | 'Canceled' = 'Available';
   @Input() text?: string;
 
   get badgeClass(): string {

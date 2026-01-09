@@ -36,6 +36,24 @@ export class ClientHeader {
     { name: 'Earphones', path: '/category/Earphones' }
   ];
 
+  ngAfterViewInit() {
+    // Inizializza il widget solo quando l'HTML è pronto nel DOM
+    this.initGoogleTranslate();
+  }
+
+  initGoogleTranslate() {
+    // @ts-ignore
+    if (window.google && window.google.translate) {
+      // @ts-ignore
+      new window.google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'it,en,fr,de',
+        layout: 0, // 0 corrisponde a InlineLayout.SIMPLE
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  }
+
   ngOnInit(): void {
     // Load categories
     this.productService.categories();
