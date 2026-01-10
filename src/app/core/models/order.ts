@@ -19,7 +19,7 @@ export interface Order {
   estimatedDelivery?: Date | string | null;
   trackingNumber?: string | null;
   shippingAddress?: ShippingAddress;
-  paymentDetails?: PaymentDetails;
+  paymentMethod?: string;
   items?: any[];
   subtotal?: number;
   shipping?: number;
@@ -38,12 +38,4 @@ export interface ShippingAddress {
   city: string;
   zipCode: string;
   country: string;
-}
-
-export interface PaymentDetails {
-  cardholderName: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-  billingAddress: ShippingAddress;
 }

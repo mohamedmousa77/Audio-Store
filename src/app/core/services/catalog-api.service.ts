@@ -180,22 +180,7 @@ private getMockOrders(): Order[] {
       zipCode: '00100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Giovanni Rossi',
-      cardNumber: '****1234',
-      expiryDate: '12/25',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Giovanni',
-        lastName: 'Rossi',
-        email: 'giovanni.rossi@email.com',
-        phone: '+39 348 1234567',
-        address: 'Via Roma 123, Appartamento 5',
-        city: 'Rome',
-        zipCode: '00100',
-        country: 'Italy'
-      }
-    },
+    
     items: [
       {
         id: 'ITEM-001',
@@ -245,22 +230,7 @@ private getMockOrders(): Order[] {
       zipCode: '20100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Maria Bianchi',
-      cardNumber: '****5678',
-      expiryDate: '08/26',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Maria',
-        lastName: 'Bianchi',
-        email: 'maria.bianchi@email.com',
-        phone: '+39 333 9876543',
-        address: 'Via Milano 456',
-        city: 'Milan',
-        zipCode: '20100',
-        country: 'Italy'
-      }
-    },
+    
     items: [
       {
         id: 'ITEM-003',
@@ -309,22 +279,6 @@ private getMockOrders(): Order[] {
       city: 'Naples',
       zipCode: '80100',
       country: 'Italy'
-    },
-    paymentDetails: {
-      cardholderName: 'Marco Ferrari',
-      cardNumber: '****9012',
-      expiryDate: '06/27',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Marco',
-        lastName: 'Ferrari',
-        email: 'marco.ferrari@email.com',
-        phone: '+39 345 5555666',
-        address: 'Corso Vittorio Emanuele 789, Piano 3',
-        city: 'Naples',
-        zipCode: '80100',
-        country: 'Italy'
-      }
     },
     items: [
       {
@@ -385,22 +339,6 @@ private getMockOrders(): Order[] {
       zipCode: '10100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Laura Conti',
-      cardNumber: '****3456',
-      expiryDate: '03/25',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Laura',
-        lastName: 'Conti',
-        email: 'laura.conti@email.com',
-        phone: '+39 320 7777888',
-        address: 'Via Torino 321',
-        city: 'Turin',
-        zipCode: '10100',
-        country: 'Italy'
-      }
-    },
     items: [
       {
         id: 'ITEM-008',
@@ -450,22 +388,7 @@ private getMockOrders(): Order[] {
       zipCode: '30100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Alessandro De Luca',
-      cardNumber: '****7890',
-      expiryDate: '11/24',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Alessandro',
-        lastName: 'De Luca',
-        email: 'alex.deluca@email.com',
-        phone: '+39 371 1111222',
-        address: 'Via Venezia 654',
-        city: 'Venice',
-        zipCode: '30100',
-        country: 'Italy'
-      }
-    },
+    
     items: [
       {
         id: 'ITEM-010',
@@ -562,22 +485,7 @@ export const MOCK_ORDERS: Order[] =
       zipCode: '00100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Giovanni Rossi',
-      cardNumber: '****1234',
-      expiryDate: '12/25',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Giovanni',
-        lastName: 'Rossi',
-        email: 'giovanni.rossi@email.com',
-        phone: '+39 348 1234567',
-        address: 'Via Roma 123, Appartamento 5',
-        city: 'Rome',
-        zipCode: '00100',
-        country: 'Italy'
-      }
-    },
+    
     items: [
       {
         id: 'ITEM-001',
@@ -627,22 +535,6 @@ export const MOCK_ORDERS: Order[] =
       zipCode: '20100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Maria Bianchi',
-      cardNumber: '****5678',
-      expiryDate: '08/26',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Maria',
-        lastName: 'Bianchi',
-        email: 'maria.bianchi@email.com',
-        phone: '+39 333 9876543',
-        address: 'Via Milano 456',
-        city: 'Milan',
-        zipCode: '20100',
-        country: 'Italy'
-      }
-    },
     items: [
       {
         id: 'ITEM-003',
@@ -691,22 +583,6 @@ export const MOCK_ORDERS: Order[] =
       city: 'Naples',
       zipCode: '80100',
       country: 'Italy'
-    },
-    paymentDetails: {
-      cardholderName: 'Marco Ferrari',
-      cardNumber: '****9012',
-      expiryDate: '06/27',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Marco',
-        lastName: 'Ferrari',
-        email: 'marco.ferrari@email.com',
-        phone: '+39 345 5555666',
-        address: 'Corso Vittorio Emanuele 789, Piano 3',
-        city: 'Naples',
-        zipCode: '80100',
-        country: 'Italy'
-      }
     },
     items: [
       {
@@ -767,22 +643,6 @@ export const MOCK_ORDERS: Order[] =
       zipCode: '10100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Laura Conti',
-      cardNumber: '****3456',
-      expiryDate: '03/25',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Laura',
-        lastName: 'Conti',
-        email: 'laura.conti@email.com',
-        phone: '+39 320 7777888',
-        address: 'Via Torino 321',
-        city: 'Turin',
-        zipCode: '10100',
-        country: 'Italy'
-      }
-    },
     items: [
       {
         id: 'ITEM-008',
@@ -832,22 +692,7 @@ export const MOCK_ORDERS: Order[] =
       zipCode: '30100',
       country: 'Italy'
     },
-    paymentDetails: {
-      cardholderName: 'Alessandro De Luca',
-      cardNumber: '****7890',
-      expiryDate: '11/24',
-      cvv: '***',
-      billingAddress: {
-        firstName: 'Alessandro',
-        lastName: 'De Luca',
-        email: 'alex.deluca@email.com',
-        phone: '+39 371 1111222',
-        address: 'Via Venezia 654',
-        city: 'Venice',
-        zipCode: '30100',
-        country: 'Italy'
-      }
-    },
+    
     items: [
       {
         id: 'ITEM-010',

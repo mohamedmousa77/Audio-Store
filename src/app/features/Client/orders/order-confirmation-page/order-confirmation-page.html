@@ -1,172 +1,160 @@
+<app-client-header></app-client-header>
 
-<div class="confirmation-container">
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-state">
-    <div class="spinner"></div>
-    <p>Processing your order...</p>
-  </div>
-
-  <!-- Confirmation State -->
-  <div *ngIf="!loading && order" class="confirmation-content">
-    <!-- Success Header -->
-    <div class="confirmation-header">
-      <div class="success-icon">✓</div>
-      <h1>Order Confirmed!</h1>
-      <p class="confirmation-message">
-        Thank you for your purchase. Your order has been successfully placed.
-      </p>
+<main class="confirmation-bg">
+  <div class="container-premium">
+    
+    <!-- LOADING STATE -->
+    <div *ngIf="loading" class="state-card">
+      <div class="loader-circle"></div>
+      <p>Stiamo caricando i dettagli del tuo acquisto...</p>
     </div>
 
-    <!-- Order Number Section -->
-    <div class="order-details-card">
-      <div class="order-number-section">
-        <div class="order-item">
-          <span class="label">Order Number</span>
-          <span class="value">{{ order.orderNumber }}</span>
-        </div>
-        <div class="order-item">
-          <span class="label">Order Date</span>
-          <span class="value">{{ order.date | date: 'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-        <div class="order-item">
-          <span class="label">Status</span>
-          <span class="value status" [ngClass]="'status-' + order.status">{{ order.status | uppercase }}</span>
-        </div>
-      </div>
+    <!-- ERROR STATE -->
+    <div *ngIf="!loading && error" class="state-card">
+      <span class="material-symbols-outlined error-icon">sentiment_very_dissatisfied</span>
+      <h2>Oops! Ordine non trovato</h2>
+      <p>Non siamo riusciti a trovare l'ordine <strong>{{ orderId }}</strong>.</p>
+      <button class="btn-primary-custom" (click)="continueShopping()">Torna allo Shop</button>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="confirmation-grid">
-      <!-- Shipping Address -->
-      <div class="info-card">
-        <h2>Shipping Address</h2>
-        <div class="info-content">
-          <p><strong>{{ order.shippingAddress!.firstName }} {{ order.shippingAddress!.lastName }}</strong></p>
-          <p>{{ order.shippingAddress!.address }}</p>
-          <p>{{ order.shippingAddress!.zipCode }} {{ order.shippingAddress!.city }}</p>
-          <p>{{ order.shippingAddress!.country }}</p>
-          <hr>
-          <p><strong>Email:</strong> {{ order.shippingAddress!.email }}</p>
-          <p><strong>Phone:</strong> {{ order.shippingAddress!.phone }}</p>
+    <!-- SUCCESS STATE -->
+    <div *ngIf="!loading && !error && order" class="confirmation-layout">
+      
+      <!-- HERO SECTION - Success Message -->
+      <section class="hero-success-card">
+        <div class="check-wrapper">
+          <span class="material-symbols-outlined">check_circle</span>
         </div>
-      </div>
+        <h1>Thank you for your order!</h1>
+        <p class="hero-text">
+          We've sent a confirmation email to
+          <strong>{{ order.shippingAddress?.email }}</strong>. Your order
+          <strong>#{{ order.orderNumber }}</strong> has been placed successfully.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn-orange-filled" (click)="continueShopping()">
+            Return to Shopping
+          </button>
+          <button class="btn-white-outline" (click)="downloadInvoice()">
+            Download Invoice
+          </button>
+        </div>
+      </section>
 
-      <!-- Payment Information -->
-      <div class="info-card">
-        <h2>Payment Information</h2>
-        <div class="info-content">
-          <p><strong>Cardholder:</strong> {{ order.paymentDetails!.cardholderName }}</p>
-          <p><strong>Card:</strong> {{ order.paymentDetails!.cardNumber }}</p>
-          <p><strong>Expires:</strong> {{ order.paymentDetails!.expiryDate }}</p>
-          <div class="payment-status">
-            <span class="badge badge-success">✓ Payment Confirmed</span>
+      <!-- MAIN GRID LAYOUT -->
+      <div class="order-grid">
+        
+        <!-- LEFT COLUMN - Items and Details -->
+        <div class="left-col">
+          
+          <!-- ITEMS ORDERED SECTION -->
+          <section class="premium-card">
+            <div class="card-header">
+              <h3>Items Ordered</h3>
+              <span class="count-pill">{{ order.items?.length }} Items</span>
+            </div>
+            <div class="items-container">
+              <div class="product-row" *ngFor="let item of order.items">
+                <img 
+                  [src]="item.image" 
+                  [alt]="item.name"
+                  class="product-image"
+                />
+                <div class="product-info">
+                  <p class="p-name">{{ item.name }}</p>
+                  <p class="p-cat">{{ item.category }}</p>
+                  <p class="p-qty">Qty: {{ item.quantity }}</p>
+                </div>
+                <div class="product-price">
+                  €{{ (item.price * item.quantity).toFixed(2) }}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SHIPPING & PAYMENT ROW -->
+          <div class="address-payment-row">
+            
+            <!-- SHIPPING ADDRESS -->
+            <section class="premium-card">
+              <h4 class="card-title">
+                <span class="material-symbols-outlined">local_shipping</span>
+                Shipping Address
+              </h4>
+              <div class="address-box" *ngIf="order.shippingAddress">
+                <p>
+                  <strong>
+                    {{ order.shippingAddress.firstName }}
+                    {{ order.shippingAddress.lastName }}
+                  </strong>
+                </p>
+                <p>{{ order.shippingAddress.address }}</p>
+                <p>
+                  {{ order.shippingAddress.zipCode }}
+                  {{ order.shippingAddress.city }}
+                </p>
+                <p>{{ order.shippingAddress.country }}</p>
+              </div>
+            </section>
+
+            <!-- PAYMENT METHOD -->
+            <section class="premium-card">
+              <h4 class="card-title">
+                <span class="material-symbols-outlined">payments</span>
+                Payment Method
+              </h4>
+              <div class="payment-box">
+                <p>Cash on Delivery</p>
+                <span class="badge-payment">Pay upon receipt</span>
+              </div>
+            </section>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Order Items -->
-    <div class="order-items-card">
-      <h2>Order Items</h2>
-      <div class="items-table">
-        <div class="table-header">
-          <div class="col-product">Product</div>
-          <div class="col-price">Price</div>
-          <div class="col-qty">Quantity</div>
-          <div class="col-total">Total</div>
-        </div>
-        <div *ngFor="let item of order.items" class="table-row">
-          <div class="col-product">
-            <img [src]="item.image" [alt]="item.name" class="product-thumb">
-            <div class="product-info">
-              <strong>{{ item.name }}</strong>
-              <p class="category">{{ item.category }}</p>
+        <!-- RIGHT COLUMN - Order Summary Sidebar -->
+        <aside class="right-col">
+          <div class="summary-premium-card">
+            <h3>Order Summary</h3>
+            
+            <div class="summary-lines">
+              <div class="s-line">
+                <span>Subtotal</span>
+                <span>€{{ (order.subtotal ?? 0).toFixed(2) }}</span>
+              </div>
+              <div class="s-line">
+                <span>Shipping</span>
+                <span class="text-green">Free</span>
+              </div>
+              <div class="s-line">
+                <span>Tax Est.</span>
+                <span>€{{ (order.tax ?? 0).toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="s-divider"></div>
+
+            <!-- TOTAL -->
+            <div class="s-total">
+              <div class="total-label-group">
+                <span class="total-title">Total</span>
+                <span class="total-note">Includes all taxes and duties</span>
+              </div>
+              <span class="total-price-val">€{{ getTotalAmount().toFixed(2) }}</span>
+            </div>
+
+            <!-- ESTIMATED DELIVERY -->
+            <div class="estimate-box">
+              <span class="material-symbols-outlined">calendar_today</span>
+              <div class="estimate-text">
+                <p>Estimated Delivery</p>
+                <strong>{{ order.estimatedDelivery | date: 'MMM dd - MMM dd' }}</strong>
+              </div>
             </div>
           </div>
-          <div class="col-price">€{{ item.price.toFixed(2) }}</div>
-          <div class="col-qty">{{ item.quantity }}</div>
-          <div class="col-total">€{{ (item.price * item.quantity).toFixed(2) }}</div>
-        </div>
+        </aside>
       </div>
-    </div>
-
-    <!-- Order Summary -->
-    <div class="order-summary-card">
-      <h2>Order Summary</h2>
-      <div class="summary-content">
-        <div class="summary-row">
-          <span>Subtotal</span>
-          <span>€{{ order.subtotal!.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row">
-          <span>Shipping</span>
-          <span>€{{ order.shipping!.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row">
-          <span>Tax (10%)</span>
-          <span>€{{ order.tax!.toFixed(2) }}</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total Amount</span>
-          <span>€{{ getTotalAmount().toFixed(2) }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- What's Next Section -->
-    <div class="whats-next-card">
-      <h2>What's Next?</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h4>Confirmation Email</h4>
-            <p>We've sent a confirmation email to {{ order.shippingAddress!.email }}</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h4>Processing</h4>
-            <p>Your order is being prepared for shipment (1-2 business days)</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h4>Shipment</h4>
-            <p>You'll receive a tracking number via email when your order ships</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h4>Delivery</h4>
-            <p>Your order will arrive within 5-7 business days</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button class="btn-download" (click)="downloadInvoice()">
-        📥 Download Invoice
-      </button>
-      <button class="btn-track" (click)="viewOrders()">
-        📦 Track Your Orders
-      </button>
-      <button class="btn-continue" (click)="continueShopping()">
-        Continue Shopping
-      </button>
     </div>
   </div>
+</main>
 
-  <!-- Error State -->
-  <div *ngIf="!loading && !order" class="error-state">
-    <div class="error-icon">✗</div>
-    <h2>Order Not Found</h2>
-    <p>We couldn't find your order. Please check the order number and try again.</p>
-    <button class="btn-back" (click)="continueShopping()">Back to Home</button>
-  </div>
-</div>
+<app-client-footer></app-client-footer>

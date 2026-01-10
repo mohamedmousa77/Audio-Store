@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Cart } from '../../../../core/models/cart';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { OrderServices } from '../../../../core/services/order/order-services';
-import { ShippingAddress, PaymentDetails } from '../../../../core/models/order';
+import { ShippingAddress } from '../../../../core/models/order';
 import { ClientHeader } from "../../layout/client-header/client-header";
 
 @Component({
