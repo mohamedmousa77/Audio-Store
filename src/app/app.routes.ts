@@ -2,35 +2,44 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
 export const routes: Routes = [
-  // Homepage Route
   {
     path: '',
-    pathMatch: 'full', // Assicura che corrisponda esattamente alla root (/)
-    loadComponent: () =>
-      import('./features/Client/homepage/home-page/homepage').then(
-        m => m.Homepage
-      )
+    redirectTo: 'client/home',
+    pathMatch: 'full'
   },
   
-  // Auth Routes
+  // ============================================
+  // AUTH ROUTES
+  // ============================================
   {
     path: 'auth',
     children: [
       {
         path: 'login',
-        loadComponent: () => 
-          import('./features/auth/login/login')
-            .then(m => m.LoginForm)
+        loadComponent: () =>
+          import('./features/auth/login/login').then(
+            (m) => m.LoginForm
+          ),
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./features/auth/register/register').then(
+            (m) => m.Register
+          ),
       },
       {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
+
   
-  // Admin Routes
+  // ============================================
+  // ADMIN ROUTES
+  // ============================================
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
@@ -39,19 +48,19 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import('./features/admin/dashboard/dashboard')
-            .then(m => m.DashboardPageComponent)
+            .then((m) => m.DashboardPageComponent)
       },
       {
         path: 'products',
         loadComponent: () =>
           import('./features/admin/products-manage/products-page/products-page')
-            .then(m => m.ProductsPage)
+            .then((m) => m.ProductsPage)
       },
       {
         path: 'orders',
         loadComponent: () =>
           import('./features/admin/orders-manage/orders-page/orders-page')
-            .then(m => m.OrdersPage)
+            .then((m) => m.OrdersPage)
       },
       {
         path: 'customers',
@@ -72,7 +81,9 @@ export const routes: Routes = [
       }
     ]
   },
-  // Client Routes 
+  // ============================================
+  // CLIENT ROUTES
+  // ============================================
   {
     path: 'client',
     // canActivate: [authGuard],
@@ -112,6 +123,11 @@ export const routes: Routes = [
         loadComponent: () => 
           import('./features/Client/orders/order-confirmation-page/order-confirmation-page')
           .then( m => m.OrderConfirmationPage)  
+      },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
       },
     ]
   },

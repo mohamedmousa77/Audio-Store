@@ -1,69 +1,103 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <span class="material-icons logo-icon">graphic_eq</span>
-      <h1>Admin Login</h1>
-      <p class="subtitle">Welcome back to Audio Store Management</p>
-    </div>
+<div class="login-page">
+  <!-- Page Header (above the container) -->
+  <div class="form-header">
+    <h1>Welcome back</h1>
+    <p>Sign in to access your saved items and order history.</p>
+  </div>
 
-    <div class="alert alert-danger" *ngIf="error">
-      <span class="material-icons">warning</span>
-      {{ errorMessage }}
-    </div>
+  <div class="login-container">
+    <!-- Left Section - Form -->
+    <div class="login-form-section">
+      <div class="form-wrapper">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <div class="input-group">
-          <span class="material-icons input-icon">mail</span>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            class="form-control"
-            placeholder="admin@audiostore.com"
-            [class.is-invalid]="email?.invalid && email?.touched"
-          />
-        </div>
-        <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
-          Please enter a valid email address
+      <!-- Error Message -->
+      <div *ngIf="error" class="error-alert">
+        <span class="material-symbols-outlined">error</span>
+        <div>
+          <strong>Login Failed</strong>
+          <p>{{ error }}</p>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">
-          Password
-          <a href="#" class="forgot-link">Forgot password?</a>
-        </label>
-        <div class="input-group">
-          <span class="material-icons input-icon">lock</span>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            class="form-control"
-            placeholder="Enter your password"
-            [class.is-invalid]="password?.invalid && password?.touched"
-          />
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon material-symbols-outlined">mail</span>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="form-input"
+              placeholder="john.doe@example.com"
+              [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            />
+          </div>
+          <span class="error-message" *ngIf="emailError && loginForm.get('email')?.touched">
+            {{ emailError }}
+          </span>
         </div>
-        <div class="invalid-feedback" *ngIf="password?.invalid && password?.touched">
-          Password must be at least 6 characters
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="password-header">
+            <label for="password" class="form-label">Password</label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-icon material-symbols-outlined">lock</span>
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              class="form-input"
+              placeholder="••••••••"
+              [class.error]="
+                loginForm.get('password')?.invalid && loginForm.get('password')?.touched
+              "
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <span class="material-symbols-outlined">
+                {{ showPassword ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+          <span class="error-message" *ngIf="passwordError && loginForm.get('password')?.touched">
+            {{ passwordError }}
+          </span>
         </div>
+
+        <!-- Sign In Button -->
+        <button type="submit" class="btn-signin" [disabled]="loginForm.invalid || loading">
+          <span *ngIf="!loading">Sign In</span>
+          <span *ngIf="loading" class="loading-spinner">
+            <span class="spinner"></span>
+            Signing In...
+          </span>
+        </button>
+      </form>
+
+      <!-- Register Link -->
+      <div class="register-link">
+        <p>New here? <a (click)="navigateToRegister()" class="link">Create an account</a></p>
       </div>
+    </div>
+  </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="loginForm.invalid || loading"
-      >
-        <span *ngIf="loading">Signing In...</span>
-        <span *ngIf="!loading">Sign In</span>
-      </button>
-    </form>
-
-    <div class="scroll-hint">
-      <p>Scroll to Explore Panel</p>
-      <span class="material-icons">keyboard_arrow_down</span>
+  <!-- Right Section - Image -->
+  <div class="login-image-section">
+    <div class="image-wrapper">
+      <img
+        src="login-cover-image.jpg"
+        alt="Audio Product"
+      />
     </div>
   </div>
 </div>

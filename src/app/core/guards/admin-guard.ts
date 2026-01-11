@@ -8,9 +8,9 @@ const router = inject(Router);
   const authService = inject(AuthServices);
   
   // Verifica se è loggato E se è un amministratore
-  if (authService.isLoggedIn && authService.isAdmin) {
-    return true;
-  }
+  // if (authService.isAuthenticated && authService.isAdmin) {
+  //   return true;
+  // }
 
   // Se non è admin, reindirizza al login o a una pagina di accesso negato
   router.navigate(['/auth/login']);

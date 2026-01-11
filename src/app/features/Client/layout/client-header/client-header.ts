@@ -67,8 +67,8 @@ export class ClientHeader {
     this.router.navigate(['/client/cart']);
   }
 
-  goToHome(): void {
-    this.router.navigate(['/client/home']);
+  goToLogin(): void {
+    this.router.navigate(['/auth/login']);
   }
 
   onSearch(): void {

@@ -232,61 +232,6 @@
   }
 }
 
-/* Nasconde il logo "Powered by Google" e i bordi brutti */
-.translate-widget {
-  /* min-width: 140px; */
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-body {
-  top: 0px !important; /* Impedisce al sito di scendere verso il basso */
-}
-.goog-te-banner-frame.skiptranslate, 
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-#google_translate_element .goog-te-gadget-simple {
-  background-color: #f8f7f5 !important; /* Beige del brand */
-  border: 1px solid #e8ddce !important;
-  border-radius: 10px !important;
-  padding: 5px 10px !important;
-  font-family: 'Inter', sans-serif !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #1c160d !important;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-
-#google_translate_element .goog-te-gadget-simple:hover {
-  border-color: #f49d25 !important; /* Arancione al passaggio del mouse */
-}
-
-/* 3. Nasconde il logo Google e le scritte extra */
-.goog-te-gadget-icon {
-  display: none !important; /* Rimuove l'icona G colorata */
-}
-
-.goog-te-menu-value span {
-  color: #1c160d !important;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.goog-te-menu-value span:nth-child(3),
-.goog-te-menu-value span:nth-child(5),
-.goog-te-gadget span {
-  display: none !important;
-}
-
-/* Rimuove il bordo blu che appare al click */
-#google_translate_element .goog-te-gadget-simple img {
-    display: none !important;
-}
 
 /* Mobile Menu */
 .mobile-menu {

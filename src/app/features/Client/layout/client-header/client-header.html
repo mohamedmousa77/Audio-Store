@@ -40,7 +40,7 @@
     <!-- Header Actions -->
     <div class="header-actions">      
       <!-- Account -->
-      <button class="action-btn account-btn" title="Account">
+      <button class="action-btn account-btn" (click)="goToLogin()" title="Account">
         <span class="material-icons">person</span>
       </button>
 
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Translation Option -->
-      <div id="google_translate_element" class="translate-widget"></div>
+      <!-- <div id="google_translate_element" class="translate-widget"></div> -->
 
       <!-- Mobile Menu Toggle -->
       <button
