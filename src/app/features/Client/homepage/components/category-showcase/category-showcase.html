@@ -12,7 +12,7 @@
     <div class="categories-grid" *ngIf="!loading()">
       <a
         *ngFor="let category of categories()"
-        [routerLink]="['/category', category.name]"
+        [routerLink]="['/client/category', category.name]"
         class="category-card"
       >
         <div

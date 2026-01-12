@@ -44,6 +44,7 @@ export class CategoryProductsPage {
   ];
 
   ngOnInit(): void {
+    
     this.route.params.subscribe(params => {
       this.categoryName = params['id'];
       this.breadcrumbs.push({
@@ -51,6 +52,10 @@ export class CategoryProductsPage {
         path: `/category/${this.categoryName}`
       });
       this.loadProducts();
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
   }
 

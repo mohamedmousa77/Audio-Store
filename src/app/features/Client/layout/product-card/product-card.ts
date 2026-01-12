@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Badge } from '../../../../shared/components/badge/badge';
@@ -12,22 +12,24 @@ import { CartServices } from '../../../../core/services/cart/cart-services';
   styleUrl: './product-card.css',
 })
 export class ProductCard {
-    constructor(
+  constructor(
     private route: ActivatedRoute,
     private router: Router,
     // private productService: ProductServices,
     private cartService: CartServices
   ) {}
   @Input() product!: Product;
+  @Input() clickable: boolean = false;
+  @Output() productSelected = new EventEmitter<string>();
 
 
-  isWishlisted = false;
+  // isWishlisted = false;
 
-  toggleWishlist(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isWishlisted = !this.isWishlisted;
-  }
+  // toggleWishlist(event: Event): void {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   this.isWishlisted = !this.isWishlisted;
+  // }
 
   get productImageUrl(): string {
     return this.product.image || 'https://via.placeholder.com/400x400?text=No+Image';
@@ -46,5 +48,13 @@ export class ProductCard {
     setTimeout(() => {
       this.router.navigate(['/client/cart']);
     }, 500);
+  }
+
+  onCardClick(event: Event): void {
+    if (this.clickable) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.productSelected.emit(this.product.id);
+    }
   }
 }

@@ -20,6 +20,8 @@
       <app-product-card
         *ngFor="let product of featuredProducts()"
         [product]="product"
+        [clickable]="true"
+        (productSelected)="goToProduct($event)"
       />
     </div>
   </div>

@@ -20,34 +20,9 @@ import { FeaturedProducts } from '../components/featured-products/featured-produ
   templateUrl: './homepage.html',
   styleUrl: './homepage.css',
 })
-export class Homepage implements OnInit {
-  // featuredProducts: Product[] = [];
-  // newArrivals: Product[] = [];
-
-  // constructor(private productService: ProductServices) {}
-
-  // ngOnInit(): void {
-  //   // Carica prodotti in evidenza e nuovi prodotti come da Analisi Funzionale
-  //   this.productService.getProducts().subscribe(products => {
-  //     this.featuredProducts = products.filter(p => p.isFeatured);
-  //     this.newArrivals = products.filter(p => p.isNew);
-  //   });
-  // }
+export class Homepage implements OnInit {  
 
   private productService = inject(ProductServices);
-
-  heroBanner = {
-    title: 'Experience Sound Like Never Before',
-    subtitle: '',
-    description:
-      'The ZX-900 Noise Cancelling Headphones offer premium audio quality for the true audiophile. Immerse yourself in pure acoustic bliss.',
-    primaryButtonText: 'Shop Now',
-    secondaryButtonText: 'Learn More',
-    primaryButtonLink: '/category/Headphones',
-    secondaryButtonLink: '#featured',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000&h=800&fit=crop'
-  };
 
   ngOnInit(): void {
     this.loadData();

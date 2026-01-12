@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ProductCard } from '../../../layout/product-card/product-card';
 import { ProductServices } from '../../../../../core/services/product/product-services';
 
@@ -12,20 +12,12 @@ import { ProductServices } from '../../../../../core/services/product/product-se
 })
 export class FeaturedProducts {
   private productService = inject(ProductServices);
+  private router = inject(Router);
 
-  featuredProducts = this.productService.featured
+  featuredProducts = this.productService.featured;
   loading = this.productService.isLoading;
 
-  // ngOnInit(): void {
-  //   this.loadFeaturedProducts();
-  // }
-
-  // async loadFeaturedProducts(): Promise<void> {
-  //   this.loading = true;
-  //   await this.productService.products;
-  //   this.featuredProducts = this.productService.featured;
-  //   this.loading = false;
-  // }
-
-
+  goToProduct(productId: string) {
+    (this.router as Router).navigate(['/client/product', productId]);
+  }
 }

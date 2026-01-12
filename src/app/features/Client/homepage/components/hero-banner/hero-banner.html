@@ -3,17 +3,16 @@
     <!-- Content -->
     <div class="hero-content">
       <h1 class="hero-title">{{ banner.title }}</h1>
-      <h2 class="hero-subtitle" *ngIf="banner.subtitle">{{ banner.subtitle }}</h2>
-      <p class="hero-description">{{ banner.description }}</p>
+      <p class="hero-description">{{ banner.product.bannerDescription }}</p>
 
       <div class="hero-actions">
-        <a [routerLink]="banner.primaryButtonLink" class="btn btn-primary">
-          <span class="material-icons">shopping_bag</span>
-          {{ banner.primaryButtonText }}
-        </a>
-        <a [routerLink]="banner.secondaryButtonLink" class="btn btn-secondary">
-          {{ banner.secondaryButtonText }}
-        </a>
+        <button class="btn btn-primary" (click)="addToCart()">
+           <span class="material-symbols-outlined">shopping_cart</span>
+          Shop Now
+        </button>
+        <button class="btn btn-secondary" (click)="goToPageDetails(1)">
+          Learn More
+        </button>        
       </div>
     </div>
 
@@ -21,7 +20,7 @@
     <div class="hero-image-container">
       <div
         class="hero-image"
-        [style.backgroundImage]="'url(' + banner.backgroundImage + ')'"
+        [style.backgroundImage]="'url(' + banner.product.image + ')'"
       ></div>
     </div>
   </div>

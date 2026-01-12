@@ -1,13 +1,18 @@
 <app-client-header />
 
 <main class="home-page">
-  <app-hero-banner [banner]="heroBanner" />
-
-  <app-featured-products />
-
-  <app-category-showcase />
-
-  <app-newsletter-signup />
+  <div class="homepage-section">
+    <app-hero-banner />
+  </div>
+  <div class="homepage-section">
+    <app-featured-products />
+  </div>
+  <div class="homepage-section">
+    <app-category-showcase />
+  </div>
+  <div class="homepage-section">
+    <app-newsletter-signup />
+  </div>
 </main>
 
 <app-client-footer />

@@ -7,8 +7,12 @@
         <!-- <p>Manage your profile</p> -->
         <p>{{ memberSince  }}</p>
       </div>
-      <button class="logout-btn" (click)="logout()" title="Logout">
+      <!-- <button class="logout-btn" (click)="logout()" title="Logout">
         <span class="material-symbols-outlined">logout</span>
+      </button> -->
+      <button class="btn-continue-top" (click)="continueShopping()">
+          <span class="material-symbols-outlined">keyboard_backspace</span>
+          Continue Shopping
       </button>
     </div>
   </header>
@@ -18,14 +22,20 @@
     <!-- Sidebar Menu -->
     <aside class="profile-sidebar">
       <nav class="menu">
-        <button
-          *ngFor="let item of menuItems"
-          class="menu-item"
-          [class.active]="activeMenu === item.id"
-          (click)="navigateToSection(item)"
-        >
-          <span class="menu-icon material-symbols-outlined">{{ item.icon }}</span>
-          <span class="menu-label">{{ item.label }}</span>
+        <ng-container *ngFor="let item of menuItems">
+          <button
+            class="menu-item"
+            [class.active]="activeMenu === item.id"
+            (click)="navigateToSection(item)"
+          >
+            <span class="menu-icon material-symbols-outlined">{{ item.icon }}</span>
+            <span class="menu-label">{{ item.label }}</span>
+          </button>
+        </ng-container>
+        <div class="menu-spacer"></div>
+        <button class="menu-item logout-menu-item" (click)="logout()" title="Logout">
+          <span class="menu-icon material-symbols-outlined">logout</span>
+          <span class="menu-label">Logout</span>
         </button>
       </nav>
     </aside>

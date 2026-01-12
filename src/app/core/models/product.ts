@@ -13,5 +13,6 @@ export interface Product {
     gallery?: string[];
     isFeatured?: boolean;
     isNew?: boolean;
+    bannerDescription? :string;
 
 }

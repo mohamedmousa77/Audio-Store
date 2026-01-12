@@ -30,10 +30,6 @@ export class ProductDetails implements OnInit {
     private cartService: CartServices
   ) {}
 
-  // private productService = inject(ProductServices);
-  // private cartService = inject(CartServices);
-  // private route = inject(ActivatedRoute);
-
   product: Product | null = null;
   relatedProducts: Product[] = [];
   quantity = 1;
@@ -59,6 +55,10 @@ export class ProductDetails implements OnInit {
       if (productId) {
         this.loadProduct(productId);
       }
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
   }
 
@@ -160,5 +160,12 @@ export class ProductDetails implements OnInit {
   get currentImage(): string {
     return this.productImages[this.selectedImageIndex] || this.product?.image || '';
   }
+
+   onRelatedProductSelected(productId: string): void {
+      this.router.navigate(['/client/product', productId]);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    }
 
 }

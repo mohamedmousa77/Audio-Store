@@ -25,6 +25,12 @@ export class CartPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Scroll to top when cart page loads
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
     this.cartService.getCart().subscribe(cart => {
       this.cart = cart;
     });

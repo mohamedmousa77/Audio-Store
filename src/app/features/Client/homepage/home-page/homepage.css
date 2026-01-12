@@ -1,0 +1,20 @@
+
+.home-page {
+	width: 100%;
+	min-height: 100vh;
+	background: #faf9f6;
+}
+
+.homepage-section {
+	margin-bottom: 0rem;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+@media (max-width: 768px) {
+	.homepage-section {
+		margin-bottom: 2rem;
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
+	}
+}

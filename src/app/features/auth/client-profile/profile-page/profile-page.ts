@@ -157,8 +157,6 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit{
 
   navigateToSection(menuItem: MenuItem): void {
     this.activeMenu = menuItem.id;
-
-    // Usa un timeout per assicurarsi che il template sia renderizzato
     setTimeout(() => {
       const section = this[menuItem.section as keyof this] as ElementRef;
       if (section && section.nativeElement) {
@@ -194,6 +192,10 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit{
   getFullName(): string {
     if (!this.currentUser) return '';
     return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+  }
+
+  continueShopping(): void {
+    this.router.navigate(['/client/home']);
   }
 
 }

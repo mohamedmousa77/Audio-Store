@@ -1,17 +1,7 @@
 <app-client-header />
 
 <main class="product-detail-page">
-  <!-- Breadcrumbs -->
-  <nav class="breadcrumbs">
-    <div class="breadcrumbs-container">
-      <a *ngFor="let breadcrumb of breadcrumbs; let last = last" 
-         [routerLink]="breadcrumb.path"
-         class="breadcrumb-link">
-        {{ breadcrumb.label }}
-        <span *ngIf="!last" class="separator">/</span>
-      </a>
-    </div>
-  </nav>
+
 
   <!-- Loading State -->
   <div class="loading-state" *ngIf="loading">
@@ -135,15 +125,14 @@
           <button 
             class="add-to-cart-btn"
             (click)="addToCart()"
-            [class.added]="addedToCart"
+            
             [disabled]="product.stock === 0"
           >
-            <span class="material-icons">shopping_bag</span>            
-            <span *ngIf="addedToCart">✓ Added to Cart</span>
+            <span class="material-icons">shopping_bag</span>
             Add to Cart
           </button>
 
-          <button 
+          <!-- <button 
             class="wishlist-btn"
             (click)="toggleWishlist()"
             [class.wishlisted]="isWishlisted"
@@ -152,7 +141,7 @@
             <span class="material-icons">
               {{ isWishlisted ? 'favorite' : 'favorite_border' }}
             </span>
-          </button>
+          </button> -->
         </div>
 
         <!-- Features -->
@@ -210,6 +199,8 @@
         <app-product-card
           *ngFor="let relatedProduct of relatedProducts"
           [product]="relatedProduct"
+          [clickable]="true"
+          (productSelected)="onRelatedProductSelected($event)"
         />
       </div>
     </section>
