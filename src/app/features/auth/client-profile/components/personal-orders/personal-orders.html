@@ -1,0 +1,120 @@
+<div class="orders-section">
+  <!-- Header -->
+  <div class="section-header">
+    <div class="section-title">
+      <h2>Order History</h2>
+      <p>Track your past orders and their status</p>
+    </div>
+    <div class="date-filter">
+      <label for="dateRange" class="filter-label">Last</label>
+      <select
+        id="dateRange"
+        class="filter-select"
+        [(ngModel)]="selectedDateFilter"
+        (change)="onDateFilterChange(selectedDateFilter)"
+      >
+        <option value="all">All Orders</option>
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your orders...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-alert">
+    <span class="material-symbols-outlined">error</span>
+    <div>
+      <strong>Error</strong>
+      <p>{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Orders List -->
+  <div *ngIf="!loading && filteredOrders.length > 0" class="orders-list">
+    <div *ngFor="let order of filteredOrders" class="order-card">
+      <!-- Order Header -->
+      <div class="order-header">
+        <div class="order-info">
+          <div class="info-group">
+            <label class="info-label">ORDER ID</label>
+            <span class="order-id">#{{ order.orderNumber }}</span>
+          </div>
+          <div class="info-group">
+            <label class="info-label">DATE</label>
+            <span class="order-date">{{ formatDate(order.date) }}</span>
+          </div>
+          <div class="info-group">
+            <label class="info-label">TOTAL</label>
+            <span class="order-total">{{ formatPrice(order.total!) }}</span>
+          </div>
+          <div class="info-group">
+            <label class="info-label">STATUS</label>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusColor(order.status)"
+            >
+              {{ order.status || 'Processing' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- View Details Link -->
+        <button
+          class="view-details-btn"
+          (click)="viewOrderDetails(order.id)"
+        >
+          <span>View Details</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Product Images -->
+      <div class="order-products" *ngIf="order.items && order.items.length > 0">
+        <div class="products-gallery">
+          <div
+            *ngFor="let item of getProductImages(order)"
+            class="product-thumbnail"
+          >
+            <img
+              [src]="item.image"
+              [alt]="item.name"
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Extra Products Badge -->
+          <div
+            *ngIf="getExtraProductsCount(order) > 0"
+            class="extra-products-badge"
+          >
+            <span>+{{ getExtraProductsCount(order) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredOrders.length === 0" class="empty-state">
+    <span class="material-symbols-outlined">receipt</span>
+    <h3>No orders found</h3>
+    <p>
+      {{
+        selectedDateFilter === 'all'
+          ? 'You haven\'t placed any orders yet.'
+          : 'No orders found for the selected period.'
+      }}
+    </p>
+    <a href="/client/home" class="btn btn-primary">
+      <span class="material-symbols-outlined">shopping_bag</span>
+      Start Shopping
+    </a>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="profile-container">
+  <!-- Header -->
+  <header class="profile-header">
+    <div class="header-content">
+      <div class="user-greeting">
+        <h1>Hello, {{ currentUser?.firstName ?? 'Mousa' }}</h1>
+        <!-- <p>Manage your profile</p> -->
+        <p>{{ memberSince  }}</p>
+      </div>
+      <button class="logout-btn" (click)="logout()" title="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="profile-content">
+    <!-- Sidebar Menu -->
+    <aside class="profile-sidebar">
+      <nav class="menu">
+        <button
+          *ngFor="let item of menuItems"
+          class="menu-item"
+          [class.active]="activeMenu === item.id"
+          (click)="navigateToSection(item)"
+        >
+          <span class="menu-icon material-symbols-outlined">{{ item.icon }}</span>
+          <span class="menu-label">{{ item.label }}</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Sections Container -->
+    <div class="profile-sections">
+      <!-- Personal Information Section -->
+      <section
+        #personalInfoSection
+        id="personalInfoSection"
+        class="profile-section"
+        [class.active]="activeMenu === 'personal-info'"
+      >
+        <app-personal-info></app-personal-info>
+      </section>
+
+      <!-- Address Section -->
+      <section
+        #addressSection
+        id="addressSection"
+        class="profile-section"
+        [class.active]="activeMenu === 'address'"
+      >
+        <app-personal-address></app-personal-address>
+      </section>
+
+      <!-- Orders Section -->
+      <section
+        #ordersSection
+        id="ordersSection"
+        class="profile-section"
+        [class.active]="activeMenu === 'orders'"
+      >
+        <app-personal-orders></app-personal-orders>
+      </section>
+    </div>
+  </div>
+</div>

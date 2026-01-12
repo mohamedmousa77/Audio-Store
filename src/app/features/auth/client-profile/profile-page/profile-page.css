@@ -1,0 +1,277 @@
+:host {
+  --orange: #f49d25;
+  --dark: #1c160d;
+  --muted: #9c7a49;
+  --bg-beige: #f8f7f5;
+  --white: #ffffff;
+  --green: #27ae60;
+  --error: #e74c3c;
+  --light-gray: #f5f5f5;
+  --border: #e8e5df;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.profile-container {
+  min-height: 100vh;
+  background: var(--bg-beige);
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.profile-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-greeting h1 {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+
+.user-greeting p {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.logout-btn {
+  background: var(--light-gray);
+  border: none;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--muted);
+}
+
+.logout-btn:hover {
+  background: var(--orange);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.logout-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* ============================================
+   PROFILE CONTENT LAYOUT
+   ============================================ */
+
+.profile-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: block;
+  padding: 40px 20px;
+  padding-left: 260px;
+}
+
+@media (max-width: 1024px) {
+  .profile-sidebar {
+    width: 150px;
+    left: 16px;
+    top: 170px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    display: block;
+    gap: 30px;
+    padding: 30px 16px;
+    padding-left: 16px;
+  }
+
+  .profile-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* ============================================
+   SIDEBAR MENU
+   ============================================ */
+
+.profile-sidebar {
+  height: fit-content;
+  position: fixed;
+  left: 20px;
+  top: 170px;
+  width: 200px;
+  z-index: 50;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: left;
+}
+
+.menu-item:hover {
+  background: var(--light-gray);
+  /* color: var(--dark); */
+  transform: translateY(-2px);
+  border: 2px solid transparent;
+}
+
+.menu-item.active {
+  background: var(--orange);
+  color: var(--white);
+  border-color: var(--orange);
+}
+
+.menu-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.menu-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  .profile-sidebar {
+    position: static;
+  }
+
+  .menu {
+    flex-direction: row;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .menu-item {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .menu-label {
+    display: none;
+  }
+
+  .menu-item.active .menu-label {
+    display: none;
+  }
+}
+
+/* ============================================
+   PROFILE SECTIONS
+   ============================================ */
+
+.profile-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.profile-section {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 30px 16px;
+  }
+
+  .user-greeting h1 {
+    font-size: 28px;
+  }
+
+  .user-greeting p {
+    font-size: 13px;
+  }
+
+  .profile-content {
+    padding: 20px 16px;
+  }
+
+  .profile-sections {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 24px 12px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .user-greeting h1 {
+    font-size: 24px;
+  }
+
+  .profile-content {
+    padding: 16px 12px;
+    gap: 20px;
+  }
+
+  .profile-sections {
+    gap: 24px;
+  }
+}
+
+/* ============================================
+   SCROLL BEHAVIOR
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+}

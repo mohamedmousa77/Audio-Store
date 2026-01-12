@@ -1,0 +1,251 @@
+<div class="address-section">
+  <!-- Header -->
+  <div class="section-header">
+    <div class="section-title">
+      <h2>Default Address</h2>
+      <p>Manage your shipping and billing addresses</p>
+    </div>
+    <button
+      class="btn btn-add"
+      (click)="startAdding()"
+      *ngIf="!isAdding"
+    >
+      <span class="material-symbols-outlined">add</span>
+      Add Address
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="saveSuccess" class="success-alert">
+    <span class="material-symbols-outlined">check_circle</span>
+    <div>
+      <strong>Success!</strong>
+      <p>Your address has been saved successfully.</p>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="saveError" class="error-alert">
+    <span class="material-symbols-outlined">error</span>
+    <div>
+      <strong>Error</strong>
+      <p>{{ saveError }}</p>
+    </div>
+  </div>
+
+  <!-- Add/Edit Form -->
+  <form
+    *ngIf="isAdding"
+    [formGroup]="addressForm"
+    (ngSubmit)="onSave()"
+    class="address-form"
+  >
+    <!-- Name Row -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="firstName" class="form-label">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          formControlName="firstName"
+          class="form-input"
+          placeholder="John"
+        />
+        <span
+          class="error-message"
+          *ngIf="firstNameError && addressForm.get('firstName')?.touched"
+        >
+          {{ firstNameError }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          formControlName="lastName"
+          class="form-input"
+          placeholder="Doe"
+        />
+        <span
+          class="error-message"
+          *ngIf="lastNameError && addressForm.get('lastName')?.touched"
+        >
+          {{ lastNameError }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Street Address -->
+    <div class="form-group">
+      <label for="address" class="form-label">Street Address</label>
+      <input
+        id="address"
+        type="text"
+        formControlName="address"
+        class="form-input"
+        placeholder="1234 Sound Wave Avenue, Apt 46"
+      />
+      <span
+        class="error-message"
+        *ngIf="addressError && addressForm.get('address')?.touched"
+      >
+        {{ addressError }}
+      </span>
+    </div>
+
+    <!-- City/State/ZIP Row -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="city" class="form-label">City</label>
+        <input
+          id="city"
+          type="text"
+          formControlName="city"
+          class="form-input"
+          placeholder="San Francisco"
+        />
+        <span
+          class="error-message"
+          *ngIf="cityError && addressForm.get('city')?.touched"
+        >
+          {{ cityError }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="zipCode" class="form-label">ZIP Code</label>
+        <input
+          id="zipCode"
+          type="text"
+          formControlName="zipCode"
+          class="form-input"
+          placeholder="94105"
+        />
+        <span
+          class="error-message"
+          *ngIf="zipCodeError && addressForm.get('zipCode')?.touched"
+        >
+          {{ zipCodeError }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Country -->
+    <div class="form-group">
+      <label for="country" class="form-label">Country</label>
+      <select
+        id="country"
+        formControlName="country"
+        class="form-input form-select"
+      >
+        <option value="">Select a country</option>
+        <option value="United States">United States</option>
+        <option value="Canada">Canada</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="Australia">Australia</option>
+        <option value="Italy">Italy</option>
+        <option value="Germany">Germany</option>
+        <option value="France">France</option>
+        <option value="Spain">Spain</option>
+        <option value="Other">Other</option>
+      </select>
+      <span
+        class="error-message"
+        *ngIf="countryError && addressForm.get('country')?.touched"
+      >
+        {{ countryError }}
+      </span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="addressForm.invalid || isSaving"
+      >
+        <span *ngIf="!isSaving">Save Address</span>
+        <span *ngIf="isSaving" class="loading-spinner">
+          <span class="spinner"></span>
+          Saving...
+        </span>
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancel()"
+        [disabled]="isSaving"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+
+  <!-- Addresses List -->
+  <div *ngIf="!isAdding && addresses.length > 0" class="addresses-list">
+    <div *ngFor="let address of addresses" class="address-card">
+      <!-- Default Badge -->
+      <span
+        *ngIf="address.isDefault"
+        class="default-badge"
+      >
+        Default
+      </span>
+
+      <!-- Address Info -->
+      <div class="address-info">
+        <h3>{{ address.firstName }} {{ address.lastName }}</h3>
+        <p class="street">{{ address.address }}</p>
+        <p class="city-zip">
+          {{ address.city }}, {{ address.zipCode }}
+        </p>
+        <p class="country">{{ address.country }}</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="address-actions">
+        <button
+          *ngIf="!address.isDefault"
+          class="btn btn-text"
+          (click)="setAsDefault(address.id)"
+          title="Set as default"
+        >
+          <span class="material-symbols-outlined">check</span>
+          Set Default
+        </button>
+        <button
+          class="btn btn-text"
+          (click)="startEditing(address)"
+          title="Edit address"
+        >
+          <span class="material-symbols-outlined">edit</span>
+          Edit
+        </button>
+        <button
+          class="btn btn-text btn-danger"
+          (click)="deleteAddress(address.id)"
+          title="Delete address"
+        >
+          <span class="material-symbols-outlined">delete</span>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isAdding && addresses.length === 0" class="empty-state">
+    <span class="material-symbols-outlined">location_on</span>
+    <h3>No addresses yet</h3>
+    <p>Add an address to get started with your orders</p>
+    <button
+      class="btn btn-primary"
+      (click)="startAdding()"
+    >
+      <span class="material-symbols-outlined">add</span>
+      Add Your First Address
+    </button>
+  </div>
+</div>

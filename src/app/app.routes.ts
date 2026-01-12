@@ -125,6 +125,12 @@ export const routes: Routes = [
           .then( m => m.OrderConfirmationPage)  
       },
       {
+        path: 'profile',
+        loadComponent: () => 
+          import('./features/auth/client-profile/profile-page/profile-page')
+          .then( m => m.ProfilePage)  
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
