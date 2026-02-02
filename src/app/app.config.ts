@@ -7,12 +7,19 @@ import { routes } from './app.routes';
 
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { loggingInterceptor } from './core/interceptors/logging-interceptor';
+import { environment } from '../environments/environment';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withHashLocation()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
+      withInterceptors([
+        authInterceptor,
+        ...(environment.enableLogging ? [loggingInterceptor] : []),
+        errorInterceptor
+      ])
     ),
     provideAnimations()
   ]

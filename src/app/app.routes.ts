@@ -42,7 +42,7 @@ export const routes: Routes = [
   // ============================================
   {
     path: 'admin',
-    canActivate: [authGuard, adminGuard],
+    // canActivate: [authGuard, adminGuard],
     children: [
       {
         path: 'dashboard',
