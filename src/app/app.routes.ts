@@ -7,7 +7,7 @@ export const routes: Routes = [
     redirectTo: 'client/home',
     pathMatch: 'full'
   },
-  
+
   // ============================================
   // AUTH ROUTES
   // ============================================
@@ -36,13 +36,12 @@ export const routes: Routes = [
     ],
   },
 
-  
   // ============================================
   // ADMIN ROUTES
   // ============================================
   {
     path: 'admin',
-    // canActivate: [authGuard, adminGuard],
+    canActivate: [adminGuard], // Admin guard checks both auth and admin role
     children: [
       {
         path: 'dashboard',
@@ -92,43 +91,46 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () =>
           import('./features/Client/homepage/home-page/homepage')
-          .then(m => m.Homepage)
+            .then(m => m.Homepage)
       },
       {
         path: 'category/:id',
         loadComponent: () =>
           import('./features/Client/category-products/category-products-page/category-products-page')
-          .then(m => m.CategoryProductsPage)
+            .then(m => m.CategoryProductsPage)
       },
       {
         path: 'product/:id',
         loadComponent: () =>
           import('./features/Client/product-details/product-details-page/product-details')
-          .then(m => m.ProductDetails)
+            .then(m => m.ProductDetails)
       },
       {
         path: 'cart',
         loadComponent: () =>
           import('./features/Client/cart/cart-page/cart-page')
-          .then( m => m.CartPage)
+            .then(m => m.CartPage)
       },
       {
         path: 'checkout',
-        loadComponent: () => 
+        // Guest checkout allowed - no auth required
+        loadComponent: () =>
           import('./features/Client/orders/checkout-page/order-page')
-          .then( m => m.OrderPage)  
+            .then(m => m.OrderPage)
       },
       {
         path: 'order-confirmation/:id',
-        loadComponent: () => 
+        // Guest orders allowed - no auth required
+        loadComponent: () =>
           import('./features/Client/orders/order-confirmation-page/order-confirmation-page')
-          .then( m => m.OrderConfirmationPage)  
+            .then(m => m.OrderConfirmationPage)
       },
       {
         path: 'profile',
-        loadComponent: () => 
+        canActivate: [authGuard], // Profile requires authentication
+        loadComponent: () =>
           import('./features/auth/client-profile/profile-page/profile-page')
-          .then( m => m.ProfilePage)  
+            .then(m => m.ProfilePage)
       },
       {
         path: '',
