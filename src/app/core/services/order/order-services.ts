@@ -1,436 +1,256 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { BaseApiServices } from '../api/api-services';
-import {map, switchMap, catchError} from 'rxjs/operators';
-import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { Order, ShippingAddress} from '../../models/order';
-import { MOCK_ORDERS } from '../catalog-api.service';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import {
+  Order,
+  CreateOrderRequest,
+  OrderConfirmation,
+  UpdateOrderStatusRequest,
+  OrderFilterParams,
+  PaginatedResult,
+  CreateOrderItem
+} from '../../models/order';
+import { OrderApiService } from './order-api.service';
+import { Cart } from '../../models/cart';
 
+/**
+ * Order Services
+ * High-level service for order management
+ * 
+ * ARCHITECTURE:
+ * - All operations require authentication (JWT token)
+ * - No mock data - always uses OrderApiService
+ * - Uses Signals for reactive state management
+ * - Provides helper methods for cart → order conversion
+ */
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
+export class OrderServices {
+  private orderApi = inject(OrderApiService);
 
+  // ============================================
+  // STATE MANAGEMENT (Signals)
+  // ============================================
 
-// export class OrderServices extends BaseApiServices {
-//   private readonly endpoint = API_ENDPOINTS.orders;
+  private ordersSignal = signal<Order[]>([]);
+  private currentOrderSignal = signal<Order | null>(null);
+  loadingSignal = signal<boolean>(false);
+  errorSignal = signal<string | null>(null);
 
-//   // Recupera la lista completa degli ordini per l'amministratore
-//   getOrders(): Observable<Order[]> {
-//     return this.http.get<Order[]>(this.buildUrl(this.endpoint));
-//   }
+  // Computed values
+  orders = computed(() => this.ordersSignal());
+  currentOrder = computed(() => this.currentOrderSignal());
+  hasOrders = computed(() => this.ordersSignal().length > 0);
 
-//   // Visualizzazione del dettaglio di un singolo ordine
-//   getOrderById(id: string): Observable<Order> {
-//     return this.http.get<Order>(`${this.buildUrl(this.endpoint)}/${id}`);
-//   }
-
-//   // Modifica dello stato di un ordine tra i valori ammessi
-//   updateOrderStatus(id: string, status: 'Processing' | 'Shipped' | 'Delivered' | 'Canceled'): Observable<Order> {
-//     return this.http.patch<Order>(`${this.buildUrl(this.endpoint)}/${id}/status`, { status }, {
-//       headers: this.getStandardHeaders()
-//     });
-//   }
-
-//   // Recupera ordini specifici di un utente (per l'interfaccia Cliente)
-//   getOrdersByUserId(userId: string): Observable<Order[]> {
-//     return this.http.get<Order[]>(`${this.buildUrl(this.endpoint)}?userId=${userId}`);
-//   }
-// }
-
-// export class OrderServices {
-//   private ordersSubject = new BehaviorSubject<Order[]>([]);
-//   public orders$ = this.ordersSubject.asObservable();
-  
-//   private currentOrderSubject = new BehaviorSubject<Order | null>(null);
-//   public currentOrder$ = this.currentOrderSubject.asObservable();
-
-//   private useMockData = true;
-
-//   constructor() {
-//     this.loadOrdersFromLocalStorage();
-//   }
-
-//   private loadOrdersFromLocalStorage(): void {
-//     const savedOrders = localStorage.getItem('orders');
-//     if (savedOrders) {
-//     try {
-//         const orders = JSON.parse(savedOrders);
-//         this.ordersSubject.next(orders);
-//       } catch (error) {
-//         console.error('Errore nel parsing degli ordini da localStorage', error);
-//         this.ordersSubject.next(MOCK_ORDERS);
-//       }
-//     } else {
-//       // Se non ci sono ordini salvati, usa i mock data
-//       this.ordersSubject.next(MOCK_ORDERS);
-//     }
-//   }
-
-//   private saveOrdersToLocalStorage(): void {
-//     localStorage.setItem('orders', JSON.stringify(this.ordersSubject.value));
-//   }
-
-//   createOrder(
-//     shippingAddress: ShippingAddress,
-//     items: any[],
-//     subtotal: number,
-//     shipping: number,
-//     tax: number
-//   ): Order {
-//     const order: Order = {
-//       id: `ORD-${Date.now()}`,
-//       orderNumber: `#${Math.floor(100000 + Math.random() * 900000)}`,
-//       date: new Date(),
-//       shippingAddress,
-//       items,
-//       subtotal,
-//       shipping,
-//       tax,
-//       total: subtotal + shipping + tax,
-//       status: 'confirmed'
-//     };
-
-//     const currentOrders = this.ordersSubject.value;
-//     currentOrders.push(order);
-//     this.ordersSubject.next(currentOrders);
-//     this.currentOrderSubject.next(order);
-//     this.saveOrdersToLocalStorage();
-
-//     return order;
-//   }
-
-//   setCurrentOrder(order: Order): void {
-//     this.currentOrderSubject.next(order);
-//   }
-
-//   getCurrentOrder(): Observable<Order | null> {
-//     return this.currentOrder$;
-//   }
-
-//   getOrders(): Observable<Order[]> {
-//     if (this.useMockData) {
-//       return of(MOCK_ORDERS);
-//     }
-//     return this.orders$;
-//     // return this.http.get<Order[]>(this.buildUrl(this.endpoint)).pipe(
-//     //   map((orders) => {
-//     //     this.ordersSubject.next(orders);
-//     //     return orders;
-//     //   })
-//     // );
-//   }
-
-//   getOrderById$(id: string): Observable<Order | undefined> {
-//     if (this.useMockData) {
-//       const order = MOCK_ORDERS.find(o => o.id === id);
-//       return of(order);
-//     }
-//     const order = this.getOrderById(id);
-//     return of(order);
-//   }
-
-//   getOrderById(id: string): Order | undefined {
-//     {
-//       const localOrder = this.getOrderByIdFromLocalStorage(id);
-//       if (localOrder) {
-//         console.log('✓ Order found in localStorage:', localOrder);
-//         return of(localOrder);
-//       }
-
-//       const orders = this.ordersSubject.value;
-//       return orders.find(order => order.id === id);
-//     }
-//   }
-
-//   getOrdersByUserId(userId: string): Observable<Order[]> {
-//     const userOrders = this.ordersSubject.value.filter(
-//       order => order.customerEmail?.toLowerCase().includes(userId.toLowerCase())
-//     );
-//     return of(userOrders);
-//   }
-
-//   /**
-//    * Ottiene gli ordini per email
-//    */
-//   getOrdersByEmail(email: string): Observable<Order[]> {
-//     const userOrders = this.ordersSubject.value.filter(
-//       order => order.customerEmail === email
-//     );
-//     return of(userOrders);
-//   }
-
-//   /**
-//    * Ottiene ordini per stato
-//    */
-//   getOrdersByStatus(status: Order['status']): Observable<Order[]> {
-//     const filteredOrders = this.ordersSubject.value.filter(
-//       order => order.status === status
-//     );
-//     return of(filteredOrders);
-//   }
-
-//   /**
-//    * Cancella un ordine
-//    */
-//   // cancelOrder(orderId: string): void {
-//   //   this.updateOrderStatus(orderId, 'canceled');
-//   // }
-
-//   /**
-//    * Calcola la data stimata di consegna (5-7 giorni lavorativi)
-//    */
-//   private calculateEstimatedDelivery(): Date {
-//     const date = new Date();
-//     date.setDate(date.getDate() + 5);
-//     return date;
-//   }
-  
-// private generateTrackingNumber(): string {
-//     const prefix = 'IT';
-//     const randomNumbers = Math.floor(Math.random() * 1000000000000)
-//       .toString()
-//       .padStart(12, '0');
-//     const randomLetters = String.fromCharCode(
-//       65 + Math.floor(Math.random() * 26),
-//       65 + Math.floor(Math.random() * 26),
-//       65 + Math.floor(Math.random() * 26)
-//     );
-//     return `${prefix}${randomNumbers}${randomLetters}`;
-//   }
-
-//   /**
-//    * Svuota tutti gli ordini
-//    */
-//   clearAllOrders(): void {
-//     localStorage.removeItem('orders');
-//     this.ordersSubject.next([]);
-//   }
-
-//   /**
-//    * Ripristina i mock data
-//    */
-//   resetToMockData(): void {
-//     this.ordersSubject.next(MOCK_ORDERS);
-//     this.saveOrdersToLocalStorage();
-//   }
-
-
-// }
-
-
-export class OrderServices extends BaseApiServices {
-  private readonly endpoint = API_ENDPOINTS.orders;
-
-  private ordersSubject = new BehaviorSubject<Order[]>([]);
-  public orders$ = this.ordersSubject.asObservable();
-
-  private currentOrderSubject = new BehaviorSubject<Order | null>(null);
-  public currentOrder$ = this.currentOrderSubject.asObservable();
-
-  private useMockData = true; // CAMBIA IN false QUANDO L'API È PRONTA
-
-  constructor(http: HttpClient) {
-    super(http); 
-    this.loadOrdersFromLocalStorage();
-  }
+  // ============================================
+  // USER OPERATIONS
+  // ============================================
 
   /**
-   * Recupera la lista completa degli ordini
+   * Load current user's orders
+   * Requires authentication
    */
-  getOrders(): Observable<Order[]> {
-    if (this.useMockData) {
-      return of(MOCK_ORDERS);
-    }
-    return this.http.get<Order[]>(this.buildUrl(this.endpoint)).pipe(
-      map((orders) => {
-        this.ordersSubject.next(orders);
-        return orders;
-      })
-    );
-  }
+  async loadUserOrders(): Promise<void> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
 
-  /**
-   * Recupera un singolo ordine per ID
-   */
-  getOrderById(id: string): Observable<Order | null> {
-    console.log('🔍 Fetching order with ID:', id);
-
-    if (this.useMockData) {
-      // Prova localStorage FIRST
-      const localOrder = this.getOrderByIdFromLocalStorage(id);
-      if (localOrder) {
-        console.log('✓ Order found in localStorage:', localOrder);
-        return of(localOrder);
-      }
-
-      // Poi prova MOCKORDERS
-      const mockOrder = MOCK_ORDERS.find((o) => o.id === id || o.orderNumber?.toString() === id);
-      if (mockOrder) {
-        console.log('✓ Order found in MOCKORDERS:', mockOrder);
-        this.currentOrderSubject.next(mockOrder);
-        return of(mockOrder);
-      }
-
-      console.warn('⚠ Order not found');
-      return of(null);
-    }
-
-    // Se API è attiva, prova API poi fallback a localStorage
-    return this.http.get<Order>(this.buildUrl(`${this.endpoint}/${id}`)).pipe(
-      map((order) => {
-        console.log('✓ Order fetched from API:', order);
-        this.currentOrderSubject.next(order);
-        return order;
-      }),
-      catchError((err) => {
-        console.warn('⚠ API error, trying localStorage...');
-        const localOrder = this.getOrderByIdFromLocalStorage(id);
-        return of(localOrder);
-      })
-    );
-  }
-
-  /**
-   * Carica ordine da localStorage
-   */
-  getOrderByIdFromLocalStorage(id: string): Order | null {
-    const orders = this.ordersSubject.value;
-    const order = orders.find((o) => o.id === id || o.orderNumber?.toString() === id);
-    return order ?? null;
-  }
-
-  /**
-   * Aggiorna lo stato dell'ordine
-   */
-  updateOrderStatus(
-    id: string,
-    status: 'Processing' | 'Shipped' | 'Delivered' | 'Canceled'
-  ): Observable<Order> {
-    return this.http.patch<Order>(
-      this.buildUrl(`${this.endpoint}/${id}/status`),
-      { status },
-      { headers: this.getStandardHeaders() }
-    );
-  }
-
-  /**
-   * Recupera ordini per utente
-   */
-  getOrdersByUserId(userId: string): Observable<Order[]> {
-    const userOrders = this.ordersSubject.value.filter(
-      (order) => order.customerEmail?.toLowerCase().includes(userId.toLowerCase())
-    );
-    return of(userOrders);
-  }
-
-  /**
-   * Crea nuovo ordine
-   */
-  createOrder(
-    shippingAddress: ShippingAddress,
-    items: any[],
-    subtotal: number,
-    shipping: number,
-    tax: number
-  ): Order {
-    const order: Order = {
-      id: `ORD-${Date.now()}`,
-      orderNumber: (Math.floor(100000 + Math.random() * 900000)).toString(),
-      date: new Date(),
-      shippingAddress,
-      items,
-      subtotal,
-      shipping,
-      tax,
-      total: subtotal + shipping + tax,
-      status: 'confirmed',
-      customerName: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
-      customerEmail: shippingAddress.email,
-      trackingNumber: this.generateTrackingNumber(),
-      estimatedDelivery: this.calculateEstimatedDelivery(),
-      paymentMethod: 'Cash on Delivery',
-    };
-
-    const currentOrders = this.ordersSubject.value;
-    currentOrders.push(order);
-    this.ordersSubject.next(currentOrders);
-    this.currentOrderSubject.next(order);
-    this.saveOrdersToLocalStorage();
-
-    return order;
-  }
-
-  /**
-   * Imposta ordine corrente
-   */
-  setCurrentOrder(order: Order): void {
-    this.currentOrderSubject.next(order);
-  }
-
-  /**
-   * Carica ordini da localStorage
-   */
-  private loadOrdersFromLocalStorage(): void {
-    const savedOrders = localStorage.getItem('orders');
-    if (savedOrders) {
-      try {
-        const orders = JSON.parse(savedOrders) as Order[];
-        this.ordersSubject.next(orders);
-        console.log('📂 Orders loaded from localStorage:', orders.length);
-      } catch (error) {
-        console.error('Error parsing orders:', error);
-        this.ordersSubject.next(MOCK_ORDERS);
-      }
-    } else {
-      this.ordersSubject.next(MOCK_ORDERS);
+    try {
+      const orders = await firstValueFrom(this.orderApi.getUserOrders());
+      this.ordersSignal.set(orders);
+      console.log(`✅ Loaded ${orders.length} orders`);
+    } catch (error) {
+      console.error('Failed to load orders:', error);
+      this.errorSignal.set('Failed to load orders');
+      this.ordersSignal.set([]);
+    } finally {
+      this.loadingSignal.set(false);
     }
   }
 
   /**
-   * Salva ordini in localStorage
+   * Get order details by ID
+   * @param id Order ID
    */
-  private saveOrdersToLocalStorage(): void {
-    localStorage.setItem('orders', JSON.stringify(this.ordersSubject.value));
+  async getOrderDetails(id: number): Promise<Order | undefined> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const order = await firstValueFrom(this.orderApi.getOrderById(id));
+      this.currentOrderSignal.set(order);
+      console.log(`✅ Loaded order ${id}`);
+      return order;
+    } catch (error) {
+      console.error(`Failed to load order ${id}:`, error);
+      this.errorSignal.set('Failed to load order details');
+      return undefined;
+    } finally {
+      this.loadingSignal.set(false);
+    }
   }
 
   /**
-   * Calcola data stimata consegna
+   * Get order by order number
+   * @param orderNumber Order number (e.g., "ORD-2024-001")
    */
-  private calculateEstimatedDelivery(): Date {
-    const date = new Date();
-    date.setDate(date.getDate() + 5);
-    return date;
+  async getOrderByNumber(orderNumber: string): Promise<Order | undefined> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const order = await firstValueFrom(
+        this.orderApi.getOrderByNumber(orderNumber)
+      );
+      this.currentOrderSignal.set(order);
+      console.log(`✅ Loaded order ${orderNumber}`);
+      return order;
+    } catch (error) {
+      console.error(`Failed to load order ${orderNumber}:`, error);
+      this.errorSignal.set('Order not found');
+      return undefined;
+    } finally {
+      this.loadingSignal.set(false);
+    }
   }
 
   /**
-   * Genera numero tracking
+   * Create new order from cart
+   * @param request Order creation data
+   * @returns Order confirmation or undefined if failed
    */
-  private generateTrackingNumber(): string {
-    const prefix = 'IT';
-    const randomNumbers = Math.floor(Math.random() * 1000000000000)
-      .toString()
-      .padStart(12, '0');
-    const randomLetters =
-      String.fromCharCode(65 + Math.floor(Math.random() * 26)) +
-      String.fromCharCode(65 + Math.floor(Math.random() * 26)) +
-      String.fromCharCode(65 + Math.floor(Math.random() * 26));
-    return prefix + randomNumbers + randomLetters;
+  async createOrder(request: CreateOrderRequest): Promise<OrderConfirmation | undefined> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const confirmation = await firstValueFrom(
+        this.orderApi.createOrder(request)
+      );
+
+      console.log(`✅ Order created: ${confirmation.orderNumber}`);
+
+      // Reload user orders to include new order
+      await this.loadUserOrders();
+
+      return confirmation;
+    } catch (error) {
+      console.error('Failed to create order:', error);
+      this.errorSignal.set('Failed to create order');
+      throw error;
+    } finally {
+      this.loadingSignal.set(false);
+    }
   }
 
   /**
-   * Cancella tutto
+   * Cancel order
+   * @param id Order ID
+   * @returns true if successful, false otherwise
    */
-  clearAllOrders(): void {
-    localStorage.removeItem('orders');
-    this.ordersSubject.next([]);
+  async cancelOrder(id: number): Promise<boolean> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      await firstValueFrom(this.orderApi.cancelOrder(id));
+
+      console.log(`✅ Order ${id} canceled`);
+
+      // Reload orders to reflect cancellation
+      await this.loadUserOrders();
+
+      return true;
+    } catch (error) {
+      console.error(`Failed to cancel order ${id}:`, error);
+      this.errorSignal.set('Failed to cancel order');
+      return false;
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  // ============================================
+  // ADMIN OPERATIONS
+  // ============================================
+
+  /**
+   * Get all orders with filtering (Admin only)
+   * @param filter Filter parameters
+   */
+  async getAllOrders(filter?: OrderFilterParams): Promise<PaginatedResult<Order> | undefined> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const result = await firstValueFrom(
+        this.orderApi.getAllOrders(filter)
+      );
+
+      console.log(`✅ Loaded ${result.items.length} orders (page ${result.page})`);
+      return result;
+    } catch (error) {
+      console.error('Failed to load all orders:', error);
+      this.errorSignal.set('Failed to load orders');
+      return undefined;
+    } finally {
+      this.loadingSignal.set(false);
+    }
   }
 
   /**
-   * Ripristina mock data
+   * Update order status (Admin only)
+   * @param request Order ID and new status
    */
-  resetToMockData(): void {
-    this.ordersSubject.next(MOCK_ORDERS);
-    this.saveOrdersToLocalStorage();
+  async updateOrderStatus(request: UpdateOrderStatusRequest): Promise<Order | undefined> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const updatedOrder = await firstValueFrom(
+        this.orderApi.updateOrderStatus(request)
+      );
+
+      console.log(`✅ Order ${request.orderId} status updated to ${request.newStatus}`);
+      return updatedOrder;
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+      this.errorSignal.set('Failed to update order status');
+      return undefined;
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  // ============================================
+  // HELPER METHODS
+  // ============================================
+
+  /**
+   * Convert cart to order items
+   * Helper method for checkout process
+   * @param cart Shopping cart
+   */
+  convertCartToOrderItems(cart: Cart): CreateOrderItem[] {
+    return cart.items.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      unitPrice: item.price
+    }));
+  }
+
+  /**
+   * Clear current order
+   */
+  clearCurrentOrder(): void {
+    this.currentOrderSignal.set(null);
+  }
+
+  /**
+   * Clear all orders (e.g., on logout)
+   */
+  clearOrders(): void {
+    this.ordersSignal.set([]);
+    this.currentOrderSignal.set(null);
+    this.errorSignal.set(null);
   }
 }

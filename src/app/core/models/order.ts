@@ -1,41 +1,170 @@
+/**
+ * Order Models
+ * Updated to match backend DTOs
+ */
 
-// export interface Order {
-//     id: string;
-//     date: string;
-//     customerName: string;
-//     customerEmail: string;
-//     total: string;
-//     status: 'Processing' | 'Shipped' | 'Delivered' | 'Canceled';
-//     time?: string;
-// }
-
-export interface Order {
-  id: string;
-  orderNumber?: string;
-  customerName?: string;
-  customerEmail?: string;
-  date?: string | Date;
-  time?: string;
-  estimatedDelivery?: Date | string | null;
-  trackingNumber?: string | null;
-  shippingAddress?: ShippingAddress;
-  paymentMethod?: string;
-  items?: any[];
-  subtotal?: number;
-  shipping?: number;
-  tax?: number;
-  total?: number | string;
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled' |
-   'Available' | 'Low Stock' | 'Unavailable' | 'Processing' | 'Shipped' | 'Delivered' | 'Canceled';
+/**
+ * Order Status Enum
+ * Matches backend AudioStore.Common.Enums.OrderStatus
+ */
+export enum OrderStatus {
+  Pending = 0,
+  Confirmed = 1,
+  Shipped = 2,
+  Delivered = 3,
+  Canceled = 4
 }
 
+/**
+ * Order - Complete order details
+ * Matches backend OrderDTO
+ */
+export interface Order {
+  id: number;
+  orderNumber: string;
+  orderDate: string;              // ISO date string
+  userId?: number | null;         // Null for guest orders
+  orderStatus: OrderStatus;
+
+  // Customer Info
+  customerFirstName: string;
+  customerLastName: string;
+  customerEmail: string;
+  customerPhone: string;
+
+  // Shipping Address
+  shippingStreet: string;
+  shippingCity: string;
+  shippingPostalCode: string;
+  shippingCountry: string;
+
+  // Order Items
+  items: OrderItem[];
+
+  // Totals
+  subtotal: number;
+  shippingCost: number;
+  tax: number;
+  totalAmount: number;
+
+  // Payment
+  paymentMethod: string;
+  notes?: string;
+}
+
+/**
+ * Order Item - Single product in order
+ * Matches backend OrderItemDTO
+ */
+export interface OrderItem {
+  id: number;
+  productId: number;
+  productName: string;
+  productImage: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+/**
+ * Request DTOs for Order API
+ */
+
+/**
+ * Create Order Request
+ * Matches backend CreateOrderDTO
+ */
+export interface CreateOrderRequest {
+  userId?: number | null;         // Set by backend from JWT
+
+  // Customer Info (optional for authenticated users)
+  customerFirstName?: string;
+  customerLastName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+
+  // Shipping Address (required)
+  shippingStreet: string;
+  shippingCity: string;
+  shippingPostalCode: string;
+  shippingCountry: string;
+
+  // Order Items (from cart)
+  items: CreateOrderItem[];
+
+  // Optional notes
+  notes?: string;
+}
+
+/**
+ * Create Order Item
+ * Matches backend CreateOrderItemDTO
+ */
+export interface CreateOrderItem {
+  productId: number;
+  quantity: number;
+  unitPrice: number;
+}
+
+/**
+ * Update Order Status Request (Admin only)
+ * Matches backend UpdateOrderStatusDTO
+ */
+export interface UpdateOrderStatusRequest {
+  orderId: number;
+  newStatus: OrderStatus;
+}
+
+/**
+ * Response DTOs
+ */
+
+/**
+ * Order Confirmation Response
+ * Matches backend OrderConfirmationDTO
+ */
+export interface OrderConfirmation {
+  orderNumber: string;
+  orderDate: string;
+  customerEmail: string;
+  totalAmount: number;
+  message: string;
+  orderDetails: Order;
+}
+
+/**
+ * Order Filter Parameters (Admin)
+ */
+export interface OrderFilterParams {
+  status?: OrderStatus;
+  startDate?: string;
+  endDate?: string;
+  searchTerm?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+/**
+ * Paginated Result
+ */
+export interface PaginatedResult<T> {
+  items: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+/**
+ * Shipping Address (for forms)
+ */
 export interface ShippingAddress {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  address: string;
+  street: string;
   city: string;
-  zipCode: string;
+  postalCode: string;
   country: string;
 }

@@ -46,8 +46,10 @@ export const API_ENDPOINTS = {
     byId: (id: number) => `orders/${id}`,
     byNumber: (orderNumber: string) => `orders/number/${orderNumber}`,
     cancel: (id: number) => `orders/${id}/cancel`,
-    adminAll: 'orders/admin/all',
-    updateStatus: (id: number) => `orders/${id}/status`
+    admin: {
+      all: 'orders/admin/all',
+      updateStatus: (id: number) => `orders/${id}/status`
+    }
   },
 
   // Profile endpoints
