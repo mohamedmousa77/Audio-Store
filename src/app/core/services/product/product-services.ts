@@ -60,32 +60,46 @@ export class ProductServices {
   }
 
   /**
-   * Load featured products
+   * Load newest product (for HomePage "New Product" section)
+   * Loads only the most recent product
    */
-  async loadFeaturedProducts(): Promise<void> {
+  async loadNewProduct(): Promise<Product | undefined> {
+    this.catalogStore.loadingSignal.set(true);
     try {
-      const featured = await firstValueFrom(this.catalogApi.getFeaturedProducts());
-      this.catalogStore.setProducts(featured);
+      // Get first product sorted by creation date (newest first)
+      const products = await firstValueFrom(this.catalogApi.getProducts());
+
+      if (products.length > 0) {
+        return products[0]; // Return newest product
+      }
+      return undefined;
     } catch (error) {
-      console.error('Failed to load featured products:', error);
-      this.catalogStore.errorSignal.set('Failed to load featured products');
+      console.error('Failed to load new product:', error);
+      this.catalogStore.errorSignal.set('Failed to load new product');
+      return undefined;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
     }
   }
 
   /**
-   * Load products by category
-   * @param categoryId Category ID
+   * Load featured products (optimized for HomePage)
+   * @param limit Number of products to load (default: 3 for HomePage)
    */
-  async loadProductsByCategory(categoryId: number): Promise<void> {
+  async loadFeaturedProducts(limit?: number): Promise<Product[]> {
     this.catalogStore.loadingSignal.set(true);
     try {
-      const products = await firstValueFrom(
-        this.catalogApi.getProductsByCategory(categoryId)
-      );
-      this.catalogStore.setProducts(products);
+      const featured = await firstValueFrom(this.catalogApi.getFeaturedProducts());
+
+      // Limit results if specified
+      const limitedFeatured = limit ? featured.slice(0, limit) : featured;
+
+      this.catalogStore.setProducts(limitedFeatured);
+      return limitedFeatured;
     } catch (error) {
-      console.error(`Failed to load products for category ${categoryId}:`, error);
-      this.catalogStore.errorSignal.set('Failed to load products');
+      console.error('Failed to load featured products:', error);
+      this.catalogStore.errorSignal.set('Failed to load featured products');
+      return [];
     } finally {
       this.catalogStore.loadingSignal.set(false);
     }

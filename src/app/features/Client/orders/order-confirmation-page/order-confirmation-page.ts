@@ -1,227 +1,150 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderServices } from '../../../../core/services/order/order-services';
-import { Order } from '../../../../core/models/order';
+import { Order, OrderStatus } from '../../../../core/models/order';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
-import { Subject, takeUntil } from 'rxjs';
 import { jsPDF } from 'jspdf';
+
+/**
+ * Order Confirmation Page Component
+ * Updated to use Signals and order number (string) instead of ID
+ * 
+ * Breaking Changes:
+ * - Uses order number (string) from URL, not ID
+ * - Uses Signals from OrderServices
+ * - OrderStatus is enum (not string)
+ */
 @Component({
   selector: 'app-order-confirmation-page',
   imports: [CommonModule, ClientHeader, ClientFooter],
   templateUrl: './order-confirmation-page.html',
   styleUrl: './order-confirmation-page.css',
 })
-export class OrderConfirmationPage implements OnInit, OnDestroy {
-  order: Order | null | undefined= null;
-  orderId: string = '';
-  loading: boolean = true;
-  error: boolean = false;
+export class OrderConfirmationPage implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private orderService = inject(OrderServices);
 
-  private destroy$ = new Subject<void>();
+  // State
+  order = signal<Order | null>(null);
+  orderNumber = signal<string>('');
+  loading = signal<boolean>(true);
+  error = signal<boolean>(false);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private orderService: OrderServices
-  ) {}
+  // Expose OrderStatus enum to template
+  OrderStatus = OrderStatus;
 
   ngOnInit(): void {
-    this.route.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params: any) => {
-        this.orderId = params['id'] ?? '';
-        console.log('Order ID from URL:', this.orderId);
+    // Get order number from URL params
+    const orderNumberParam = this.route.snapshot.paramMap.get('id');
 
-        if (this.orderId) {
-          this.loadOrder();
-        } else {
-          this.loading = false;
-          this.error = true;
-          console.warn('No Order ID provided in URL');
-        }
-      });
+    if (orderNumberParam) {
+      this.orderNumber.set(orderNumberParam);
+      this.loadOrder(orderNumberParam);
+    } else {
+      console.warn('No order number provided in URL');
+      this.loading.set(false);
+      this.error.set(true);
+    }
   }
-
-    ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-private loadOrder(): void {
-    this.loading = true;
-    this.error = false;
-    console.log('Starting order load for ID:', this.orderId);
-
-    this.orderService
-      .getOrderById(this.orderId)
-      // .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (orderData: Order | null | undefined) => {
-          console.log('Order data received from service:', orderData);
-
-          // Verifica che orderData non sia null/undefined e abbia items
-          if (
-            orderData &&
-            orderData.items &&
-            Array.isArray(orderData.items) &&
-            orderData.items.length > 0
-          ) {
-            console.log('✓ Order successfully loaded');
-            console.log('✓ Items count:', orderData.items.length);
-            console.log('✓ Order items:', orderData.items);
-
-            this.order = orderData;
-            this.loading = false;
-            this.error = false;
-          } else {
-            console.warn(
-              '⚠ Order data is missing items or is incomplete',
-              orderData
-            );
-            this.loading = false;
-            this.error = true;
-          }
-        },
-        error: (err: any) => {
-          console.error('✗ Error loading order:', err);
-          console.error('Error details:', {
-            message: err?.message || 'Unknown error',
-            status: err?.status || 'Unknown status',
-            statusText: err?.statusText || 'Unknown',
-          });
-          this.loading = false;
-          this.error = true;
-        },
-      });
-  }
-
 
   /**
-   * Calcola l'importo totale
+   * Load order by order number
+   * @param orderNumber Order number (e.g., "ORD-2024-001")
+   */
+  async loadOrder(orderNumber: string): Promise<void> {
+    this.loading.set(true);
+    this.error.set(false);
+
+    console.log('Loading order:', orderNumber);
+
+    try {
+      const orderData = await this.orderService.getOrderByNumber(orderNumber);
+
+      if (orderData && orderData.items && orderData.items.length > 0) {
+        console.log('✅ Order loaded successfully:', orderData);
+        this.order.set(orderData);
+      } else {
+        console.warn('⚠️ Order data is incomplete or missing items');
+        this.error.set(true);
+      }
+    } catch (err) {
+      console.error('❌ Error loading order:', err);
+      this.error.set(true);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * Calculate total amount
    */
   getTotalAmount(): number {
-    if (!this.order) return 0;
-    const subtotal = this.order.subtotal || 0;
-    const shipping = this.order.shipping || 0;
-    const tax = this.order.tax || 0;
-    return subtotal + shipping + tax;  
+    const currentOrder = this.order();
+    if (!currentOrder) return 0;
+
+    return (currentOrder.subtotal || 0) +
+      (currentOrder.shippingCost || 0) +
+      (currentOrder.tax || 0);
   }
 
-
+  /**
+   * Get tax amount
+   */
   getTaxAmount(): number {
-    return this.order?.tax || 0;
+    return this.order()?.tax || 0;
   }
 
+  /**
+   * Navigate to home page
+   */
   continueShopping(): void {
     this.router.navigate(['/client/home']);
   }
 
+  /**
+   * Navigate to orders page
+   */
   viewOrders(): void {
     this.router.navigate(['/client/orders']);
   }
 
-  getStatusClass(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'pending': 'status-pending',
-      'confirmed': 'status-confirmed',
-      'shipped': 'status-shipped',
-      'delivered': 'status-delivered',
-      'canceled': 'status-canceled'
+  /**
+   * Get status CSS class
+   */
+  getStatusClass(status: OrderStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [OrderStatus.Pending]: 'status-pending',
+      [OrderStatus.Confirmed]: 'status-confirmed',
+      [OrderStatus.Shipped]: 'status-shipped',
+      [OrderStatus.Delivered]: 'status-delivered',
+      [OrderStatus.Canceled]: 'status-canceled'
     };
     return statusMap[status] || 'status-pending';
   }
 
-  getStatusText(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'pending': 'In Sospeso',
-      'confirmed': 'Confermato',
-      'shipped': 'Spedito',
-      'delivered': 'Consegnato',
-      'canceled': 'Annullato'
+  /**
+   * Get status text in Italian
+   */
+  getStatusText(status: OrderStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [OrderStatus.Pending]: 'In Sospeso',
+      [OrderStatus.Confirmed]: 'Confermato',
+      [OrderStatus.Shipped]: 'Spedito',
+      [OrderStatus.Delivered]: 'Consegnato',
+      [OrderStatus.Canceled]: 'Annullato'
     };
     return statusMap[status] || 'Sconosciuto';
   }
 
-
-  
   /**
-   * Download dell'invoice
+   * Download invoice as PDF
    */
-//   downloadInvoice(): void {
-//     if (!this.order) return;
-
-//     const invoiceContent = `
-// =====================================
-// INVOICE - FATTURA
-// =====================================
-// Order Number: ${this.order.orderNumber}
-// Date: ${this.order.date ? new Date(this.order.date).toLocaleDateString('it-IT') : 'N/A'}
-// Time: ${this.order.time || 'N/A'}
-
-// =====================================
-// CUSTOMER INFORMATION
-// =====================================
-// Name: ${this.order.customerName || 'N/A'}
-// Email: ${this.order.customerEmail || 'N/A'}
-
-// =====================================
-// SHIPPING ADDRESS
-// =====================================
-// ${this.order.shippingAddress?.firstName} ${this.order.shippingAddress?.lastName}
-// ${this.order.shippingAddress?.address}
-// ${this.order.shippingAddress?.zipCode} ${this.order.shippingAddress?.city}
-// ${this.order.shippingAddress?.country}
-// Phone: ${this.order.shippingAddress?.phone}
-
-// =====================================
-// ORDER ITEMS
-// =====================================
-// ${this.order.items?.map(item => 
-//   `${item.name} (x${item.quantity}) - €${(item.price * item.quantity).toFixed(2)}`
-// ).join('\n')}
-
-// =====================================
-// PAYMENT SUMMARY
-// =====================================
-// Subtotal:     €${(this.order.subtotal || 0).toFixed(2)}
-// Shipping:     €${(this.order.shipping || 0).toFixed(2)}
-// Tax (10%):    €${(this.order.tax || 0).toFixed(2)}
-// ───────────────────────────────────
-// TOTAL:        €${this.getTotalAmount().toFixed(2)}
-
-// =====================================
-// TRACKING INFORMATION
-// =====================================
-// Tracking Number: ${this.order.trackingNumber || 'N/A'}
-// Status: ${this.order.status?.toUpperCase() || 'N/A'}
-// Estimated Delivery: ${this.order.estimatedDelivery ? new Date(this.order.estimatedDelivery).toLocaleDateString('it-IT') : 'N/A'}
-
-// =====================================
-// NOTES
-// =====================================
-// ${'No notes'}
-
-// =====================================
-// Thank you for your order!
-// =====================================
-//     `;
-
-//     const element = document.createElement('a');
-//     element.setAttribute(
-//       'href',
-//       'data:text/plain;charset=utf-8,' + encodeURIComponent(invoiceContent)
-//     );
-//     element.setAttribute('download', `Invoice_${this.order.orderNumber}.txt`);
-//     element.style.display = 'none';
-//     document.body.appendChild(element);
-//     element.click();
-//     document.body.removeChild(element);
-//   }
-
   downloadInvoice(): void {
-    if (!this.order) {
+    const currentOrder = this.order();
+    if (!currentOrder) {
       console.warn('Cannot download invoice: order is null');
       return;
     }
@@ -232,7 +155,6 @@ private loadOrder(): void {
       const pageHeight = doc.internal.pageSize.getHeight();
       let yPosition = 15;
       const margin = 15;
-      const maxWidth = pageWidth - 2 * margin;
 
       // Helper functions
       const addTitle = (text: string, fontSize: number = 16) => {
@@ -262,26 +184,25 @@ private loadOrder(): void {
       yPosition += 3;
 
       // Order Info
-      addText(`Order Number: ${this.order.orderNumber}`);
-      addText(`Date: ${this.order.date ? new Date(this.order.date).toLocaleDateString('it-IT') : 'N/A'}`);
+      addText(`Order Number: ${currentOrder.orderNumber}`);
+      addText(`Date: ${new Date(currentOrder.orderDate).toLocaleDateString('it-IT')}`);
       yPosition += 5;
 
-      // Customer Info Section
+      // Customer Info
       addSection('CUSTOMER INFORMATION');
-      addText(`Name: ${this.order.customerName ?? 'N/A'}`);
-      addText(`Email: ${this.order.customerEmail ?? 'N/A'}`);
+      addText(`Name: ${currentOrder.customerFirstName} ${currentOrder.customerLastName}`);
+      addText(`Email: ${currentOrder.customerEmail}`);
+      addText(`Phone: ${currentOrder.customerPhone}`);
       yPosition += 5;
 
-      // Shipping Address Section
+      // Shipping Address
       addSection('SHIPPING ADDRESS');
-      addText(`${this.order.shippingAddress?.firstName ?? 'N/A'} ${this.order.shippingAddress?.lastName ?? 'N/A'}`);
-      addText(`${this.order.shippingAddress?.address ?? 'N/A'}`);
-      addText(`${this.order.shippingAddress?.zipCode ?? ''} ${this.order.shippingAddress?.city ?? ''}`);
-      addText(`${this.order.shippingAddress?.country ?? 'N/A'}`);
-      addText(`Phone: ${this.order.shippingAddress?.phone ?? 'N/A'}`);
+      addText(`${currentOrder.shippingStreet}`);
+      addText(`${currentOrder.shippingPostalCode} ${currentOrder.shippingCity}`);
+      addText(`${currentOrder.shippingCountry}`);
       yPosition += 5;
 
-      // Order Items Section
+      // Order Items
       addSection('ORDER ITEMS');
       doc.setFontSize(9);
       doc.setFont('', 'bold');
@@ -292,34 +213,32 @@ private loadOrder(): void {
       yPosition += 6;
 
       doc.setFont('', 'normal');
-      if (this.order.items) {
-        this.order.items.forEach((item) => {
-          const itemTotal = (item.price ?? 0) * item.quantity;
-          doc.text(`${item.name} (${item.category})`, margin, yPosition, { maxWidth: 95 });
-          doc.text(item.quantity.toString(), margin + 100, yPosition);
-          doc.text(`€${(item.price ?? 0).toFixed(2)}`, margin + 120, yPosition);
-          doc.text(`€${itemTotal.toFixed(2)}`, margin + 150, yPosition);
-          yPosition += 6;
-        });
-      }
+      currentOrder.items.forEach((item) => {
+        const itemTotal = item.unitPrice * item.quantity;
+        doc.text(`${item.productName}`, margin, yPosition, { maxWidth: 95 });
+        doc.text(item.quantity.toString(), margin + 100, yPosition);
+        doc.text(`€${item.unitPrice.toFixed(2)}`, margin + 120, yPosition);
+        doc.text(`€${itemTotal.toFixed(2)}`, margin + 150, yPosition);
+        yPosition += 6;
+      });
       yPosition += 5;
 
-      // Payment Summary Section
+      // Payment Summary
       addSection('PAYMENT SUMMARY');
+      const summaryX = pageWidth - margin - 50;
+
       doc.setFontSize(10);
       doc.setFont('', 'normal');
-      
-      const summaryX = pageWidth - margin - 50;
       doc.text(`Subtotal:`, summaryX - 40, yPosition);
-      doc.text(`€${(this.order.subtotal ?? 0).toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
+      doc.text(`€${currentOrder.subtotal.toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
       yPosition += 6;
 
       doc.text(`Shipping:`, summaryX - 40, yPosition);
-      doc.text(`€${(this.order.shipping ?? 0).toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
+      doc.text(`€${currentOrder.shippingCost.toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
       yPosition += 6;
 
-      doc.text(`Tax (Est.):`, summaryX - 40, yPosition);
-      doc.text(`€${(this.order.tax ?? 0).toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
+      doc.text(`Tax:`, summaryX - 40, yPosition);
+      doc.text(`€${currentOrder.tax.toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
       yPosition += 6;
 
       doc.setDrawColor(180, 180, 180);
@@ -329,27 +248,12 @@ private loadOrder(): void {
       doc.setFont('', 'bold');
       doc.setFontSize(12);
       doc.text(`TOTAL:`, summaryX - 40, yPosition);
-      doc.text(`€${this.getTotalAmount().toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
+      doc.text(`€${currentOrder.totalAmount.toFixed(2)}`, pageWidth - margin - 10, yPosition, { align: 'right' });
       yPosition += 8;
-
-      // Tracking Information Section
-      if (yPosition > pageHeight - 40) {
-        doc.addPage();
-        yPosition = 15;
-      }
-      addSection('TRACKING INFORMATION');
-      addText(`Tracking Number: ${this.order.trackingNumber ?? 'N/A'}`);
-      addText(`Status: ${this.order.status?.toUpperCase() ?? 'N/A'}`);
-      addText(`Estimated Delivery: ${
-        this.order.estimatedDelivery
-          ? new Date(this.order.estimatedDelivery).toLocaleDateString('it-IT')
-          : 'N/A'
-      }`);
-      yPosition += 5;
 
       // Payment Method
       addSection('PAYMENT METHOD');
-      addText('Cash on Delivery');
+      addText(`${currentOrder.paymentMethod || 'Cash on Delivery'}`);
       yPosition += 8;
 
       // Footer
@@ -359,13 +263,11 @@ private loadOrder(): void {
       doc.text('For support: support@audiostore.com', pageWidth / 2, pageHeight - 15, { align: 'center' });
 
       // Save PDF
-      doc.save(`Invoice-${this.order.orderNumber}.pdf`);
-      console.log('✓ Invoice (PDF) downloaded successfully');
+      doc.save(`Invoice-${currentOrder.orderNumber}.pdf`);
+      console.log('✅ Invoice downloaded successfully');
     } catch (error) {
-      console.error('✗ Error downloading invoice:', error);
+      console.error('❌ Error downloading invoice:', error);
       alert('Errore nel download della fattura. Riprova.');
     }
   }
-
-
 }

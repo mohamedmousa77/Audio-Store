@@ -1,10 +1,17 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
-import { HomeBanner } from '../../../../../core/models/home-banner'
+import { RouterModule, Router } from '@angular/router';
+import { Product } from '../../../../../core/models/product';
 import { CartServices } from '../../../../../core/services/cart/cart-services';
 
+/**
+ * Hero Banner Component
+ * Updated to accept product via @Input() from parent
+ * 
+ * Breaking Changes:
+ * - Now accepts product via @Input() (not hardcoded)
+ * - Product ID is number (not string)
+ */
 @Component({
   selector: 'app-hero-banner',
   imports: [CommonModule, RouterModule],
@@ -13,40 +20,33 @@ import { CartServices } from '../../../../../core/services/cart/cart-services';
 })
 export class HeroBanner {
   private router = inject(Router);
+  private cartService = inject(CartServices);
 
-  banner: HomeBanner = {
-    title: 'Experience Sound Like Never Before',
-    product: {
-      id: '1',
-          name: 'Sony WH-1000XM5',
-          brand: 'Sony',
-          sku: 'SNY-XM5-BLK',
-          category: 'Headphones',
-          price: 348.0,
-          stock: 12,
-          status: 'Available',
-          isFeatured: true,
-          isNew: true,
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000&h=800&fit=crop',
-          description: 'Industry-leading noise cancelling',
-          bannerDescription: 'The ZX-900 Noise Cancelling Headphones offer premium audio quality for the true audiophile. Immerse yourself in pure acoustic bliss.'
-        },
-  };
+  /**
+   * Product to display in hero banner
+   * Passed from parent Homepage component
+   */
+  @Input() product?: Product;
 
-  constructor(private cartService: CartServices) {}
-
-  goToPageDetails(productId: number):void{
-     (this.router as Router).navigate(['/client/product', productId]);
+  /**
+   * Navigate to product details page
+   * @param productId Product ID (number)
+   */
+  goToPageDetails(productId: number): void {
+    this.router.navigate(['/client/product', productId]);
   }
 
-    addToCart(): void {
-  //   // THE PRODUCT IS HARD CODED FOR UI IMPLEMENTATION. ONCE API DONE SHOULL SEND THE REAL BANER-PRODUCT.
-    // if (!this.banner.product) return;
+  /**
+   * Add product to cart and navigate to cart page
+   */
+  async addToCart(): Promise<void> {
+    if (!this.product) return;
 
-    this.cartService.addToCart(this.banner.product, 1);
+    await this.cartService.addToCart(this.product, 1);
+
+    // Navigate to cart after short delay
     setTimeout(() => {
       this.router.navigate(['/client/cart']);
     }, 500);
   }
-
 }

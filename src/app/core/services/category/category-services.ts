@@ -54,6 +54,29 @@ export class CategoryServices {
   }
 
   /**
+   * Load top categories (optimized for HomePage)
+   * @param limit Number of categories to load (default: 3 for HomePage)
+   */
+  async loadTopCategories(limit: number = 3): Promise<Category[]> {
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      const categories = await firstValueFrom(this.catalogApi.getCategories());
+
+      // Limit results
+      const limitedCategories = categories.slice(0, limit);
+
+      this.catalogStore.setCategories(limitedCategories);
+      return limitedCategories;
+    } catch (error) {
+      console.error('Failed to load top categories:', error);
+      this.catalogStore.errorSignal.set('Failed to load top categories');
+      return [];
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  /**
    * Get products for a specific category
    * Delegates to ProductServices via store filter
    * @param categoryId Category ID

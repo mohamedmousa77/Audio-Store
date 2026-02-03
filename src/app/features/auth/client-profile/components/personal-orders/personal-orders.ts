@@ -1,97 +1,67 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { OrderServices } from '../../../../../core/services/order/order-services';
-import { Order } from '../../../../../core/models/order';
+import { Order, OrderStatus } from '../../../../../core/models/order';
 
 type DateFilter = 'all' | 'today' | 'week' | 'month';
 
+/**
+ * Personal Orders Component
+ * Updated to use Signals from OrderServices
+ * 
+ * Breaking Changes:
+ * - Uses Signals instead of Observables
+ * - Order IDs are numbers (not strings)
+ * - OrderStatus is enum (not string)
+ */
 @Component({
   selector: 'app-personal-orders',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-
   ],
   templateUrl: './personal-orders.html',
   styleUrl: './personal-orders.css',
 })
-export class PersonalOrders implements OnInit, OnDestroy {
-  orders: Order[] = [];
-  filteredOrders: Order[] = [];
-  selectedDateFilter: DateFilter = 'all';
-  loading = true;
-  error: string | null = null;
+export class PersonalOrders implements OnInit {
+  private orderService = inject(OrderServices);
+  private router = inject(Router);
 
-  private destroy$ = new Subject<void>();
+  // Use Signals from OrderServices
+  orders = this.orderService.orders;
+  loading = this.orderService.loadingSignal;
+  error = this.orderService.errorSignal;
 
-  constructor(private orderService: OrderServices) {}
+  // Local state
+  selectedDateFilter = signal<DateFilter>('all');
 
-  ngOnInit(): void {
-    this.loadOrders();
-  }
+  // Computed filtered orders
+  filteredOrders = computed(() => {
+    const allOrders = this.orders();
+    const filter = this.selectedDateFilter();
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+    if (filter === 'all') {
+      return allOrders;
+    }
 
-  /**
-   * Carica gli ordini
-   */
-  private loadOrders(): void {
-    this.loading = true;
-    this.error = null;
-
-    this.orderService
-      .getOrders()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (orders) => {
-          this.orders = orders;
-          this.applyDateFilter();
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error loading orders:', err);
-          this.error = 'Failed to load orders. Please try again.';
-          this.loading = false;
-        },
-      });
-  }
-
-  /**
-   * Applica il filtro per data
-   */
-  onDateFilterChange(filter: DateFilter): void {
-    this.selectedDateFilter = filter;
-    this.applyDateFilter();
-  }
-
-  /**
-   * Filtra gli ordini per data
-   */
-  private applyDateFilter(): void {
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const startOfWeek = new Date(startOfDay);
     startOfWeek.setDate(startOfDay.getDate() - startOfDay.getDay());
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    this.filteredOrders = this.orders.filter((order) => {
-      if (!order.date) return false;
-
-      const orderDate = new Date(order.date);
+    return allOrders.filter((order) => {
+      const orderDate = new Date(order.orderDate);
       const orderDateOnly = new Date(
         orderDate.getFullYear(),
         orderDate.getMonth(),
         orderDate.getDate()
       );
 
-      switch (this.selectedDateFilter) {
+      switch (filter) {
         case 'today':
           return orderDateOnly.getTime() === startOfDay.getTime();
         case 'week':
@@ -102,43 +72,69 @@ export class PersonalOrders implements OnInit, OnDestroy {
           return true;
       }
     });
+  });
+
+  // Expose OrderStatus enum to template
+  OrderStatus = OrderStatus;
+
+  ngOnInit(): void {
+    this.loadOrders();
   }
 
   /**
-   * Ottiene il colore dello status
+   * Load user's orders
    */
-  getStatusColor(status: string): string {
-    switch (status?.toLowerCase()) {
-      case 'processing':
-      case 'pending':
-        return 'status-processing';
-      case 'shipped':
-        return 'status-shipped';
-      case 'delivered':
-        return 'status-delivered';
-      case 'canceled':
-        return 'status-canceled';
-      default:
-        return 'status-processing';
-    }
+  async loadOrders(): Promise<void> {
+    await this.orderService.loadUserOrders();
   }
 
   /**
-   * Formatta il prezzo
+   * Apply date filter
    */
-  formatPrice(price: number | string): string {
-    if (typeof price === 'string') {
-      return `$${price}`
-    }
-    return `$${(price ?? 0).toFixed(2)}`;
+  onDateFilterChange(filter: DateFilter): void {
+    this.selectedDateFilter.set(filter);
   }
 
   /**
-   * Formatta la data
+   * Get status CSS class
    */
-  formatDate(date: Date | string | undefined): string {
-    if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-US', {
+  getStatusColor(status: OrderStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [OrderStatus.Pending]: 'status-processing',
+      [OrderStatus.Confirmed]: 'status-processing',
+      [OrderStatus.Shipped]: 'status-shipped',
+      [OrderStatus.Delivered]: 'status-delivered',
+      [OrderStatus.Canceled]: 'status-canceled'
+    };
+    return statusMap[status] || 'status-processing';
+  }
+
+  /**
+   * Get status text in Italian
+   */
+  getStatusText(status: OrderStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [OrderStatus.Pending]: 'In Attesa',
+      [OrderStatus.Confirmed]: 'Confermato',
+      [OrderStatus.Shipped]: 'Spedito',
+      [OrderStatus.Delivered]: 'Consegnato',
+      [OrderStatus.Canceled]: 'Annullato'
+    };
+    return statusMap[status] || 'Sconosciuto';
+  }
+
+  /**
+   * Format price
+   */
+  formatPrice(price: number): string {
+    return `€${price.toFixed(2)}`;
+  }
+
+  /**
+   * Format date
+   */
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString('it-IT', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -146,14 +142,14 @@ export class PersonalOrders implements OnInit, OnDestroy {
   }
 
   /**
-   * Ottieni le immagini dei prodotti (max 2)
+   * Get product images (max 2)
    */
   getProductImages(order: Order): any[] {
     return (order.items || []).slice(0, 2);
   }
 
   /**
-   * Conta i prodotti aggiuntivi
+   * Get extra products count
    */
   getExtraProductsCount(order: Order): number {
     const count = (order.items || []).length - 2;
@@ -161,12 +157,10 @@ export class PersonalOrders implements OnInit, OnDestroy {
   }
 
   /**
-   * Naviga ai dettagli dell'ordine
+   * Navigate to order details
+   * @param orderNumber Order number (string)
    */
-  viewOrderDetails(orderId: string): void {
-    // Naviga alla pagina di dettaglio dell'ordine
-    window.location.href = `/client/order-confirmation/${orderId}`;
+  viewOrderDetails(orderNumber: string): void {
+    this.router.navigate(['/client/order-confirmation', orderNumber]);
   }
-
-
 }

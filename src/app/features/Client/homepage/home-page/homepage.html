@@ -1,18 +1,37 @@
 <app-client-header />
 
 <main class="home-page">
+  <!-- Loading State -->
+  @if (isLoading()) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Caricamento...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+  <div class="error-container">
+    <p class="error-message">{{ error() }}</p>
+    <button class="retry-button" (click)="retryLoad()">Riprova</button>
+  </div>
+  }
+
+  <!-- Content -->
+  @else {
   <div class="homepage-section">
-    <app-hero-banner />
+    <app-hero-banner [product]="newProduct()" />
   </div>
   <div class="homepage-section">
-    <app-featured-products />
+    <app-featured-products [products]="featuredProducts()" />
   </div>
   <div class="homepage-section">
-    <app-category-showcase />
+    <app-category-showcase [categories]="topCategories()" />
   </div>
   <div class="homepage-section">
     <app-newsletter-signup />
   </div>
+  }
 </main>
 
 <app-client-footer />
