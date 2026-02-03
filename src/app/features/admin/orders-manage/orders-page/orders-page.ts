@@ -1,12 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
 import { OrderForm } from '../order-form/order-form';
 import { Badge } from '../../../../shared/components/badge/badge';
-import { Order } from '../../../../core/models/order';
+import { Order, OrderStatus } from '../../../../core/models/order';
+import { OrderServices } from '../../../../core/services/order/order-services';
 
+/**
+ * Admin Orders Page Component
+ * Updated to use OrderServices with Signals
+ * 
+ * Breaking Changes:
+ * - Uses Signals instead of hardcoded data
+ * - OrderStatus is enum (not string)
+ * - Order properties: orderDate, totalAmount, orderStatus, orderNumber
+ */
 @Component({
   selector: 'app-orders-page',
   imports: [
@@ -21,82 +31,69 @@ import { Order } from '../../../../core/models/order';
   styleUrl: './orders-page.css',
 })
 export class OrdersPage implements OnInit {
-orders: Order[] = [
-    {
-      id: '#ORD-7752',
-      date: '2024-01-15',
-      customerName: 'Alex Morgan',
-      customerEmail: 'alex.m@example.com',
-      total: '$478.95',
-      status: 'shipped',
-      time: '2 mins ago',
+  private orderService = inject(OrderServices);
 
-    },
-    {
-      id: '#ORD-7751',
-      date: '2024-01-14',
-      customerName: 'Sarah Jenkins',
-      customerEmail: 's.jenkins@test.com',
-      total: '$129.99',
-      status: 'delivered',
-      time: '1 hour ago'
-    },
-    {
-      id: '#ORD-7750',
-      date: '2024-01-14',
-      customerName: 'Michael Chen',
-      customerEmail: 'mchen88@gmail.com',
-      total: '$1,299.00',
-      status: 'pending',
-      time: '3 hours ago'
-    },
-    {
-      id: '#ORD-7749',
-      date: '2024-01-13',
-      customerName: 'Emily Miller',
-      customerEmail: 'emily.m@studio.com',
-      total: '$59.95',
-      status: 'delivered',
-      time: '5 hours ago'
-    },
-    {
-      id: '#ORD-7748',
-      date: '2024-01-13',
-      customerName: 'James Wilson',
-      customerEmail: 'james.w@music.com',
-      total: '$899.50',
-      status: 'pending',
-      time: '8 hours ago'
-    },
-    {
-      id: '#ORD-7747',
-      date: '2024-01-12',
-      customerName: 'Lisa Brown',
-      customerEmail: 'lisa.b@pro.com',
-      total: '$249.99',
-      status: 'canceled',
-      time: '1 day ago'
+  // Use Signals from OrderServices
+  orders = this.orderService.orders;
+  loading = this.orderService.loadingSignal;
+  error = this.orderService.errorSignal;
+
+  // Local state
+  showDetail = signal<boolean>(false);
+  selectedOrder = signal<Order | null>(null);
+  searchTerm = signal<string>('');
+  selectedStatus = signal<OrderStatus | null>(null);
+
+  // Computed filtered orders
+  filteredOrders = computed(() => {
+    const allOrders = this.orders();
+    const search = this.searchTerm().toLowerCase();
+    const status = this.selectedStatus();
+
+    return allOrders.filter(order => {
+      const matchesSearch = !search ||
+        order.orderNumber.toLowerCase().includes(search) ||
+        `${order.customerFirstName} ${order.customerLastName}`.toLowerCase().includes(search) ||
+        order.customerEmail.toLowerCase().includes(search);
+
+      const matchesStatus = status === null || order.orderStatus === status;
+
+      return matchesSearch && matchesStatus;
+    });
+  });
+
+  // Expose OrderStatus enum to template
+  OrderStatus = OrderStatus;
+
+  async ngOnInit(): Promise<void> {
+    await this.loadOrders();
+
+    // Select first order if available
+    const firstOrder = this.filteredOrders()[0];
+    if (firstOrder) {
+      this.selectOrder(firstOrder);
     }
-  ];
-
-  showDetail = false;
-  selectedOrder: any = null;
-  filteredOrders: Order[] = [];
-  searchTerm = '';
-  selectedStatus = '';
-  selectedDateRange = '';
-
-  ngOnInit(): void {
-    this.filteredOrders = [...this.orders];
-    this.selectOrder(this.orders[0]);
   }
 
-  selectOrder(order: any): void {
-    this.selectedOrder = order;
-    this.showDetail = true;
+  /**
+   * Load all orders (admin)
+   */
+  async loadOrders(): Promise<void> {
+    await this.orderService.loadAllOrders();
+  }
+
+  /**
+   * Select order to view details
+   */
+  selectOrder(order: Order): void {
+    this.selectedOrder.set(order);
+    this.showDetail.set(true);
     this.scrollToDetail();
   }
 
+  /**
+   * Scroll to detail section
+   */
   private scrollToDetail(): void {
     setTimeout(() => {
       const element = document.getElementById('order-detail-section');
@@ -106,62 +103,130 @@ orders: Order[] = [
     }, 100);
   }
 
-  updateStatus(newStatus: string) {
-    if (this.selectedOrder) {
-      this.selectedOrder.status = newStatus;
-      // Qui andrebbe la chiamata API per salvare
+  /**
+   * Update order status (admin)
+   */
+  async updateStatus(newStatus: OrderStatus): Promise<void> {
+    const order = this.selectedOrder();
+    if (!order) return;
+
+    try {
+      await this.orderService.updateOrderStatus({ orderId: order.id, newStatus });
+
+      // Update selected order
+      const updatedOrders = this.orders();
+      const updated = updatedOrders.find(o => o.id === order.id);
+      if (updated) {
+        this.selectedOrder.set(updated);
+      }
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Errore durante l\'aggiornamento dello stato dell\'ordine');
     }
   }
 
-  onStatusChange(order: Order, event: any): void {
-    const newStatus = event.target.value;
-    this.updateOrderStatus(order, newStatus);
+  /**
+   * Handle status change from dropdown
+   */
+  async onStatusChange(order: Order, event: any): Promise<void> {
+    const newStatus = parseInt(event.target.value) as OrderStatus;
+
+    try {
+      await this.orderService.updateOrderStatus({ orderId: order.id, newStatus });
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Errore durante l\'aggiornamento dello stato');
+    }
   }
-  
+
+  /**
+   * Get count of shipped orders
+   */
   getShippedCount(): number {
-    return this.orders.filter(order => order.status === 'shipped').length;
+    return this.orders().filter(order => order.orderStatus === OrderStatus.Shipped).length;
   }
 
+  /**
+   * Apply filters
+   */
   applyFilters(): void {
-    this.filteredOrders = this.orders.filter(order => {
-      const matchesSearch = order.id.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                           order.customerName!.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesStatus = !this.selectedStatus || order.status === this.selectedStatus;
-      
-      return matchesSearch && matchesStatus;
-    });
+    // Filters are automatically applied via computed signal
+    // This method kept for compatibility with template
   }
 
+  /**
+   * Clear all filters
+   */
   clearFilters(): void {
-    this.searchTerm = '';
-    this.selectedStatus = '';
-    this.selectedDateRange = '';
-    this.filteredOrders = [...this.orders];
+    this.searchTerm.set('');
+    this.selectedStatus.set(null);
   }
 
-  updateOrderStatus(order: Order, newStatus: string): void {
-    const index = this.orders.findIndex(o => o.id === order.id);
-    if (index !== -1) {
-      this.orders[index].status = newStatus as any;
-      this.applyFilters();
-    }
-  }
-
+  /**
+   * Delete order (not implemented - requires backend endpoint)
+   */
   deleteOrder(order: Order): void {
-    if (confirm(`Are you sure you want to delete order ${order.id}?`)) {
-      this.orders = this.orders.filter(o => o.id !== order.id);
-      this.applyFilters();
+    if (confirm(`Are you sure you want to delete order ${order.orderNumber}?`)) {
+      alert('Delete functionality not implemented yet');
+      // TODO: Implement delete endpoint in backend
     }
   }
 
+  /**
+   * Handle cancel/close detail view
+   */
   handleCancel(): void {
-    this.selectedOrder = null; // Nasconde il form
-    this.showDetail = false;
-    // Scorrimento fluido verso l'inizio della pagina
+    this.selectedOrder.set(null);
+    this.showDetail.set(false);
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
   }
 
+  /**
+   * Get status text in Italian
+   */
+  getStatusText(status: OrderStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [OrderStatus.Pending]: 'In Attesa',
+      [OrderStatus.Confirmed]: 'Confermato',
+      [OrderStatus.Shipped]: 'Spedito',
+      [OrderStatus.Delivered]: 'Consegnato',
+      [OrderStatus.Canceled]: 'Annullato'
+    };
+    return statusMap[status] || 'Sconosciuto';
+  }
+
+  /**
+   * Get status CSS class
+   */
+  getStatusClass(status: OrderStatus): string {
+    const statusMap: { [key: number]: string } = {
+      [OrderStatus.Pending]: 'status-pending',
+      [OrderStatus.Confirmed]: 'status-confirmed',
+      [OrderStatus.Shipped]: 'status-shipped',
+      [OrderStatus.Delivered]: 'status-delivered',
+      [OrderStatus.Canceled]: 'status-canceled'
+    };
+    return statusMap[status] || 'status-pending';
+  }
+
+  /**
+   * Format date
+   */
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString('it-IT', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
+  /**
+   * Format price
+   */
+  formatPrice(price: number): string {
+    return `€${price.toFixed(2)}`;
+  }
 }

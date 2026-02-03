@@ -68,6 +68,27 @@ export class OrderServices {
   }
 
   /**
+   * Load all orders (Admin only)
+   * @param filter Optional filter (status, customer search, date range, pagination)
+   */
+  async loadAllOrders(filter?: OrderFilterParams): Promise<void> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const result = await firstValueFrom(this.orderApi.getAllOrders(filter));
+      this.ordersSignal.set(result.items);
+      console.log(`✅ Loaded ${result.items.length} orders (admin)`);
+    } catch (error) {
+      console.error('Failed to load all orders:', error);
+      this.errorSignal.set('Failed to load orders');
+      this.ordersSignal.set([]);
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  /**
    * Get order details by ID
    * @param id Order ID
    */
