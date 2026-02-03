@@ -5,8 +5,9 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { AuthApi} from '../services/auth-api';
 import { AuthServices } from '../../../core/services/auth/auth-services';
+import { LoginRequest } from '../../../core/models/user';
+import { ErrorHandlingService } from '../../../core/services/error/error-handling.service';
 
 @Component({
   selector: 'app-login-form',
@@ -16,13 +17,15 @@ import { AuthServices } from '../../../core/services/auth/auth-services';
   standalone: true
 })
 
-export class  LoginForm implements OnInit, OnDestroy {
+export class LoginForm implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   loading = false;
   error: string | null = null;
   errorMessage = '';
   showPassword = false;
   private destroy$ = new Subject<void>();
+
+  private errorService = inject(ErrorHandlingService);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,35 +55,49 @@ export class  LoginForm implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      console.warn('Form invalid');
+      this.markFormGroupTouched(this.loginForm);
       return;
     }
-    
 
     this.loading = true;
     this.error = null;
+    this.errorService.clearError();
 
-    const { email, password } = this.loginForm.value;
-
-    if(email === 'mousa@clienttest.com' || password === '123123'){
-      this.loading = false;
-      this.router.navigate(['/client/home']);
-    }
+    const credentials: LoginRequest = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    };
 
     this.authService
-    .login( { email, password })
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (response) => {
-        console.log('✓ Login successful');
-        this.loading = false;
-        this.router.navigate(['/client/home']);
-      },
-      error: (err) => {
+      .login(credentials)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('✓ Login successful:', response.user.email);
+          this.loading = false;
+          // Navigate based on user role
+          if (response.user.role === 'Admin') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/client/home']);
+          }
+        },
+        error: (err) => {
           console.error('✗ Login failed:', err);
-          this.error = err.error?.message || 'Invalid email or password';
+          this.error = err.message || 'Invalid email or password';
+          this.errorService.setError(this.error || 'Login failed', err.status);
           this.loading = false;
         },
+      });
+  }
+
+  /**
+   * Mark all form fields as touched to show validation errors
+   */
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
     });
   }
 

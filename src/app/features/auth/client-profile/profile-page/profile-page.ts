@@ -132,14 +132,15 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit{
 
   private calculateMemberSince(): void {
     
-    if (!this.currentUser?.registrationDate) {
-      this.memberSince = 'Member since registration';
-      return;
-    }
+    // if (!this.currentUser?.registrationDate) {
+    //   this.memberSince = 'Member since registration';
+    //   return;
+    // }
 
-    const createdDate = new Date(this.currentUser.registrationDate);
+    const createdDate = '2023-01-15'; // Placeholder date for testing
+    const createdDateObj = new Date(createdDate);
     const now = new Date();
-    const months = this.getMonthsBetween(createdDate, now);
+    const months = this.getMonthsBetween(createdDateObj, now);
 
     if (months === 0) {
       this.memberSince = 'Member since this month';

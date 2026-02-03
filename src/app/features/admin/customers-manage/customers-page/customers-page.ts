@@ -20,116 +20,108 @@ export class CustomersPage implements OnInit {
 
   customers: User[] = [
       {
-        id: '1',
+        id: 1,
         name: 'Alex Morgan',
         firstName: 'Alex',
         lastName: 'Morgan',
         email: 'alex.m@example.com',
         phone: '+39 320 123 4567',
-        registrationDate: '2023-06-15',
         totalOrders: 12,
         lastOrderDate: '2024-01-15',
         initials: 'AM',
         color: '#FF6B6B',
-        ruole: 'Customer'      
+        role: 'Customer'      
       },
       {
-        id: '2',
+        id: 2,    
         name: 'Sarah Jenkins',
         firstName: 'Sarah',
         lastName: 'Jenkins',
         email: 's.jenkins@test.com',
         phone: '+39 333 456 7890',
-        registrationDate: '2023-08-22',
         totalOrders: 8,
         lastOrderDate: '2024-01-14',
         initials: 'SJ',
         color: '#4ECDC4',
-        ruole: 'Customer'
+        role: 'Customer'
       },
       {
-        id: '3',
+        id: 3,
         name: 'Michael Chen',
         firstName: 'Michael',
         lastName: 'Chen',
         email: 'mchen88@gmail.com',
         phone: '+39 345 789 0123',
-        registrationDate: '2023-09-10',
         totalOrders: 15,
         lastOrderDate: '2024-01-14',
         initials: 'MC',
         color: '#45B7D1',
-        ruole: 'Customer'
+        role: 'Customer'
       },
       {
-        id: '4',
+        id: 4,
         name: 'Emily Miller',
         firstName: 'Emily',
         lastName: 'Miller',
         email: 'emily.m@studio.com',
         phone: '+39 366 234 5678',
-        registrationDate: '2023-11-05',
         totalOrders: 5,
         lastOrderDate: '2024-01-13',
         initials: 'EM',
         color: '#FFA07A',
-        ruole: 'Customer'
+        role: 'Customer'
       },
       {
-        id: '5',
+        id: 5,
         name: 'James Wilson',
         firstName: 'James',
         lastName: 'Wilson',
         email: 'james.w@music.com',
         phone: '+39 380 567 8901',
-        registrationDate: '2024-01-01',
         totalOrders: 3,
         lastOrderDate: '2024-01-13',
         initials: 'JW',
         color: '#98D8C8',
-        ruole: 'Customer'
+        role: 'Customer'
       },
       {
-        id: '6',
+        id: 6,
         name: 'Lisa Brown',
         firstName: 'Lisa',
         lastName: 'Brown',
         email: 'lisa.b@pro.com',
         phone: '+39 391 890 1234',
-        registrationDate: '2023-07-20',
         totalOrders: 22,
         lastOrderDate: '2024-01-12',
         initials: 'LB',
         color: '#F7DC6F',
-        ruole: 'Customer'
+        role: 'Customer'
       },
       {
-        id: '7',
+        id: 7,
         name: 'David Kumar',
         firstName: 'David',
         lastName: 'Kumar',
         email: 'david.k@audio.com',
         phone: '+39 328 345 6789',
-        registrationDate: '2023-10-30',
         totalOrders: 9,
         lastOrderDate: '2024-01-10',
         initials: 'DK',
         color: '#BB8FCE',
-        ruole: 'Customer'
+        role: 'Customer'
       },
       {
-        id: '8',
+        id: 8,
         name: 'Jessica Thompson',
         firstName: 'Jessica',
         lastName: 'Thompson',
         email: 'jessica.t@sound.com',
         phone: '+39 320 456 7890',
-        registrationDate: '2023-12-12',
         totalOrders: 4,
         lastOrderDate: '2024-01-08',
         initials: 'JT',
         color: '#85C1E2',
-        ruole: 'Customer'
+        role: 'Customer'
       }
   ];
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -11,8 +11,9 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { AuthApi } from '../services/auth-api';
 import { AuthServices } from '../../../core/services/auth/auth-services';
+import { RegisterRequest } from '../../../core/models/user';
+import { ErrorHandlingService } from '../../../core/services/error/error-handling.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -32,6 +33,7 @@ export class Register implements OnDestroy, OnInit {
   agreedToTerms = false;
 
   private destroy$ = new Subject<void>();
+  private errorService = inject(ErrorHandlingService);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -146,39 +148,59 @@ export class Register implements OnDestroy, OnInit {
    */
   onSubmit(): void {
     if (this.registrationForm.invalid) {
-      console.warn('Form invalid');
+      this.markFormGroupTouched(this.registrationForm);
       return;
     }
 
     this.loading = true;
     this.error = null;
+    this.errorService.clearError();
 
-    const { firstName, lastName, email, phone, password } = this.registrationForm.value;
+    const userData: RegisterRequest = {
+      firstName: this.registrationForm.value.firstName,
+      lastName: this.registrationForm.value.lastName,
+      email: this.registrationForm.value.email,
+      phone: this.registrationForm.value.phone,
+      password: this.registrationForm.value.password
+    };
 
     this.authService
-      .register({
-        firstName,
-        lastName,
-        email,
-        phone,
-        password,
-      })
+      .register(userData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('✓ Registration successful');
+          console.log('✓ Registration successful:', response.user.email);
           this.loading = false;
-          this.router.navigate(['/client/home']);
+          // Auto-login after registration, navigate based on role
+          if (response.user.role === 'Admin') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/client/home']);
+          }
         },
         error: (err) => {
           console.error('✗ Registration failed:', err);
-          this.error = err.error?.message || 'Registration failed. Please try again.';
-          if (err.error?.code === 'EMAIL_ALREADY_EXISTS') {
+          this.error = err.message || 'Registration failed. Please try again.';
+          this.errorService.setError(this.error || 'Registration failed', err.status);
+
+          // Check for specific error codes
+          if (err.message?.includes('email') || err.message?.includes('already exists')) {
             this.emailAlreadyRegistered = true;
           }
+
           this.loading = false;
         },
       });
+  }
+
+  /**
+   * Mark all form fields as touched to show validation errors
+   */
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+    });
   }
 
   /**
