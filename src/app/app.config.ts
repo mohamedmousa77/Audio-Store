@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { loggingInterceptor } from './core/interceptors/logging-interceptor';
+import { sessionIdInterceptor } from './core/interceptors/session-id.interceptor';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(
       withInterceptors([
+        sessionIdInterceptor,  // Must be first for guest users
         authInterceptor,
         ...(environment.enableLogging ? [loggingInterceptor] : []),
         errorInterceptor
