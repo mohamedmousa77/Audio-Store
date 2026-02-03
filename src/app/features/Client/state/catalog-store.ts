@@ -9,23 +9,28 @@ import { Order } from '../../../core/models/order';
 })
 // Catalog Store using Angular Signals for state management
 export class CatalogStore {
- // Signals
+  // Signals
   productsSignal = signal<Product[]>([]);
   categoriesSignal = signal<Category[]>([]);
   ordersSignal = signal<Order[]>([]);
-  selectedCategorySignal = signal<string>('');
+
+  // Filter state - changed to number to match Product.categoryId
+  selectedCategorySignal = signal<number | null>(null);
   searchTermSignal = signal<string>('');
+
+  // UI state
   loadingSignal = signal<boolean>(false);
   errorSignal = signal<string | null>(null);
 
   // Computed values
   filteredProducts = computed(() => {
     const products = this.productsSignal();
-    const category = this.selectedCategorySignal();
+    const categoryId = this.selectedCategorySignal();
     const search = this.searchTermSignal().toLowerCase();
 
     return products.filter(p => {
-      const matchCategory = !category || p.category === category;
+      // Match by categoryId (number) instead of category (string)
+      const matchCategory = !categoryId || p.categoryId === categoryId;
       const matchSearch =
         p.name.toLowerCase().includes(search) ||
         (p.description ? p.description.toLowerCase().includes(search) : false);
@@ -52,8 +57,8 @@ export class CatalogStore {
     this.categoriesSignal.set(categories);
   }
 
-  setSelectedCategory(category: string): void {
-    this.selectedCategorySignal.set(category);
+  setSelectedCategory(categoryId: number | null): void {
+    this.selectedCategorySignal.set(categoryId);
   }
 
   setSearchTerm(term: string): void {

@@ -1,100 +1,160 @@
 import { Injectable } from '@angular/core';
-import { delay, of, Observable, firstValueFrom } from 'rxjs';
-import { BaseApiServices } from '../api/api-services';
+import { firstValueFrom } from 'rxjs';
 import { Product } from '../../models/product';
 import { CatalogStore } from '../../../features/Client/state/catalog-store';
-import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { CatalogApiService } from '../catalog-api.service';
 
-
+/**
+ * Product Services
+ * High-level service for product management
+ * Uses CatalogApiService for API calls and CatalogStore for state management
+ */
 @Injectable({
   providedIn: 'root',
 })
-export class ProductServices {  
-  // private readonly endpoint = API_ENDPOINTS.products;
-
-  // getProducts(): Observable<Product[]> {
-  //   return this.http.get<Product[]>(this.buildUrl(this.endpoint));
-  // }
-  
-  // getFeaturedProducts(): Observable<Product[]> {
-  //   return this.http.get<Product[]>(`${this.buildUrl(this.endpoint)}?isFeatured=true`);
-  // }
-
-  // // Recupera singolo prodotto con dettagli tecnici e galleria
-  // getProductById(id: string): Observable<Product> {
-  //   // return this.getProducts().pipe(
-  //   //   delay(300)
-  //   // );
-  //   return this.http.get<Product>(`${this.buildUrl(this.endpoint)}/${id}`);
-  // }
-
-  // createProduct(product: Partial<Product>): Observable<Product> {
-  //   return this.http.post<Product>(
-  //     this.buildUrl(this.endpoint), 
-  //     product, 
-  //     { headers: this.getStandardHeaders() }
-  //   );
-  // }
-
-  // updateProduct(id: string, product: Partial<Product>): Observable<Product> {
-  //   return this.http.put<Product>(
-  //     `${this.buildUrl(this.endpoint)}/${id}`, 
-  //     product, 
-  //     { headers: this.getStandardHeaders() }
-  //   );
-  // }
-
-  // deleteProduct(id: string): Observable<void> {
-  //   return this.http.delete<void>(`${this.buildUrl(this.endpoint)}/${id}`);
-  // }
-
-constructor(
+export class ProductServices {
+  constructor(
     private catalogApi: CatalogApiService,
     private catalogStore: CatalogStore
-  ) {}
+  ) { }
 
-  // Carica tutto e popola lo stato globale
+  /**
+   * Load all catalog data (products and categories) and populate global state
+   */
   async loadCatalogData(): Promise<void> {
     this.catalogStore.loadingSignal.set(true);
     try {
-      // Eseguiamo entrambi i caricamenti in parallelo per velocità
+      // Execute both API calls in parallel for better performance
       const [products, categories] = await Promise.all([
         firstValueFrom(this.catalogApi.getProducts()),
         firstValueFrom(this.catalogApi.getCategories()),
       ]);
-      
+
       this.catalogStore.setProducts(products);
       this.catalogStore.setCategories(categories);
     } catch (error) {
+      console.error('Failed to load catalog data:', error);
       this.catalogStore.errorSignal.set('Failed to load catalog data');
     } finally {
       this.catalogStore.loadingSignal.set(false);
     }
   }
 
-  // Caricamento efficiente per ID: cerca prima nello stato, poi nell'API
-  async getProductDetails(id: string): Promise<Product | undefined> {
-    // 1. Cerca nei prodotti già caricati (Signal)
+  /**
+   * Get product details by ID
+   * First checks the store, then falls back to API if not found
+   * @param id Product ID
+   */
+  async getProductDetails(id: number): Promise<Product | undefined> {
+    // 1. Check if product is already loaded in store
     const existing = this.catalogStore.productsSignal().find(p => p.id === id);
     if (existing) return existing;
 
-    // 2. Se non c'è (es. accesso diretto via URL), chiedi all'API
+    // 2. If not found (e.g., direct URL access), fetch from API
     try {
       return await firstValueFrom(this.catalogApi.getProductById(id));
     } catch (error) {
+      console.error(`Failed to load product ${id}:`, error);
       return undefined;
     }
   }
 
-  // --- GETTERS PER I COMPONENTI (Signals) ---
-  // I componenti useranno questi per visualizzare i dati
-  get products() { return this.catalogStore.filteredProducts; }
-  get featured() { return this.catalogStore.featuredProducts; }
-  get categories() { return this.catalogStore.categories; }
-  get isLoading() { return this.catalogStore.loadingSignal; }
+  /**
+   * Load featured products
+   */
+  async loadFeaturedProducts(): Promise<void> {
+    try {
+      const featured = await firstValueFrom(this.catalogApi.getFeaturedProducts());
+      this.catalogStore.setProducts(featured);
+    } catch (error) {
+      console.error('Failed to load featured products:', error);
+      this.catalogStore.errorSignal.set('Failed to load featured products');
+    }
+  }
 
-  // --- FILTRARE ---
-  setCategory(category: string) { this.catalogStore.setSelectedCategory(category); }
-  setSearch(term: string) { this.catalogStore.setSearchTerm(term); }
+  /**
+   * Load products by category
+   * @param categoryId Category ID
+   */
+  async loadProductsByCategory(categoryId: number): Promise<void> {
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      const products = await firstValueFrom(
+        this.catalogApi.getProductsByCategory(categoryId)
+      );
+      this.catalogStore.setProducts(products);
+    } catch (error) {
+      console.error(`Failed to load products for category ${categoryId}:`, error);
+      this.catalogStore.errorSignal.set('Failed to load products');
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  /**
+   * Search products
+   * @param query Search term
+   */
+  async searchProducts(query: string): Promise<void> {
+    if (!query.trim()) {
+      // If empty query, reload all products
+      await this.loadCatalogData();
+      return;
+    }
+
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      const products = await firstValueFrom(
+        this.catalogApi.searchProducts(query)
+      );
+      this.catalogStore.setProducts(products);
+    } catch (error) {
+      console.error(`Failed to search products with query "${query}":`, error);
+      this.catalogStore.errorSignal.set('Failed to search products');
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  // ============================================
+  // GETTERS FOR COMPONENTS (Signals)
+  // Components use these to access reactive state
+  // ============================================
+
+  get products() {
+    return this.catalogStore.filteredProducts;
+  }
+
+  get featured() {
+    return this.catalogStore.featuredProducts;
+  }
+
+  get categories() {
+    return this.catalogStore.categories;
+  }
+
+  get isLoading() {
+    return this.catalogStore.loadingSignal;
+  }
+
+  get error() {
+    return this.catalogStore.errorSignal;
+  }
+
+  // ============================================
+  // FILTERS
+  // ============================================
+
+  setCategory(categoryId: number | null) {
+    this.catalogStore.setSelectedCategory(categoryId);
+  }
+
+  setSearch(term: string) {
+    this.catalogStore.setSearchTerm(term);
+  }
+
+  clearFilters() {
+    this.catalogStore.setSelectedCategory(null);
+    this.catalogStore.setSearchTerm('');
+  }
 }
