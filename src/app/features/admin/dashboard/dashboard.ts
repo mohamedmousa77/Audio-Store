@@ -1,22 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminSidebar } from '../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../layout/admin-header/header';
-import { DashboardStats } from '../../../core/models/DashboardStats';
+import { DashboardStats as DashboardStatsModel } from '../../../core/models/DashboardStats';
 import { StatCard } from '../components/stat-card/stat-card';
 import { RecentOrders } from '../orders-manage/recent-orders/recent-orders';
 import { CategoryStats } from '../categories-manage/category-stats/category-stats';
 import { TopProductsDashboardManage } from '../../admin/products-manage/top-products-dashboard/products-manage';
 import { OrderServices } from '../../../core/services/order/order-services';
+import { DashboardServices } from '../../../core/services/dashboard/dashboard-services';
 
 /**
  * Admin Dashboard Component
- * Updated to integrate OrderServices for recent orders
+ * Updated to use DashboardServices for real-time statistics
  * 
  * Changes:
- * - Loads recent orders from API (5 most recent)
- * - Passes orders to RecentOrders component
- * - Keeps hardcoded stats for now (future: DashboardApiService)
+ * - Loads dashboard stats from API via DashboardServices
+ * - Loads recent orders from OrderServices
+ * - Removed all hardcoded data
+ * - Uses Signals for reactive state management
  */
 @Component({
   selector: 'app-dashboard',
@@ -34,95 +36,154 @@ import { OrderServices } from '../../../core/services/order/order-services';
 })
 export class DashboardPageComponent implements OnInit {
   private orderService = inject(OrderServices);
+  private dashboardService = inject(DashboardServices);
 
-  // Use Signals from OrderServices for recent orders
+  // Use Signals from services
   recentOrders = this.orderService.orders;
-  loading = this.orderService.loadingSignal;
+  dashboardStats = this.dashboardService.stats;
+  loading = this.dashboardService.loading;
+  error = this.dashboardService.error;
+  ordersLoading = this.orderService.loadingSignal;
 
-  // Mock data for demonstration purposes (keep for now)
-  stats: DashboardStats[] = [
-    {
-      label: 'Total Sales',
-      value: '$48,250',
-      trend: '+12.5%',
-      icon: 'payments',
-      color: 'green'
-    },
-    {
-      label: 'Total Orders',
-      value: '1,245',
-      trend: '+5.2%',
-      icon: 'shopping_bag',
-      color: 'blue'
-    },
-    {
-      label: 'Active Customers',
-      value: '892',
-      trend: '0.0%',
-      icon: 'group',
-      color: 'orange'
-    }
-  ];
+  // Computed stats for stat cards
+  stats = computed(() => {
+    const data = this.dashboardStats();
+    if (!data) return [];
 
-  ordersStatusData = [
-    { label: 'Delivered', percentage: 65, count: 810, color: '#10b981' },
-    { label: 'Shipped', percentage: 20, count: 250, color: '#3b82f6' },
-    { label: 'Pending', percentage: 10, count: 125, color: '#f49d25' },
-    { label: 'Returned', percentage: 5, count: 60, color: '#ef4444' }
-  ];
+    return [
+      {
+        label: 'Total Sales',
+        value: `€${data.totalSales.toFixed(2)}`,
+        trend: '', // Backend doesn't provide trend
+        icon: 'payments',
+        color: 'green'
+      },
+      {
+        label: 'Total Orders',
+        value: data.totalOrders.toString(),
+        trend: '',
+        icon: 'shopping_bag',
+        color: 'blue'
+      },
+      {
+        label: 'Active Customers',
+        value: data.totalCustomers.toString(),
+        trend: '',
+        icon: 'group',
+        color: 'orange'
+      }
+    ];
+  });
 
-  categoryStats = [
-    { name: 'Headphones', value: 435, percentage: 35, color: '#f49d25' },
-    { name: 'Speakers', value: 298, percentage: 50, color: '#3b82f6' },
-    { name: 'Microphones', value: 186, percentage: 15, color: '#10b981' },
-  ];
+  // Computed orders status data for chart
+  ordersStatusData = computed(() => {
+    const data = this.dashboardStats();
+    if (!data) return [];
 
-  topProducts = [
-    {
-      name: 'Sony WH-1000XM5',
-      category: 'Headphones',
-      stockStatus: 'In Stock',
-      price: '$349.00',
-      sales: 124,
-      icon: 'headphones',
-      brand: 'Apple',
-      image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop'
+    const total = data.ordersByStatus.pending +
+      data.ordersByStatus.processing +
+      data.ordersByStatus.shipped +
+      data.ordersByStatus.delivered +
+      data.ordersByStatus.cancelled;
 
-    },
-    {
-      name: 'Yeti Blue Mic',
-      category: 'Microphones',
-      stockStatus: 'Low Stock',
-      price: '$129.99',
-      sales: 89,
-      icon: 'mic',
-      brand: 'KRK Systems',
-      image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&h=400&fit=crop'
-    },
-    {
-      name: 'JBL Flip 6',
-      category: 'Speakers',
-      stockStatus: 'In Stock',
-      price: '$99.95',
-      sales: 76,
-      icon: 'speaker',
-      brand: 'Logitech',
-      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&h=400&fit=crop'
-    },
-    {
-      name: 'AirPods Pro 2',
-      category: 'Headphones',
-      stockStatus: 'Out of Stock',
-      price: '$249.00',
-      sales: 54,
-      icon: 'headphones',
-      brand: 'Sony',
-      image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=400&fit=crop'
-    }
-  ];
+    if (total === 0) return [];
+
+    return [
+      {
+        label: 'Delivered',
+        count: data.ordersByStatus.delivered,
+        percentage: Math.round((data.ordersByStatus.delivered / total) * 100),
+        color: '#10b981'
+      },
+      {
+        label: 'Shipped',
+        count: data.ordersByStatus.shipped,
+        percentage: Math.round((data.ordersByStatus.shipped / total) * 100),
+        color: '#3b82f6'
+      },
+      {
+        label: 'Pending',
+        count: data.ordersByStatus.pending,
+        percentage: Math.round((data.ordersByStatus.pending / total) * 100),
+        color: '#f49d25'
+      },
+      {
+        label: 'Processing',
+        count: data.ordersByStatus.processing,
+        percentage: Math.round((data.ordersByStatus.processing / total) * 100),
+        color: '#8b5cf6'
+      },
+      {
+        label: 'Cancelled',
+        count: data.ordersByStatus.cancelled,
+        percentage: Math.round((data.ordersByStatus.cancelled / total) * 100),
+        color: '#ef4444'
+      }
+    ].filter(item => item.count > 0); // Only show statuses with orders
+  });
+
+  // Computed category stats for chart
+  categoryStats = computed(() => {
+    const data = this.dashboardStats();
+    if (!data || !data.topCategories.length) return [];
+
+    const maxRevenue = Math.max(...data.topCategories.map(c => c.totalRevenue));
+
+    return data.topCategories.map((cat, index) => ({
+      name: cat.categoryName,
+      value: cat.totalQuantitySold,
+      percentage: maxRevenue > 0 ? Math.round((cat.totalRevenue / maxRevenue) * 100) : 0,
+      color: this.getCategoryColor(index)
+    }));
+  });
+
+  // Computed top products
+  topProducts = computed(() => {
+    const data = this.dashboardStats();
+    if (!data || !data.topProducts.length) return [];
+
+    return data.topProducts.map(product => ({
+      name: product.productName,
+      category: product.categoria,
+      stockStatus: product.stockStatus,
+      price: `€${product.totalRevenue.toFixed(2)}`,
+      sales: product.totalQuantitySold,
+      brand: product.brand,
+      image: product.productImage || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+      icon: this.getCategoryIcon(product.categoria)
+    }));
+  });
 
   async ngOnInit(): Promise<void> {
-    // Load recent orders (5 most recent)
-    await this.orderService.loadAllOrders({ pageSize: 5, page: 1 });
+    // Load dashboard stats and recent orders in parallel
+    await Promise.all([
+      this.dashboardService.loadDashboardStats(),
+      this.orderService.loadAllOrders({ pageSize: 5, page: 1 })
+    ]);
+  }
+
+  /**
+   * Get color for category chart based on index
+   */
+  private getCategoryColor(index: number): string {
+    const colors = ['#f49d25', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#06b6d4'];
+    return colors[index % colors.length];
+  }
+
+  /**
+   * Get icon for category
+   */
+  private getCategoryIcon(categoryName: string): string {
+    const iconMap: Record<string, string> = {
+      'Headphones': 'headphones',
+      'Speakers': 'speaker',
+      'Microphones': 'mic',
+      'Turntables': 'album',
+      'Amplifiers': 'graphic_eq',
+      'Cables & Accessories': 'cable',
+      'Mixing Consoles': 'tune',
+      'Studio Monitors': 'monitor'
+    };
+    return iconMap[categoryName] || 'category';
   }
 }
