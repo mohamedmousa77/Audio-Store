@@ -1,160 +1,221 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
 import { Badge } from '../../../../shared/components/badge/badge';
+import { CategoryServices } from '../../../../core/services/category/category-services';
+import { ProductServices } from '../../../../core/services/product/product-services';
 import { Category } from '../../../../core/models/category';
 
-
+/**
+ * Categories Management Page (Admin)
+ * Updated to use CategoryServices with Signals and full CRUD operations
+ * 
+ * Breaking Changes:
+ * - Uses Signals instead of hardcoded data
+ * - Category model updated (id is number, not string)
+ * - Reactive filtering with computed()
+ * - CRUD operations integrated with backend API
+ */
 @Component({
   selector: 'app-categories-page',
   imports: [
-    CommonModule, 
-    FormsModule, 
-    AdminSidebar, 
+    CommonModule,
+    FormsModule,
+    AdminSidebar,
     AdminHeader
   ],
   templateUrl: './categories-page.html',
   styleUrl: './categories-page.css',
 })
 export class CategoriesPage implements OnInit {
-categories: Category[] = [
-    {
-      id: '1',
-      name: 'Headphones',
-      description: 'Premium audio headphones and earbuds for all occasions',
-      icon: 'headphones',
-      productCount: 45
-    },
-    {
-      id: '2',
-      name: 'Speakers',
-      description: 'High-quality speakers for home and studio use',
-      icon: 'speaker',
-      productCount: 28
-    },
-    {
-      id: '3',
-      name: 'Microphones',
-      description: 'Professional microphones for recording and streaming',
-      icon: 'mic',
-      productCount: 32
-    },
-    {
-      id: '4',
-      name: 'Turntables',
-      description: 'Vinyl turntables and record players',
-      icon: 'album',
-      productCount: 12
-    },
-    {
-      id: '5',
-      name: 'Amplifiers',
-      description: 'Audio amplifiers and preamps',
-      icon: 'graphic_eq',
-      productCount: 18
-    },
-    {
-      id: '6',
-      name: 'Cables & Accessories',
-      description: 'Audio cables, adapters, and accessories',
-      icon: 'cable',
-      productCount: 156
-    },
-    {
-      id: '7',
-      name: 'Mixing Consoles',
-      description: 'Professional mixing boards and controllers',
-      icon: 'tune',
-      productCount: 8
-    },
-    {
-      id: '8',
-      name: 'Studio Monitors',
-      description: 'Professional studio monitor speakers',
-      icon: 'monitor',
-      productCount: 22
-    }
-  ];
+  private categoryService = inject(CategoryServices);
+  private productService = inject(ProductServices);
 
-  isFormOpen = false;
-  formCategory: Category = { id: '', name: '', description: '', icon: '', productCount: 0 };
-  filteredCategories: Category[] = [];
-  searchTerm = '';
-  sortBy: 'name' | 'products' = 'name';
-  sortOrder: 'asc' | 'desc' = 'asc';
-  viewMode: 'grid' | 'table' = 'table';
-  showCategoryModal = false;
-  editingCategory: Category | null = null;
+  // Use Signals from CategoryServices
+  categories = this.categoryService.categories;
+  loading = this.categoryService.isLoading;
+  error = this.categoryService.error;
 
-  ngOnInit(): void {
-    this.filteredCategories = [...this.categories];
-    this.applySort();
-  }
+  // Local state
+  searchTerm = signal<string>('');
+  sortBy = signal<'name' | 'products'>('name');
+  sortOrder = signal<'asc' | 'desc'>('asc');
+  viewMode = signal<'grid' | 'table'>('table');
+  isFormOpen = signal<boolean>(false);
+  editingCategory = signal<Category | null>(null);
+  formCategory = signal<Partial<Category>>({});
 
-  applySearch(): void {
-    this.filteredCategories = this.categories.filter(category => {
-      const searchLower = this.searchTerm.toLowerCase();
+  // Computed filtered and sorted categories
+  filteredCategories = computed(() => {
+    const allCategories = this.categories();
+    const search = this.searchTerm().toLowerCase();
+    const sort = this.sortBy();
+    const order = this.sortOrder();
+
+    // Filter
+    let filtered = allCategories.filter(category => {
+      if (!search) return true;
       return (
-        category.name.toLowerCase().includes(searchLower) ||
-        category.description.toLowerCase().includes(searchLower)
+        category.name.toLowerCase().includes(search) ||
+        (category.description?.toLowerCase().includes(search) || false)
       );
     });
-    this.applySort();
-  }
 
-  applySort(): void {
-    this.filteredCategories.sort((a, b) => {
+    // Sort
+    filtered.sort((a, b) => {
       let aValue: any;
       let bValue: any;
 
-      switch (this.sortBy) {
+      switch (sort) {
         case 'name':
           aValue = a.name;
           bValue = b.name;
-          return this.sortOrder === 'asc'
+          return order === 'asc'
             ? aValue.localeCompare(bValue)
             : bValue.localeCompare(aValue);
         case 'products':
-          aValue = a.productCount;
-          bValue = b.productCount;
-          return this.sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+          aValue = this.getProductCount(a.id);
+          bValue = this.getProductCount(b.id);
+          return order === 'asc' ? aValue - bValue : bValue - aValue;
         default:
           return 0;
       }
     });
+
+    return filtered;
+  });
+
+  async ngOnInit(): Promise<void> {
+    await this.loadData();
   }
 
-  toggleSortOrder(): void {
-    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-    this.applySort();
+  /**
+   * Load all data
+   */
+  async loadData(): Promise<void> {
+    await Promise.all([
+      this.categoryService.loadCategories(),
+      this.productService.loadCatalogData()
+    ]);
   }
 
-  toggleViewMode(): void {
-    this.viewMode = this.viewMode === 'grid' ? 'table' : 'grid';
-  }
-
-  clearSearch(): void {
-    this.searchTerm = '';
-    this.filteredCategories = [...this.categories];
-    this.applySort();
-  }
-
+  /**
+   * Open add category form
+   */
   openAddCategory(): void {
-    this.editingCategory = null;
-    this.formCategory = { id: '', name: '', description: '', icon: 'category', productCount: 0 };
-    this.isFormOpen = true;
+    this.editingCategory.set(null);
+    this.formCategory.set({ name: '', description: '', icon: 'category' });
+    this.isFormOpen.set(true);
     this.scrollToForm();
   }
 
+  /**
+   * Edit existing category
+   */
   editCategory(category: Category): void {
-    this.editingCategory = { ...category };
-    this.formCategory = { ...category };
-    this.isFormOpen = true;
+    this.editingCategory.set(category);
+    this.formCategory.set({ ...category });
+    this.isFormOpen.set(true);
     this.scrollToForm();
   }
 
+  /**
+   * Close form
+   */
+  closeForm(): void {
+    this.isFormOpen.set(false);
+    this.editingCategory.set(null);
+    this.formCategory.set({});
+  }
+
+  /**
+   * Save category (create or update)
+   */
+  async saveCategory(): Promise<void> {
+    const editing = this.editingCategory();
+    const formData = this.formCategory();
+
+    if (!formData.name) {
+      alert('Category name is required');
+      return;
+    }
+
+    const categoryData: Category = {
+      id: editing?.id || 0,
+      name: formData.name,
+      description: formData.description || '',
+      icon: formData.icon || 'category',
+      productCount: formData.productCount || 0
+    };
+
+    if (editing) {
+      // Update existing category
+      const result = await this.categoryService.updateCategory(editing.id, categoryData);
+      if (result) {
+        alert('Category updated successfully!');
+        this.closeForm();
+      } else {
+        alert('Failed to update category');
+      }
+    } else {
+      // Create new category
+      const result = await this.categoryService.createCategory(categoryData);
+      if (result) {
+        alert('Category created successfully!');
+        this.closeForm();
+      } else {
+        alert('Failed to create category');
+      }
+    }
+  }
+
+  /**
+   * Delete category
+   */
+  async deleteCategory(category: Category): Promise<void> {
+    const productCount = this.getProductCount(category.id);
+
+    if (productCount > 0) {
+      alert(`Cannot delete category "${category.name}" because it has ${productCount} products. Please reassign or delete the products first.`);
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete the "${category.name}" category? This action cannot be undone.`)) {
+      const result = await this.categoryService.deleteCategory(category.id);
+      if (result) {
+        alert('Category deleted successfully!');
+      } else {
+        alert('Failed to delete category');
+      }
+    }
+  }
+
+  /**
+   * Toggle sort order
+   */
+  toggleSortOrder(): void {
+    this.sortOrder.set(this.sortOrder() === 'asc' ? 'desc' : 'asc');
+  }
+
+  /**
+   * Toggle view mode
+   */
+  toggleViewMode(): void {
+    this.viewMode.set(this.viewMode() === 'grid' ? 'table' : 'grid');
+  }
+
+  /**
+   * Clear search
+   */
+  clearSearch(): void {
+    this.searchTerm.set('');
+  }
+
+  /**
+   * Scroll to form section
+   */
   private scrollToForm(): void {
     setTimeout(() => {
       const element = document.getElementById('category-form-section');
@@ -164,58 +225,39 @@ categories: Category[] = [
     }, 100);
   }
 
-  saveCategory(): void {
-      // ... logic remains same, just use this.formCategory
-      if (this.formCategory.id) {
-          // Update
-          const index = this.categories.findIndex(c => c.id === this.formCategory.id);
-          this.categories[index] = { ...this.formCategory };
-      } else {
-          // Add
-          this.formCategory.id = Date.now().toString();
-          this.categories.push({ ...this.formCategory });
-      }
-      this.applySearch();
-      this.closeForm();
+  /**
+   * Get product count for category
+   */
+  getProductCount(categoryId: number): number {
+    return this.categoryService.getProductCountForCategory(categoryId);
   }
 
-  deleteCategory(category: Category): void {
-    if (
-      confirm(
-        `Are you sure you want to delete the "${category.name}" category? This action cannot be undone.`
-      )
-    ) {
-      this.categories = this.categories.filter(c => c.id !== category.id);
-      this.applySearch();
-    }
-  }
-
-  closeModal(): void {
-    this.showCategoryModal = false;
-    this.editingCategory = null;
-  }
-
-  closeForm(): void {
-    this.isFormOpen = false;
-    this.editingCategory = null;
-  }
-
+  /**
+   * Get total products across all categories
+   */
   getTotalProducts(): number {
-    return this.categories.reduce((sum, cat) => sum + cat.productCount, 0);
+    return this.categories().reduce((sum, cat) => sum + this.getProductCount(cat.id), 0);
   }
 
+  /**
+   * Get average products per category
+   */
   getAverageProducts(): number {
-    return this.categories.length > 0
-      ? Math.round(this.getTotalProducts() / this.categories.length)
+    const cats = this.categories();
+    return cats.length > 0
+      ? Math.round(this.getTotalProducts() / cats.length)
       : 0;
   }
 
+  /**
+   * Get top category by product count
+   */
   getTopCategory(): Category | null {
-    return this.categories.length > 0
-      ? this.categories.reduce((max, cat) =>
-          cat.productCount > max.productCount ? cat : max
-        )
-      : null;
-  }
+    const cats = this.categories();
+    if (cats.length === 0) return null;
 
+    return cats.reduce((max, cat) =>
+      this.getProductCount(cat.id) > this.getProductCount(max.id) ? cat : max
+    );
+  }
 }

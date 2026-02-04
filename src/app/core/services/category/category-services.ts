@@ -99,52 +99,83 @@ export class CategoryServices {
   }
 
   // ============================================
-  // ADMIN OPERATIONS (CRUD)
-  // These will be used by admin components
+  // ADMIN OPERATIONS
   // ============================================
 
   /**
-   * Create a new category (Admin only)
-   * Note: Requires admin authentication
+   * Create new category (Admin only)
+   * @param category Category data
    */
-  async createCategory(data: CreateCategoryRequest): Promise<Category | undefined> {
+  async createCategory(category: Category): Promise<Category | undefined> {
+    this.catalogStore.loadingSignal.set(true);
     try {
-      // This will be implemented when we add admin CRUD to CatalogApiService
-      console.warn('createCategory: Not yet implemented in CatalogApiService');
-      return undefined;
+      const newCategory = await firstValueFrom(this.catalogApi.createCategory(category));
+
+      // Add to store
+      const currentCategories = this.catalogStore.categoriesSignal();
+      this.catalogStore.setCategories([...currentCategories, newCategory]);
+
+      console.log(`✅ Created category: ${newCategory.name}`);
+      return newCategory;
     } catch (error) {
       console.error('Failed to create category:', error);
+      this.catalogStore.errorSignal.set('Failed to create category');
       return undefined;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
     }
   }
 
   /**
-   * Update an existing category (Admin only)
-   * Note: Requires admin authentication
+   * Update existing category (Admin only)
+   * @param id Category ID
+   * @param category Updated category data
    */
-  async updateCategory(id: number, data: UpdateCategoryRequest): Promise<Category | undefined> {
+  async updateCategory(id: number, category: Category): Promise<Category | undefined> {
+    this.catalogStore.loadingSignal.set(true);
     try {
-      // This will be implemented when we add admin CRUD to CatalogApiService
-      console.warn('updateCategory: Not yet implemented in CatalogApiService');
-      return undefined;
+      const updatedCategory = await firstValueFrom(this.catalogApi.updateCategory(id, category));
+
+      // Update in store
+      const currentCategories = this.catalogStore.categoriesSignal();
+      const updatedCategories = currentCategories.map(c =>
+        c.id === id ? updatedCategory : c
+      );
+      this.catalogStore.setCategories(updatedCategories);
+
+      console.log(`✅ Updated category: ${updatedCategory.name}`);
+      return updatedCategory;
     } catch (error) {
       console.error(`Failed to update category ${id}:`, error);
+      this.catalogStore.errorSignal.set('Failed to update category');
       return undefined;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
     }
   }
 
   /**
-   * Delete a category (Admin only)
-   * Note: Requires admin authentication
+   * Delete category (Admin only)
+   * @param id Category ID
    */
   async deleteCategory(id: number): Promise<boolean> {
+    this.catalogStore.loadingSignal.set(true);
     try {
-      // This will be implemented when we add admin CRUD to CatalogApiService
-      console.warn('deleteCategory: Not yet implemented in CatalogApiService');
-      return false;
+      await firstValueFrom(this.catalogApi.deleteCategory(id));
+
+      // Remove from store
+      const currentCategories = this.catalogStore.categoriesSignal();
+      const filteredCategories = currentCategories.filter(c => c.id !== id);
+      this.catalogStore.setCategories(filteredCategories);
+
+      console.log(`✅ Deleted category ${id}`);
+      return true;
     } catch (error) {
       console.error(`Failed to delete category ${id}:`, error);
+      this.catalogStore.errorSignal.set('Failed to delete category');
       return false;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
     }
   }
 

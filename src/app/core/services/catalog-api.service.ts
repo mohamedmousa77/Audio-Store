@@ -165,4 +165,44 @@ export class CatalogApiService {
       `${API_ENDPOINTS.categories.byId(id)}/product-count`
     );
   }
+
+  // ============================================
+  // ADMIN OPERATIONS - Categories
+  // ============================================
+
+  /**
+   * Create new category (Admin only)
+   * POST /api/categories
+   * @param category Category data
+   */
+  createCategory(category: Category): Observable<Category> {
+    return this.httpService.post<Category>(
+      API_ENDPOINTS.categories.base,
+      category
+    );
+  }
+
+  /**
+   * Update existing category (Admin only)
+   * PUT /api/categories/{id}
+   * @param id Category ID
+   * @param category Updated category data
+   */
+  updateCategory(id: number, category: Category): Observable<Category> {
+    return this.httpService.put<Category>(
+      API_ENDPOINTS.categories.byId(id),
+      category
+    );
+  }
+
+  /**
+   * Delete category (Admin only)
+   * DELETE /api/categories/{id}
+   * @param id Category ID
+   */
+  deleteCategory(id: number): Observable<void> {
+    return this.httpService.delete<void>(
+      API_ENDPOINTS.categories.byId(id)
+    );
+  }
 }
