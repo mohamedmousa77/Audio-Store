@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule, Router  } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
 import { ProductCard } from '../../layout/product-card/product-card';
 import { ProductServices } from '../../../../core/services/product/product-services';
+import { CategoryServices } from '../../../../core/services/category/category-services';
 import { Product } from '../../../../core/models/product';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 
@@ -27,8 +28,9 @@ export class ProductDetails implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductServices,
+    private categoryService: CategoryServices,
     private cartService: CartServices
-  ) {}
+  ) { }
 
   product: Product | null = null;
   relatedProducts: Product[] = [];
@@ -51,7 +53,7 @@ export class ProductDetails implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const productId = params['id'];
-      console.log('Product ID from URL:', productId); 
+      console.log('Product ID from URL:', productId);
       if (productId) {
         this.loadProduct(productId);
       }
@@ -65,34 +67,39 @@ export class ProductDetails implements OnInit {
   async loadProduct(id: string): Promise<void> {
     this.loading = true;
     console.log('Loading product with ID:', id);
-    try{
-       this.productService.loadCatalogData();
+    try {
+      await this.productService.loadCatalogData();
+      await this.categoryService.loadCategories();
       const allProducts = this.productService.products();
       console.log('All products:', allProducts);
-      
-    this.product = allProducts.find(p => p.id === id) || null;
-    console.log('Found product:', this.product);
 
-    if (this.product) {
-      this.productImages = [
-        this.product.image || 'https://via.placeholder.com/500x500?text=Product',
-        'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=500&h=500&fit=crop',
-        'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&h=500&fit=crop'
-      ];
+      this.product = allProducts.find(p => p.id === +id) || null;
+      console.log('Found product:', this.product);
 
-      // Set breadcrumbs
-      this.breadcrumbs.push(
-        { label: this.product.category, path: `/category/${this.product.category}` },
-        { label: this.product.name, path: `/product/${this.product.id}` }
-      );
+      if (this.product) {
+        this.productImages = [
+          this.product.image || 'https://via.placeholder.com/500x500?text=Product',
+          'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=500&h=500&fit=crop',
+          'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&h=500&fit=crop'
+        ];
 
-      // Load related products
-      this.relatedProducts = allProducts
-        .filter(p => p.category === this.product?.category && p.id !== this.product?.id)
-        .slice(0, 4);
-    }else {
+        // Get category name
+        const categoryName = this.product.categoryName || this.getCategoryName(this.product.categoryId);
+
+        // Set breadcrumbs
+        this.breadcrumbs = [
+          { label: 'Home', path: '/' },
+          { label: categoryName, path: `/client/category/${this.product.categoryId}` },
+          { label: this.product.name, path: `/client/product/${this.product.id}` }
+        ];
+
+        // Load related products
+        this.relatedProducts = allProducts
+          .filter(p => p.categoryId === this.product?.categoryId && p.id !== this.product?.id)
+          .slice(0, 4);
+      } else {
         console.error('Prodotto non trovato con ID:', id);
-      }       
+      }
     } catch (error) {
       console.error('Errore nel caricamento del prodotto:', error);
     } finally {
@@ -119,7 +126,7 @@ export class ProductDetails implements OnInit {
   addToCart(): void {
     console.log(`Added ${this.quantity} of ${this.product?.name} to cart`);
     // Implementazione aggiunta al carrello
-     if (!this.product) return;
+    if (!this.product) return;
 
     this.cartService.addToCart(this.product, this.quantity);
     this.addedToCart = true;
@@ -149,8 +156,16 @@ export class ProductDetails implements OnInit {
     window.scrollTo(0, 0);
   }
 
-   goToCategory(): void {
-    this.router.navigate(['/client/category', this.product?.category]);
+  goToCategory(): void {
+    this.router.navigate(['/client/category', this.product?.categoryId]);
+  }
+
+  /**
+   * Get category name by ID
+   */
+  getCategoryName(categoryId: number): string {
+    const category = this.categoryService.categories().find(c => c.id === categoryId);
+    return category?.name || 'Unknown';
   }
 
   selectImage(index: number): void {
@@ -161,11 +176,11 @@ export class ProductDetails implements OnInit {
     return this.productImages[this.selectedImageIndex] || this.product?.image || '';
   }
 
-   onRelatedProductSelected(productId: string): void {
-      this.router.navigate(['/client/product', productId]);
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 100);
-    }
+  onRelatedProductSelected(productId: number): void {
+    this.router.navigate(['/client/product', productId]);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  }
 
 }

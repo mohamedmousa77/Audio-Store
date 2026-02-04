@@ -1,223 +1,196 @@
 <div class="admin-layout">
-  <app-admin-sidebar />
-  
-  <div class="main-content">
-    <app-admin-header />
-    
-    <div class="content-area">
-      <!-- <div class="page-header">
-        <div class="header-info">
-          <h1 class="page-title">Customers Management</h1>
-          <nav class="breadcrumbs">
-            <span>Admin</span> / <span class="active">Customers</span>
-          </nav>
-          <p class="page-subtitle">View and manage your customer database</p>
-        </div>
-        <div class="header-actions">
-          <button class="btn btn-export">
-            <span class="material-icons">download</span> Export
-          </button>
-        </div>
-      </div> -->
+    <app-admin-sidebar />
 
-        <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon icon-users"><span class="material-icons">group</span></div>
-            <div class="stat-content">
-            <p class="stat-label">TOTAL CUSTOMERS</p>
-            <h3 class="stat-value">8</h3>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon icon-active"><span class="material-icons">trending_up</span></div>
-            <div class="stat-content">
-            <p class="stat-label">ACTIVE THIS MONTH</p>
-            <h3 class="stat-value">{{ getActiveCustomers() }}</h3>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon icon-orders"><span class="material-icons">shopping_bag</span></div>
-            <div class="stat-content">
-            <p class="stat-label">TOTAL ORDERS</p>
-            <h3 class="stat-value">{{ getTotalOrders() }}</h3>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon icon-top"><span class="material-icons">star</span></div>
-            <div class="stat-content">
-            <p class="stat-label">TOP CUSTOMER</p>
-            <h3 class="stat-value">{{ getTopCustomer() }}</h3>
-            </div>
-        </div>
-        </div>
+    <div class="main-content">
+        <app-admin-header />
 
-        <div class="filters-card">
-        <div class="filters-row">
-            <div class="search-box">
-                <span class="material-icons">search</span>
-                <input
-                type="text"
-                placeholder="Search by name, email or phone..."
-                [(ngModel)]="searchTerm"
-                (input)="applyFilters()"
-                class="search-input"
-                />
-            </div>
-            <div class="filter-controls">
-                <select 
-                class="filter-select" 
-                [(ngModel)]="selectedRegistrationSort" 
-                (change)="applyFilters()"
-                >
-                    <option value="newest">Registration: Newest</option>
-                    <option value="oldest">Registration: Oldest</option>
-                </select>
+        <div class="content-area">
 
-                <select 
-                class="filter-select" 
-                [(ngModel)]="selectedOrdersRange" 
-                (change)="applyFilters()"
-                >
-                    <option value="all">Total Orders: All</option>
-                    <option value="10+">High Spenders (>10)</option>
-                    <option value="1-10">Regular (1-10)</option>
-                    <option value="none">No Orders (0)</option>
-                </select>
-
-                <select 
-                class="filter-select" 
-                [(ngModel)]="selectedLastOrderFilter" 
-                (change)="applyFilters()"
-                >
-                    <option value="any">Last Order: Any</option>
-                    <option value="recent">Recent (Last 30 days)</option>
-                    <option value="inactive">Inactive (> 6 months)</option>
-                </select>
-            </div>
-        </div>
-        </div>
-
-        <div class="customers-table-container">        
-            <div class="table-container">
-                <table class="customers-table">
-                    <thead>
-                    <tr>
-                        <th>CUSTOMER</th>
-                        <th>EMAIL</th>
-                        <th>REGISTRATION</th>
-                        <th>ORDERS</th>
-                        <th>LAST ORDER</th>
-                        <th>ACTIONS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let customer of filteredCustomers",            
-                    (click)="selectCustomer(customer)"
-                    [class.active-row]="selectedCustomer?.id === customer.id"
-                    class="customer-row">
-                        <td>
-                        <div class="customer-cell">
-                            <div class="avatar">{{ customer.initials }}</div>
-                            <span class="name">{{ customer.name }}</span>
-                        </div>
-                        </td>
-                        <td><span class="email">{{ customer.email }}</span></td>
-                        <td><span class="date">{{ customer.registrationDate }}</span></td>
-                        <td><span class="order-badge">{{ customer.totalOrders }}</span></td>
-                        <td>
-                        <div class="last-order-cell">
-                            <span class="date">{{ customer.lastOrderDate }}</span>
-                            <span class="relative-time" [class.highlight]="customer.lastOrderRelative === 'Just now'">
-                            {{ customer.lastOrderRelative }}
-                            </span>
-                        </div>
-                        </td>
-                        <td>
-                        <div class="actions">
-                            <span class="material-icons view" (click)="$event.stopPropagation(); selectCustomer(customer)">visibility</span>
-                            <span class="material-icons edit" (click)="$event.stopPropagation()">edit</span>
-                        </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-footer">
-                <p>Showing 1-{{ filteredCustomers.length }} of {{ customersList.length }} results</p>
-                <div class="pagination">
-                <button class="page-btn" disabled>Previous</button>
-                <button class="page-btn">Next</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="detail-section" id="customer-detail-section" *ngIf="selectedCustomer">
-            <div class="detail-header">
-                <h2 class="detail-title">Customer Detail: <span>{{ selectedCustomer.name }}</span></h2>
-                <!-- <div class="detail-actions">
-                <button class="btn btn-outline">Reset Password</button>
-                <button class="btn btn-primary"><span class="material-icons">edit</span> Edit Data</button>
-                </div> -->
-            </div>
-
-            <div class="detail-grid-container">
-                <div class="personal-card">
-                    <div class="card-label-row">
-                    <span class="card-label">PERSONAL DATA</span>
-                    <span class="badge-active">Active</span>
-                    </div>
-                    <div class="avatar-large" [style.background]="selectedCustomer.color">
-                    {{ selectedCustomer.initials }}
-                    </div>
-                    <h3 class="detail-name">{{ selectedCustomer.name }}</h3>
-                    <p class="detail-id">ID: #{{ selectedCustomer.id }}</p>
-                </div>
-
-                <div class="stats-and-history">
-                <div class="mini-stats-grid">
-                    <div class="mini-stat">
-                    <p class="stat-label">TOTAL SPENT</p>
-                    <p class="stat-value-large">${{ selectedCustomer.totalSpent | number:'1.2-2' }}</p>
-                    </div>
-                    <div class="mini-stat">
-                    <p class="stat-label">TOTAL ORDERS</p>
-                    <p class="stat-value-large">{{ selectedCustomer.totalOrders }}</p>
-                    </div>
-                    <div class="mini-stat">
-                    <p class="stat-label">AVG. ORDER</p>
-                    <p class="stat-value-large">${{ selectedCustomer.avgOrder | number:'1.2-2' }}</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-users"><span class="material-icons">group</span></div>
+                    <div class="stat-content">
+                        <p class="stat-label">TOTAL CUSTOMERS</p>
+                        <h3 class="stat-value">{{ totalCount() }}</h3>
                     </div>
                 </div>
-
-                <div class="history-card">
-                    <div class="history-header">
-                    <h4>Recent Order History</h4>
-                    <a href="#" class="view-all">VIEW FULL HISTORY <span class="material-icons">arrow_forward</span></a>
+                <div class="stat-card">
+                    <div class="stat-icon icon-active"><span class="material-icons">trending_up</span></div>
+                    <div class="stat-content">
+                        <p class="stat-label">ACTIVE THIS MONTH</p>
+                        <h3 class="stat-value">{{ summary()?.activeCustomers || 0 }}</h3>
                     </div>
-                    <table class="history-table">
-                    <thead>
-                        <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Items</th>
-                        <th>Status</th>
-                        <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let order of selectedCustomer.recentOrders">
-                        <td class="order-id-link">{{ order.id }}</td>
-                        <td>{{ order.date }}</td>
-                        <td>{{ order.items }}</td>
-                        <td><span class="status-pill">{{ order.status }}</span></td>
-                        <td class="order-total">${{ order.total | number:'1.2-2' }}</td>
-                        </tr>
-                    </tbody>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-orders"><span class="material-icons">shopping_bag</span></div>
+                    <div class="stat-content">
+                        <p class="stat-label">TOTAL REVENUE</p>
+                        <h3 class="stat-value">€{{ summary()?.totalRevenue?.toFixed(2) || '0.00' }}</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-top"><span class="material-icons">star</span></div>
+                    <div class="stat-content">
+                        <p class="stat-label">AVG ORDER VALUE</p>
+                        <h3 class="stat-value">€{{ summary()?.averageOrderValue?.toFixed(2) || '0.00' }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-card">
+                <div class="filters-row">
+                    <div class="search-box">
+                        <span class="material-icons">search</span>
+                        <input type="text" placeholder="Search by name, email or phone..." [ngModel]="searchTerm()"
+                            (ngModelChange)="searchTerm.set($event)" class="search-input" />
+                    </div>
+                    <div class="filter-controls">
+                        <select class="filter-select" [ngModel]="selectedSort()"
+                            (ngModelChange)="selectedSort.set($event)">
+                            <option value="recent">Registration: Newest</option>
+                            <option value="oldest">Registration: Oldest</option>
+                        </select>
+
+                        <select class="filter-select" [ngModel]="selectedOrdersRange()"
+                            (ngModelChange)="selectedOrdersRange.set($event)">
+                            <option value="all">Total Orders: All</option>
+                            <option value="10+">High Spenders (>10)</option>
+                            <option value="1-10">Regular (1-10)</option>
+                            <option value="none">No Orders (0)</option>
+                        </select>
+
+                        <select class="filter-select" [ngModel]="selectedStatus()"
+                            (ngModelChange)="selectedStatus.set($event)">
+                            <option value="">Status: All</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customers-table-container">
+                <div class="table-container">
+                    <table class="customers-table">
+                        <thead>
+                            <tr>
+                                <th>CUSTOMER</th>
+                                <th>EMAIL</th>
+                                <th>REGISTRATION</th>
+                                <th>ORDERS</th>
+                                <th>TOTAL SPENT</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (customer of filteredCustomers(); track customer.id) {
+                            <tr (click)="selectCustomer(customer)"
+                                [class.active-row]="selectedCustomer()?.id === customer.id" class="customer-row">
+                                <td>
+                                    <div class="customer-cell">
+                                        <div class="avatar" [style.background]="getColor(customer.id)">{{
+                                            getInitials(customer.firstName, customer.lastName) }}</div>
+                                        <span class="name">{{ customer.firstName }} {{ customer.lastName }}</span>
+                                    </div>
+                                </td>
+                                <td><span class="email">{{ customer.email }}</span></td>
+                                <td><span class="date">{{ formatDate(customer.registrationDate) }}</span></td>
+                                <td><span class="order-badge">{{ customer.totalOrders }}</span></td>
+                                <td><span class="price">{{ formatPrice(customer.totalSpent) }}</span></td>
+                                <td>
+                                    <div class="actions">
+                                        <span class="material-icons view"
+                                            (click)="$event.stopPropagation(); selectCustomer(customer)">visibility</span>
+                                        <span class="material-icons edit" (click)="$event.stopPropagation()">edit</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
                     </table>
                 </div>
+                <div class="table-footer">
+                    <p>Showing {{ filteredCustomers().length }} of {{ totalCount() }} results</p>
                 </div>
             </div>
+
+            @if (selectedCustomer()) {
+            <div class="detail-section" id="customer-detail-section">
+                <div class="detail-header">
+                    <h2 class="detail-title">Customer Detail: <span>{{ selectedCustomer()!.firstName }} {{
+                            selectedCustomer()!.lastName }}</span></h2>
+                </div>
+
+                <div class="detail-grid-container">
+                    <div class="personal-card">
+                        <div class="card-label-row">
+                            <span class="card-label">PERSONAL DATA</span>
+                            <span class="badge-active">{{ selectedCustomer()!.status }}</span>
+                        </div>
+                        <div class="avatar-large" [style.background]="getColor(selectedCustomer()!.id)">
+                            {{ getInitials(selectedCustomer()!.firstName, selectedCustomer()!.lastName) }}
+                        </div>
+                        <h3 class="detail-name">{{ selectedCustomer()!.firstName }} {{ selectedCustomer()!.lastName }}
+                        </h3>
+                        <p class="detail-id">ID: #{{ selectedCustomer()!.id }}</p>
+                        <p class="detail-email">{{ selectedCustomer()!.email }}</p>
+                        @if (selectedCustomer()!.phone) {
+                        <p class="detail-phone">{{ selectedCustomer()!.phone }}</p>
+                        }
+                    </div>
+
+                    <div class="stats-and-history">
+                        <div class="mini-stats-grid">
+                            <div class="mini-stat">
+                                <p class="stat-label">TOTAL SPENT</p>
+                                <p class="stat-value-large">{{ formatPrice(selectedCustomer()!.totalSpent) }}</p>
+                            </div>
+                            <div class="mini-stat">
+                                <p class="stat-label">TOTAL ORDERS</p>
+                                <p class="stat-value-large">{{ selectedCustomer()!.totalOrders }}</p>
+                            </div>
+                            <div class="mini-stat">
+                                <p class="stat-label">REGISTRATION</p>
+                                <p class="stat-value-large">{{ formatDate(selectedCustomer()!.registrationDate) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="history-card">
+                            <div class="history-header">
+                                <h4>Recent Order History</h4>
+                            </div>
+                            @if (customerOrders().length > 0) {
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Items</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (order of customerOrders(); track order.id) {
+                                    <tr>
+                                        <td class="order-id-link">#{{ order.id }}</td>
+                                        <td>{{ formatDate(order.orderDate) }}</td>
+                                        <td>{{ order.items.length || 0 }}</td>
+                                        <td><span class="status-pill">{{ getOrderStatusText(order.orderStatus) }}</span>
+                                        </td>
+                                        <td class="order-total">{{ formatPrice(order.totalAmount) }}</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            } @else {
+                            <p class="no-orders">No orders found for this customer.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
         </div>
     </div>
-  </div>
 </div>

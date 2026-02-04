@@ -147,6 +147,20 @@ export class OrdersPage implements OnInit {
   }
 
   /**
+   * Get total orders count
+   */
+  getTotalOrders(): number {
+    return this.orders().length;
+  }
+
+  /**
+   * Get customer initial for avatar
+   */
+  getCustomerInitial(order: Order): string {
+    return order.customerFirstName.charAt(0).toUpperCase();
+  }
+
+  /**
    * Apply filters
    */
   applyFilters(): void {
@@ -196,6 +210,20 @@ export class OrdersPage implements OnInit {
       [OrderStatus.Canceled]: 'Annullato'
     };
     return statusMap[status] || 'Sconosciuto';
+  }
+
+  /**
+   * Get status for Badge component (lowercase)
+   */
+  getStatusBadge(status: OrderStatus): 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled' {
+    const statusMap: { [key: number]: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled' } = {
+      [OrderStatus.Pending]: 'pending',
+      [OrderStatus.Confirmed]: 'confirmed',
+      [OrderStatus.Shipped]: 'shipped',
+      [OrderStatus.Delivered]: 'delivered',
+      [OrderStatus.Canceled]: 'canceled'
+    };
+    return statusMap[status] || 'pending';
   }
 
   /**

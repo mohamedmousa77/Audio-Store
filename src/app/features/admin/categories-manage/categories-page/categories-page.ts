@@ -260,4 +260,25 @@ export class CategoriesPage implements OnInit {
       this.getProductCount(cat.id) > this.getProductCount(max.id) ? cat : max
     );
   }
+
+  /**
+   * Update form category name
+   */
+  updateFormName(name: string): void {
+    this.formCategory.set({ ...this.formCategory(), name });
+  }
+
+  /**
+   * Update form category description
+   */
+  updateFormDescription(description: string): void {
+    this.formCategory.set({ ...this.formCategory(), description });
+  }
+
+  /**
+   * Update form category icon
+   */
+  updateFormIcon(icon: string): void {
+    this.formCategory.set({ ...this.formCategory(), icon });
+  }
 }

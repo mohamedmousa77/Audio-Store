@@ -10,19 +10,20 @@
     </div>
 
     <!-- Loading State -->
-    <div class="loading-state" *ngIf="loading()">
+    @if (loading()) {
+    <div class="loading-state">
       <div class="spinner"></div>
       <p>Loading products...</p>
     </div>
+    }
 
     <!-- Products Grid -->
-    <div class="products-grid" *ngIf="!loading()">
-      <app-product-card
-        *ngFor="let product of featuredProducts()"
-        [product]="product"
-        [clickable]="true"
-        (productSelected)="goToProduct($event)"
-      />
+    @if (!loading()) {
+    <div class="products-grid">
+      @for (product of products; track product.id) {
+      <app-product-card [product]="product" [clickable]="true" (productSelected)="goToProduct($event)" />
+      }
     </div>
+    }
   </div>
 </section>

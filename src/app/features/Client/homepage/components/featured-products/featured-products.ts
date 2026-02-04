@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductCard } from '../../../layout/product-card/product-card';
@@ -20,6 +20,7 @@ import { Product } from '../../../../../core/models/product';
 })
 export class FeaturedProducts {
   private router = inject(Router);
+  loading = signal<boolean>(true);
 
   /**
    * Featured products to display

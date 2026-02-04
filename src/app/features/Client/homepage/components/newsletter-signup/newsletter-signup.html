@@ -6,29 +6,23 @@
       special offers, and audio tips.
     </p>
 
-    <div class="newsletter-form" *ngIf="!submitted">
+    @if (!submitted) {
+    <div class="newsletter-form">
       <form (ngSubmit)="onSubmit()" class="form-group">
-        <input
-          type="email"
-          [(ngModel)]="email"
-          name="email"
-          placeholder="Enter your email"
-          class="email-input"
-          required
-        />
-        <button
-          type="submit"
-          class="subscribe-btn"
-          [disabled]="loading || !email"
-        >
-           {{ loading ? 'Subscribing...' : 'Subscribe' }}
+        <input type="email" [(ngModel)]="email" name="email" placeholder="Enter your email" class="email-input"
+          required />
+        <button type="submit" class="subscribe-btn" [disabled]="loading || !email">
+          {{ loading ? 'Subscribing...' : 'Subscribe' }}
         </button>
       </form>
     </div>
+    }
 
-    <div class="success-message" *ngIf="submitted">
+    @if (submitted) {
+    <div class="success-message">
       <span class="material-icons">check_circle</span>
       <p>Thanks for subscribing! Check your email for confirmation.</p>
     </div>
+    }
   </div>
 </section>

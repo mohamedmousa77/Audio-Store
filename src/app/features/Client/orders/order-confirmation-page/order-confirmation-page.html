@@ -2,24 +2,29 @@
 
 <main class="confirmation-bg">
   <div class="container-premium">
-    
+
     <!-- LOADING STATE -->
-    <div *ngIf="loading" class="state-card">
+    @if (loading()) {
+    <div class="state-card">
       <div class="loader-circle"></div>
       <p>Stiamo caricando i dettagli del tuo acquisto...</p>
     </div>
+    }
 
     <!-- ERROR STATE -->
-    <div *ngIf="!loading && error" class="state-card">
+    @if (!loading() && error()) {
+    <div class="state-card">
       <span class="material-symbols-outlined error-icon">sentiment_very_dissatisfied</span>
       <h2>Oops! Ordine non trovato</h2>
-      <p>Non siamo riusciti a trovare l'ordine <strong>{{ orderId }}</strong>.</p>
+      <p>Non siamo riusciti a trovare l'ordine <strong>{{ orderNumber() }}</strong>.</p>
       <button class="btn-primary-custom" (click)="continueShopping()">Torna allo Shop</button>
     </div>
+    }
 
     <!-- SUCCESS STATE -->
-    <div *ngIf="!loading && !error && order" class="confirmation-layout">
-      
+    @if (!loading() && !error() && order()) {
+    <div class="confirmation-layout">
+
       <!-- HERO SECTION - Success Message -->
       <section class="hero-success-card">
         <div class="check-wrapper">
@@ -28,8 +33,8 @@
         <h1>Thank you for your order!</h1>
         <p class="hero-text">
           We've sent a confirmation email to
-          <strong>{{ order.shippingAddress?.email }}</strong>. Your order
-          <strong>#{{ order.orderNumber }}</strong> has been placed successfully.
+          <strong>{{ order()!.customerEmail }}</strong>. Your order
+          <strong>#{{ order()!.orderNumber }}</strong> has been placed successfully.
         </p>
         <div class="hero-buttons">
           <button class="btn-orange-filled" (click)="continueShopping()">
@@ -43,57 +48,54 @@
 
       <!-- MAIN GRID LAYOUT -->
       <div class="order-grid">
-        
+
         <!-- LEFT COLUMN - Items and Details -->
         <div class="left-col">
-          
+
           <!-- ITEMS ORDERED SECTION -->
           <section class="premium-card">
             <div class="card-header">
               <h3>Items Ordered</h3>
-              <span class="count-pill">{{ order.items?.length }} Items</span>
+              <span class="count-pill">{{ order()!.items.length }} Items</span>
             </div>
             <div class="items-container">
-              <div class="product-row" *ngFor="let item of order.items">
-                <img 
-                  [src]="item.image" 
-                  [alt]="item.name"
-                  class="product-image"
-                />
+              @for (item of order()!.items; track item.id) {
+              <div class="product-row">
+                <img [src]="item.productImage" [alt]="item.productName" class="product-image" />
                 <div class="product-info">
-                  <p class="p-name">{{ item.name }}</p>
-                  <p class="p-cat">{{ item.category }}</p>
+                  <p class="p-name">{{ item.productName }}</p>
                   <p class="p-qty">Qty: {{ item.quantity }}</p>
                 </div>
                 <div class="product-price">
-                  €{{ (item.price * item.quantity).toFixed(2) }}
+                  €{{ item.subtotal.toFixed(2) }}
                 </div>
               </div>
+              }
             </div>
           </section>
 
           <!-- SHIPPING & PAYMENT ROW -->
           <div class="address-payment-row">
-            
+
             <!-- SHIPPING ADDRESS -->
             <section class="premium-card">
               <h4 class="card-title">
                 <span class="material-symbols-outlined">local_shipping</span>
                 Shipping Address
               </h4>
-              <div class="address-box" *ngIf="order.shippingAddress">
+              <div class="address-box">
                 <p>
                   <strong>
-                    {{ order.shippingAddress.firstName }}
-                    {{ order.shippingAddress.lastName }}
+                    {{ order()!.customerFirstName }}
+                    {{ order()!.customerLastName }}
                   </strong>
                 </p>
-                <p>{{ order.shippingAddress.address }}</p>
+                <p>{{ order()!.shippingStreet }}</p>
                 <p>
-                  {{ order.shippingAddress.zipCode }}
-                  {{ order.shippingAddress.city }}
+                  {{ order()!.shippingPostalCode }}
+                  {{ order()!.shippingCity }}
                 </p>
-                <p>{{ order.shippingAddress.country }}</p>
+                <p>{{ order()!.shippingCountry }}</p>
               </div>
             </section>
 
@@ -104,7 +106,7 @@
                 Payment Method
               </h4>
               <div class="payment-box">
-                <p>Cash on Delivery</p>
+                <p>{{ order()!.paymentMethod || 'Cash on Delivery' }}</p>
                 <span class="badge-payment">Pay upon receipt</span>
               </div>
             </section>
@@ -115,19 +117,19 @@
         <aside class="right-col">
           <div class="summary-premium-card">
             <h3>Order Summary</h3>
-            
+
             <div class="summary-lines">
               <div class="s-line">
                 <span>Subtotal</span>
-                <span>€{{ (order.subtotal ?? 0).toFixed(2) }}</span>
+                <span>€{{ order()!.subtotal.toFixed(2) }}</span>
               </div>
               <div class="s-line">
                 <span>Shipping</span>
-                <span class="text-green">Free</span>
+                <span class="text-green">€{{ order()!.shippingCost.toFixed(2) }}</span>
               </div>
               <div class="s-line">
                 <span>Tax Est.</span>
-                <span>€{{ (order.tax ?? 0).toFixed(2) }}</span>
+                <span>€{{ order()!.tax.toFixed(2) }}</span>
               </div>
             </div>
 
@@ -139,21 +141,22 @@
                 <span class="total-title">Total</span>
                 <span class="total-note">Includes all taxes and duties</span>
               </div>
-              <span class="total-price-val">€{{ getTotalAmount().toFixed(2) }}</span>
+              <span class="total-price-val">€{{ order()!.totalAmount.toFixed(2) }}</span>
             </div>
 
-            <!-- ESTIMATED DELIVERY -->
+            <!-- ORDER STATUS -->
             <div class="estimate-box">
-              <span class="material-symbols-outlined">calendar_today</span>
+              <span class="material-symbols-outlined">info</span>
               <div class="estimate-text">
-                <p>Estimated Delivery</p>
-                <strong>{{ order.estimatedDelivery | date: 'MMM dd - MMM dd' }}</strong>
+                <p>Order Status</p>
+                <strong>{{ getStatusText(order()!.orderStatus) }}</strong>
               </div>
             </div>
           </div>
         </aside>
       </div>
     </div>
+    }
   </div>
 </main>
 

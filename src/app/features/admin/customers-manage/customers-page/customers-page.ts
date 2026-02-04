@@ -94,6 +94,9 @@ export class CustomersPage implements OnInit {
     return filtered;
   });
 
+  // Computed total count
+  totalCount = this.customerService.totalCount;
+
   // Expose OrderStatus enum to template
   OrderStatus = OrderStatus;
 
@@ -215,16 +218,16 @@ export class CustomersPage implements OnInit {
   /**
    * Get customer initials
    */
-  getInitials(customer: Customer): string {
-    return `${customer.firstName.charAt(0)}${customer.lastName.charAt(0)}`.toUpperCase();
+  getInitials(firstName: string, lastName: string): string {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   }
 
   /**
    * Get customer color (for avatar)
    */
-  getColor(customer: Customer): string {
+  getColor(customerId: number): string {
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
-    return colors[customer.id % colors.length];
+    return colors[customerId % colors.length];
   }
 
   /**

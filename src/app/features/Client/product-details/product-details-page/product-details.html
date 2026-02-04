@@ -2,42 +2,42 @@
 
 <main class="product-detail-page">
 
-
   <!-- Loading State -->
-  <div class="loading-state" *ngIf="loading">
+  @if (loading) {
+  <div class="loading-state">
     <div class="spinner"></div>
   </div>
+  }
 
   <!-- Product Content -->
-  <div class="product-container" *ngIf="product && !loading">
+  @if (product && !loading) {
+  <div class="product-container">
     <div class="product-grid">
       <!-- Gallery Section -->
       <div class="product-gallery">
         <!-- Main Image -->
         <div class="main-image-container">
-          <div 
-            class="main-image"
-            [style.backgroundImage]="'url(' + currentImage + ')'"
-          ></div>
-          
+          <div class="main-image" [style.backgroundImage]="'url(' + currentImage + ')'"></div>
+
           <!-- Badge -->
-          <div class="product-badges" *ngIf="product.isFeatured || product.isNew">
-            <span *ngIf="product.isFeatured" class="badge badge-featured">
-              BEST SELLER
-            </span>
-            <span *ngIf="product.isNew" class="badge badge-new">NEW</span>
+          @if (product.isFeatured || product.isNew) {
+          <div class="product-badges">
+            @if (product.isFeatured) {
+            <span class="badge badge-featured">BEST SELLER</span>
+            }
+            @if (product.isNew) {
+            <span class="badge badge-new">NEW</span>
+            }
           </div>
+          }
         </div>
 
         <!-- Thumbnail Gallery -->
         <div class="thumbnail-gallery">
-          <button
-            *ngFor="let img of productImages; let i = index"
-            class="thumbnail"
-            [class.active]="i === selectedImageIndex"
-            (click)="selectImage(i)"
-            [style.backgroundImage]="'url(' + img + ')'"
-          ></button>
+          @for (img of productImages; track $index) {
+          <button class="thumbnail" [class.active]="$index === selectedImageIndex" (click)="selectImage($index)"
+            [style.backgroundImage]="'url(' + img + ')'"></button>
+          }
         </div>
       </div>
 
@@ -62,10 +62,11 @@
         <!-- Price -->
         <div class="product-price-section">
           <span class="current-price">${{ product.price.toFixed(2) }}</span>
-          <span class="original-price" *ngIf="product.price < 400">
+          @if (product.price < 400) { <span class="original-price">
             ${{ (product.price * 1.15).toFixed(2) }}
-          </span>
-          <span class="discount" *ngIf="product.price < 400">Save 13%</span>
+            </span>
+            <span class="discount">Save 13%</span>
+            }
         </div>
 
         <!-- Description -->
@@ -76,37 +77,23 @@
         <!-- Stock Status -->
         <div class="stock-status" [class.in-stock]="product.stock > 0">
           <span class="material-icons">{{ product.stock > 0 ? 'check_circle' : 'cancel' }}</span>
-          <span *ngIf="product.stock > 0">
-            In Stock - Only {{ product.stock }} pieces available
-          </span>
-          <span *ngIf="product.stock === 0">Out of Stock</span>
+          @if (product.stock > 0) {
+          <span>In Stock - Only {{ product.stock }} pieces available</span>
+          } @else {
+          <span>Out of Stock</span>
+          }
         </div>
 
         <!-- Color Selection -->
         <div class="color-selection">
           <label>Color:</label>
           <div class="color-options">
-            <button 
-              class="color-btn"
-              [class.active]="selectedColor === 'black'"
-              (click)="selectedColor = 'black'"
-              style="background: #000"
-              title="Black"
-            ></button>
-            <button 
-              class="color-btn"
-              [class.active]="selectedColor === 'silver'"
-              (click)="selectedColor = 'silver'"
-              style="background: #c0c0c0"
-              title="Silver"
-            ></button>
-            <button 
-              class="color-btn"
-              [class.active]="selectedColor === 'gold'"
-              (click)="selectedColor = 'gold'"
-              style="background: #ffd700"
-              title="Gold"
-            ></button>
+            <button class="color-btn" [class.active]="selectedColor === 'black'" (click)="selectedColor = 'black'"
+              style="background: #000" title="Black"></button>
+            <button class="color-btn" [class.active]="selectedColor === 'silver'" (click)="selectedColor = 'silver'"
+              style="background: #c0c0c0" title="Silver"></button>
+            <button class="color-btn" [class.active]="selectedColor === 'gold'" (click)="selectedColor = 'gold'"
+              style="background: #ffd700" title="Gold"></button>
           </div>
         </div>
 
@@ -122,26 +109,10 @@
             </button>
           </div>
 
-          <button 
-            class="add-to-cart-btn"
-            (click)="addToCart()"
-            
-            [disabled]="product.stock === 0"
-          >
+          <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="product.stock === 0">
             <span class="material-icons">shopping_bag</span>
             Add to Cart
           </button>
-
-          <!-- <button 
-            class="wishlist-btn"
-            (click)="toggleWishlist()"
-            [class.wishlisted]="isWishlisted"
-            title="Add to Wishlist"
-          >
-            <span class="material-icons">
-              {{ isWishlisted ? 'favorite' : 'favorite_border' }}
-            </span>
-          </button> -->
         </div>
 
         <!-- Features -->
@@ -193,18 +164,19 @@
     </div>
 
     <!-- Related Products -->
-    <section class="related-products" *ngIf="relatedProducts.length > 0">
+    @if (relatedProducts.length > 0) {
+    <section class="related-products">
       <h2 class="section-title">You May Also Like</h2>
       <div class="related-grid">
-        <app-product-card
-          *ngFor="let relatedProduct of relatedProducts"
-          [product]="relatedProduct"
-          [clickable]="true"
-          (productSelected)="onRelatedProductSelected($event)"
-        />
+        @for (relatedProduct of relatedProducts; track relatedProduct.id) {
+        <app-product-card [product]="relatedProduct" [clickable]="true"
+          (productSelected)="onRelatedProductSelected($event)" />
+        }
       </div>
     </section>
+    }
   </div>
+  }
 </main>
 
 <app-client-footer />

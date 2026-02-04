@@ -1,17 +1,17 @@
 <div class="admin-layout">
-  <app-admin-sidebar/>
-  
+  <app-admin-sidebar />
+
   <div class="main-content">
     <app-admin-header />
-    
+
     <div class="content-area">
       <!-- Stats Grid -->
       <div class="stats-grid">
-        <app-stat-card
-          *ngFor="let stat of stats"
-          [stat]="stat"
-        />
+        @for (stat of stats(); track $index) {
+        <app-stat-card [stat]="stat" />
+        }
       </div>
+
       <!-- Dashboard Grid -->
       <div class="dashboard-grid">
         <!-- Orders by Status Section -->
@@ -23,18 +23,20 @@
               <span class="material-icons">arrow_forward</span>
             </a>
           </div>
-          <app-recent-orders [orders]="ordersStatusData" />
+          <app-recent-orders [orders]="ordersStatusData()" />
         </div>
+
         <!-- Sales by Category Section -->
         <div class="dashboard-card stats-card">
           <div class="card-header">
             <h2 class="card-title">Sales by Category</h2>
           </div>
-          <app-category-stats [categories]="categoryStats" />
+          <app-category-stats [categories]="categoryStats()" />
         </div>
       </div>
+
       <!-- Top Selling Products Section -->
-      <top-products-dashboard-manage [products]="topProducts" />
+      <top-products-dashboard-manage [products]="topProducts()" />
     </div>
   </div>
 </div>

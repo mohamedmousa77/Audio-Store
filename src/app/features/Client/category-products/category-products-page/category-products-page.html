@@ -3,7 +3,7 @@
 <main class="category-page bg-[#f8f7f5]">
 
   <!-- Hero Section -->
- <section class="category-hero" [style.background-image]="'url(' + categoryImage() + ')'">
+  <section class="category-hero" [style.background-image]="'url(' + categoryImage() + ')'">
     <div class="hero-overlay">
       <div class="hero-content">
         <h1 class="category-title animate-fade-in">{{ categoryName }}</h1>
@@ -12,55 +12,55 @@
     </div>
   </section>
   <!-- Filters Section -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-  <div class="filter-actions-bar">
-    <div class="filter-controls-wrapper">
-      <button (click)="toggleFilters()" class="btn-filters" [class.active]="isFiltersOpen()">
-        <span class="material-symbols-outlined">{{ isFiltersOpen() ? 'close' : 'tune' }}</span>
-        <span>Filters</span>
-      </button>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="filter-actions-bar">
+      <div class="filter-controls-wrapper">
+        <button (click)="toggleFilters()" class="btn-filters" [class.active]="isFiltersOpen()">
+          <span class="material-symbols-outlined">{{ isFiltersOpen() ? 'close' : 'tune' }}</span>
+          <span>Filters</span>
+        </button>
 
-      <div 
-      class="horizontal-filters-container" 
-      [class.open]="isFiltersOpen()">
-        <div class="filter-group-inline">
-          <select 
-          class="custom-select-small"
-          [(ngModel)]="sortBy"
-          (change)="applySort()"
-          >
-            <option value="default">Sort by</option>
-            <option value="featured">Featured</option>
-            <option value="newest">Newest</option>
-            <option value="price-low-high">Price: Low to High</option>
-            <option value="price-high-low">Price: High to Low</option>
-          </select>
-        </div>
-        
-        <div class="filter-group-inline">
-          <div class="flex gap-2">
-            <button (click)="applyFilters()" class="chip-mini">Under $100</button>
-            <button (click)="applyFilters()" class="chip-mini">$100 - $500</button>
+        <div class="horizontal-filters-container" [class.open]="isFiltersOpen()">
+          <div class="filter-group-inline">
+            <select class="custom-select-small" [(ngModel)]="sortBy" (change)="applySort()">
+              <option value="default">Sort by</option>
+              <option value="featured">Featured</option>
+              <option value="newest">Newest</option>
+              <option value="price-low-high">Price: Low to High</option>
+              <option value="price-high-low">Price: High to Low</option>
+            </select>
           </div>
-        </div>
 
-        <div class="filter-group-inline">
-          <select class="custom-select-small">
-            <option>All Brands</option>
-            <option>Sony</option>
-            <option>Bose</option>
-          </select>
+          <div class="filter-group-inline">
+            <div class="flex gap-2">
+              <button (click)="applyFilters()" class="chip-mini">Under $100</button>
+              <button (click)="applyFilters()" class="chip-mini">$100 - $500</button>
+            </div>
+          </div>
+
+          <div class="filter-group-inline">
+            <select class="custom-select-small">
+              <option>All Brands</option>
+              <option>Sony</option>
+              <option>Bose</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-    <div class="products-grid mt-8 ml-2" *ngIf="!loading">
-      <app-product-card *ngFor="let product of products" [product]="product" />
+    @if (!loading) {
+    <div class="products-grid mt-8 ml-2">
+      @for (product of products; track product.id) {
+      <app-product-card [product]="product" />
+      }
     </div>
+    }
 
-    <div class="loading-container" *ngIf="loading">
+    @if (loading) {
+    <div class="loading-container">
       <div class="loader"></div>
     </div>
+    }
   </div>
 
 </main>

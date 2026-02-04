@@ -4,21 +4,18 @@
     <h2 class="category-title">Shop by Category</h2>
 
     <!-- Loading State -->
-    <div class="loading-state" *ngIf="loading()">
+    @if (loading()) {
+    <div class="loading-state">
       <div class="spinner"></div>
     </div>
+    }
 
     <!-- Categories Grid -->
-    <div class="categories-grid" *ngIf="!loading()">
-      <a
-        *ngFor="let category of categories()"
-        [routerLink]="['/client/category', category.name]"
-        class="category-card"
-      >
-        <div
-          class="category-image"
-          [style.backgroundImage]="'url(' + getCategoryImage(category.name) + ')'"
-        >
+    @if (!loading()) {
+    <div class="categories-grid">
+      @for (category of categories; track category.id) {
+      <a [routerLink]="['/client/category', category.name]" class="category-card">
+        <div class="category-image" [style.backgroundImage]="'url(' + getCategoryImage(category) + ')'">
           <div class="category-overlay"></div>
         </div>
 
@@ -31,6 +28,8 @@
           Explore {{ category.name }}
         </button>
       </a>
+      }
     </div>
+    }
   </div>
 </section>

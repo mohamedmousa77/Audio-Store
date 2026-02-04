@@ -3,36 +3,39 @@
 <main class="cart-screen">
   <div class="cart-container">
     <header class="cart-title-row">
-        <div class="title-group">
-            <h1 class="page-title">Your Shopping Cart</h1>
-            <span class="items-info">You have {{ cart.totalItems }} items in your cart</span>
-        </div>      
-        <button class="btn-continue-top" (click)="continueShopping()">
-            <span class="material-symbols-outlined">keyboard_backspace</span>
-            Continue Shopping
-        </button>
-        
+      <div class="title-group">
+        <h1 class="page-title">Your Shopping Cart</h1>
+        <span class="items-info">You have {{ totalItems() }} items in your cart</span>
+      </div>
+      <button class="btn-continue-top" (click)="continueShopping()">
+        <span class="material-symbols-outlined">keyboard_backspace</span>
+        Continue Shopping
+      </button>
+
     </header>
 
-     <div *ngIf="cart.totalItems === 0" class="empty-cart-wrapper">
-            <div class="empty-state-content">
-                <div class="icon-circle">
-                <span class="material-symbols-outlined">shopping_basket</span>
-                </div>
-                <h2>Your shopping cart is empty</h2>
-                <p>Give it some love by adding premium audio equipment from our catalog.</p>
-                <button class="btn-primary-large" (click)="continueShopping()">
-                <span class="material-symbols-outlined">keyboard_backspace</span>
-                EXPLORE CATALOG
-                </button>
-            </div>
+    @if (isEmpty()) {
+    <div class="empty-cart-wrapper">
+      <div class="empty-state-content">
+        <div class="icon-circle">
+          <span class="material-symbols-outlined">shopping_basket</span>
         </div>
-    
+        <h2>Your shopping cart is empty</h2>
+        <p>Give it some love by adding premium audio equipment from our catalog.</p>
+        <button class="btn-primary-large" (click)="continueShopping()">
+          <span class="material-symbols-outlined">keyboard_backspace</span>
+          EXPLORE CATALOG
+        </button>
+      </div>
+    </div>
+    }
+
 
     <div class="cart-grid">
       <section class="items-section">
-       
-        <table class="cart-table" *ngIf="cart.items.length > 0">
+
+        @if (items().length > 0) {
+        <table class="cart-table">
           <thead>
             <tr>
               <th class="col-product">Product</th>
@@ -42,22 +45,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of cart.items" class="cart-row">
+            @for (item of items(); track item.id) {
+            <tr class="cart-row">
               <td class="product-cell">
                 <div class="product-info-wrapper">
                   <img [src]="item.image" [alt]="item.name" class="item-img">
                   <div class="item-text">
-                    <p class="item-cat">{{ item.category }}</p>
-                    <h3 class="item-name">{{ item.name }}</h3>                    
+                    <h3 class="item-name">{{ item.name }}</h3>
                     <p class="item-cat">Unit Price: € {{ item.price.toFixed(2) }}</p>
                   </div>
                 </div>
               </td>
-              <!-- <td class="price-cell">€ {{ item.price.toFixed(2) }}</td> -->
               <td class="qty-cell">
                 <div class="qty-stepper">
-                  <button (click)="updateQuantity(item.id, item.quantity - 1)" 
-                          [disabled]="item.quantity <= 1" class="step-btn">
+                  <button (click)="updateQuantity(item.id, item.quantity - 1)" [disabled]="item.quantity <= 1"
+                    class="step-btn">
                     <span class="material-symbols-outlined">remove</span>
                   </button>
                   <span class="qty-val">{{ item.quantity }}</span>
@@ -73,20 +75,23 @@
                 </button>
               </td>
             </tr>
+            }
           </tbody>
         </table>
+        }
 
-        
+
       </section>
 
-      <aside class="summary-section" *ngIf="cart.items.length > 0">
+      @if (!isEmpty()) {
+      <aside class="summary-section">
         <div class="summary-card">
           <h2 class="summary-header">Order Summary</h2>
-          
+
           <div class="summary-details">
             <div class="detail-row">
               <span>Subtotal</span>
-              <span class="price-val">€ {{ cart.totalPrice.toFixed(2) }}</span>
+              <span class="price-val">€ {{ totalPrice().toFixed(2) }}</span>
             </div>
             <div class="detail-row">
               <span>Shipping</span>
@@ -94,7 +99,7 @@
             </div>
             <div class="detail-row">
               <span>Tax (10%)</span>
-              <span class="price-val">€ {{ (cart.totalPrice * 0.10).toFixed(2) }}</span>
+              <span class="price-val">€ {{ (totalPrice() * 0.10).toFixed(2) }}</span>
             </div>
           </div>
 
@@ -102,7 +107,7 @@
 
           <div class="total-row">
             <span>Estimated Total</span>
-            <span class="final-price">€ {{ (cart.totalPrice + (cart.totalPrice * 0.10)).toFixed(2) }}</span>
+            <span class="final-price">€ {{ (totalPrice() + (totalPrice() * 0.10)).toFixed(2) }}</span>
           </div>
 
           <button (click)="proceedToCheckout()" class="btn-checkout">
@@ -111,6 +116,7 @@
           </button>
         </div>
       </aside>
+      }
     </div>
   </div>
 </main>

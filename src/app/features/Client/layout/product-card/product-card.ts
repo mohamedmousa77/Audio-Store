@@ -20,7 +20,7 @@ export class ProductCard {
   ) {}
   @Input() product!: Product;
   @Input() clickable: boolean = false;
-  @Output() productSelected = new EventEmitter<string>();
+  @Output() productSelected = new EventEmitter<number>();
 
 
   // isWishlisted = false;

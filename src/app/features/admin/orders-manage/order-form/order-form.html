@@ -1,8 +1,8 @@
 <div class="order-detail-container">
   <div class="detail-page-header">
     <div class="header-left">
-      <h2 class="detail-title">Order Details: <span>{{ order.id }}</span></h2>
-      <p class="detail-subtitle">Placed on {{ order.date | date:'longDate' }}</p>
+      <h2 class="detail-title">Order Details: <span>{{ order?.id }}</span></h2>
+      <p class="detail-subtitle">Placed on {{ order?.orderDate | date:'longDate' }}</p>
     </div>
     <div class="header-actions">
       <button class="btn btn-secondary" (click)="onCancel()">
@@ -21,8 +21,8 @@
           <div class="card-icon"><span class="material-icons">person</span></div>
           <div class="card-content">
             <h4>CUSTOMER INFO</h4>
-            <p class="primary-text">{{ order.customerName }}</p>
-            <p class="secondary-text">{{ order.customerEmail }}</p>
+            <p class="primary-text">{{ order?.customerFirstName + ' ' + order?.customerLastName }}</p>
+            <p class="secondary-text">{{ order?.customerEmail }}</p>
             <p class="secondary-text">+1 (555) 123-4567</p>
           </div>
         </div>
@@ -40,17 +40,24 @@
       <div class="products-list-card">
         <table class="product-mini-table">
           <thead>
-            <tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
               <td>
                 <div class="prod-cell">
-                   <div class="prod-img-placeholder"></div>
-                   <span>Sony WH-1000XM5</span>
+                  <div class="prod-img-placeholder"></div>
+                  <span>Sony WH-1000XM5</span>
                 </div>
               </td>
-              <td>1</td><td>$349.00</td><td><strong>$349.00</strong></td>
+              <td>1</td>
+              <td>$349.00</td>
+              <td><strong>$349.00</strong></td>
             </tr>
           </tbody>
         </table>
@@ -60,32 +67,22 @@
     <div class="detail-side-actions">
       <div class="action-card">
         <h4>UPDATE STATUS</h4>
-        <select class="status-dropdown" #statusSelect [value]="order.status">
-          <option value="Processing">Processing</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Canceled">Canceled</option>
+        <select class="status-dropdown" #statusSelect [value]="order?.orderStatus">
+          <option [value]="0">Pending</option>
+          <option [value]="1">Confirmed</option>
+          <option [value]="2">Shipped</option>
+          <option [value]="3">Delivered</option>
+          <option [value]="4">Canceled</option>
         </select>
-        <button class="btn btn-primary" (click)="onUpdateStatus(statusSelect.value)">
+        <button class="btn btn-primary" (click)="onUpdateStatus(+statusSelect.value)">
           Update Status
         </button>
 
         <div class="status-success-alert" *ngIf="showSuccess">
-            <span class="material-icons">check_circle</span>
-            <p>Status updated successfully. <span>Notification email sent to customer.</span></p>
+          <span class="material-icons">check_circle</span>
+          <p>Status updated successfully. <span>Notification email sent to customer.</span></p>
         </div>
       </div>
-
-      <!-- <div class="timeline-card">
-        <h4>TIMELINE</h4>
-        <div class="timeline-item active">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-                <p class="event">Order Shipped</p>
-                <p class="date">Oct 25, 10:00 AM</p>
-            </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </div>

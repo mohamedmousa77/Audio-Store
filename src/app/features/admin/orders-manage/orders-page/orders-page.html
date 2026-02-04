@@ -1,37 +1,42 @@
 <div class="admin-layout">
   <app-admin-sidebar />
-  
+
   <div class="main-content">
     <app-admin-header />
-    
+
     <div class="content-area">
       <div class="controls-card">
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder="Search by Order ID or Customer..." 
-                   [(ngModel)]="searchTerm" (input)="applyFilters()" class="search-input" />
+            <input type="text" placeholder="Search by Order ID or Customer..." [ngModel]="searchTerm()"
+              (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
           <div class="filter-controls">
-            <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="filter-select">
-              <option value="">All Status</option>
-              <option value="Processing">Processing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Delivered">Delivered</option>
+            <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event ? +$event : null)"
+              class="filter-select">
+              <option [value]="null">All Status</option>
+              <option [value]="OrderStatus.Pending">Pending</option>
+              <option [value]="OrderStatus.Confirmed">Confirmed</option>
+              <option [value]="OrderStatus.Shipped">Shipped</option>
+              <option [value]="OrderStatus.Delivered">Delivered</option>
+              <option [value]="OrderStatus.Canceled">Canceled</option>
             </select>
-            <button class="btn btn-secondary" (click)="clearFilters()" *ngIf="searchTerm || selectedStatus">
+            @if (searchTerm() || selectedStatus() !== null) {
+            <button class="btn btn-secondary" (click)="clearFilters()">
               <span class="material-icons">clear</span> Clear
             </button>
+            }
           </div>
         </div>
 
         <div class="results-info">
-            <div class="summary-chips">
-                <span class="summary-chip">Total Orders: <strong>{{ orders.length }}</strong></span>
-                <span class="summary-chip">In Transit: <strong>{{ getShippedCount() }}</strong></span>
-            </div>
-            <p class="results-count">Showing <strong>{{ filteredOrders.length }}</strong> orders</p>
+          <div class="summary-chips">
+            <span class="summary-chip">Total Orders: <strong>{{ getTotalOrders() }}</strong></span>
+            <span class="summary-chip">In Transit: <strong>{{ getShippedCount() }}</strong></span>
+          </div>
+          <p class="results-count">Showing <strong>{{ filteredOrders().length }}</strong> orders</p>
         </div>
       </div>
 
@@ -49,42 +54,40 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let order of filteredOrders" 
-                  class="order-row"
-                  (click)="selectOrder(order)"
-                  [class.active-row]="selectedOrder?.id === order.id">
-                <td><span class="order-id-label">{{ order.id }}</span></td>
-                <td><span class="text-secondary">{{ order.date | date:'shortDate' }}</span></td>
+              @for (order of filteredOrders(); track order.id) {
+              <tr class="order-row" (click)="selectOrder(order)" [class.active-row]="selectedOrder()?.id === order.id">
+                <td><span class="order-id-label">{{ order.orderNumber }}</span></td>
+                <td><span class="text-secondary">{{ formatDate(order.orderDate) }}</span></td>
                 <td>
                   <div class="customer-cell">
-                    <div class="avatar-small">{{ order.customerName!.charAt(0) }}</div>
+                    <div class="avatar-small">{{ getCustomerInitial(order) }}</div>
                     <div class="cell-texts">
-                        <p class="name">{{ order.customerName }}</p>
-                        <p class="sub">{{ order.customerEmail }}</p>
+                      <p class="name">{{ order.customerFirstName }} {{ order.customerLastName }}</p>
+                      <p class="sub">{{ order.customerEmail }}</p>
                     </div>
                   </div>
                 </td>
-                <td><span class="order-price">{{ order.total }}</span></td>
-                <td><app-badge [status]="order.status" /></td>
+                <td><span class="order-price">{{ formatPrice(order.totalAmount) }}</span></td>
+                <td><app-badge [status]="getStatusBadge(order.orderStatus)" /></td>
                 <td>
                   <div class="actions">
-                    <span class="material-icons view">visibility</span>
-                    <span class="material-icons edit">edit</span>
+                    <span class="material-icons view"
+                      (click)="$event.stopPropagation(); selectOrder(order)">visibility</span>
+                    <span class="material-icons edit" (click)="$event.stopPropagation()">edit</span>
                   </div>
                 </td>
               </tr>
+              }
             </tbody>
           </table>
         </div>
       </div>
 
       <div id="order-detail-section">
-        <app-order-form 
-          *ngIf="showDetail" 
-          [order]="selectedOrder"
-          (statusUpdate)="updateStatus($event)"
-          (cancel)="handleCancel()">
+        @if (showDetail()) {
+        <app-order-form [order]="selectedOrder()!" (statusUpdate)="updateStatus($event)" (cancel)="handleCancel()">
         </app-order-form>
+        }
       </div>
     </div>
   </div>

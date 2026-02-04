@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Category } from '../../../../../core/models/category';
@@ -18,6 +18,8 @@ import { Category } from '../../../../../core/models/category';
   styleUrl: './category-showcase.css',
 })
 export class CategoryShowcase {
+    loading = signal<boolean>(true);
+
   /**
    * Categories to display
    * Passed from parent Homepage component

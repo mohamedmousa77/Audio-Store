@@ -13,11 +13,11 @@
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         Home
       </a>
-      <a *ngFor="let category of categories"
-         [routerLink]="category.path"
-         routerLinkActive="active">
+      @for (category of categories; track category.path) {
+      <a [routerLink]="category.path" routerLinkActive="active">
         {{ category.name }}
       </a>
+      }
       <a routerLink="/support" routerLinkActive="active">
         Support
       </a>
@@ -27,18 +27,13 @@
     <div class="header-search">
       <form (ngSubmit)="onSearch()" class="search-form">
         <span class="material-icons search-icon">search</span>
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          name="search"
-          placeholder="Search products..."
-          class="search-input"
-        />
+        <input type="text" [(ngModel)]="searchTerm" name="search" placeholder="Search products..."
+          class="search-input" />
       </form>
     </div>
 
     <!-- Header Actions -->
-    <div class="header-actions">      
+    <div class="header-actions">
       <!-- Account -->
       <button class="action-btn account-btn" (click)="Navigate()" title="Account">
         <span class="material-icons">person</span>
@@ -47,20 +42,15 @@
       <!-- Cart -->
       <div (click)="goToCart()" class="action-btn cart-btn" title="Shopping Cart">
         <span class="material-icons">shopping_cart</span>
-        <span class="cart-badge" *ngIf="cartItemCount > 0">
+        @if (cartItemCount > 0) {
+        <span class="cart-badge">
           {{ cartItemCount }}
         </span>
+        }
       </div>
 
-      <!-- Translation Option -->
-      <!-- <div id="google_translate_element" class="translate-widget"></div> -->
-
       <!-- Mobile Menu Toggle -->
-      <button
-        class="mobile-menu-btn"
-        (click)="toggleMobileMenu()"
-        title="Menu"
-      >
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()" title="Menu">
         <span class="material-icons">
           {{ mobileMenuOpen ? 'close' : 'menu' }}
         </span>
@@ -69,20 +59,21 @@
   </div>
 
   <!-- Mobile Menu -->
-  <div class="mobile-menu" *ngIf="mobileMenuOpen">
+  @if (mobileMenuOpen) {
+  <div class="mobile-menu">
     <nav class="mobile-nav">
       <a routerLink="/" (click)="closeMobileMenu()" class="mobile-nav-link">
         Home
       </a>
-      <a *ngFor="let category of categories"
-         [routerLink]="category.path"
-         (click)="closeMobileMenu()"
-         class="mobile-nav-link">
+      @for (category of categories; track category.path) {
+      <a [routerLink]="category.path" (click)="closeMobileMenu()" class="mobile-nav-link">
         {{ category.name }}
       </a>
+      }
       <a routerLink="/support" (click)="closeMobileMenu()" class="mobile-nav-link">
         Support
       </a>
     </nav>
   </div>
+  }
 </header>

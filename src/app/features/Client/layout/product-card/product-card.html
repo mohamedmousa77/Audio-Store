@@ -1,13 +1,18 @@
-
-<ng-container *ngIf="!clickable; else clickableCard">
-  <a [routerLink]="['/client/product', product.id]" class="product-card">
-    <div class="card-image-wrapper">
+@if (!clickable) {
+<a [routerLink]="['/client/product', product.id]" class="product-card">
+  <div class="card-image-wrapper">
     <img [src]="product.image" [alt]="product.name" class="product-img">
-    
+
     <div class="card-badges">
-      <span *ngIf="product.isNew" class="badge badge-new">New</span>
-      <span *ngIf="product.isFeatured" class="badge badge-featured">Featured</span>
-      <span *ngIf="product.stock === 0" class="badge badge-out">Out of Stock</span>
+      @if (product.isNew) {
+      <span class="badge badge-new">New</span>
+      }
+      @if (product.isFeatured) {
+      <span class="badge badge-featured">Featured</span>
+      }
+      @if (product.stock === 0) {
+      <span class="badge badge-out">Out of Stock</span>
+      }
     </div>
 
     <button class="btn-add-cart" (click)="buyNow()">
@@ -20,22 +25,27 @@
       <span class="product-brand">{{ product.brand }}</span>
       <h3 class="product-name">{{ product.name }}</h3>
     </div>
-    
+
     <div class="card-footer">
       <span class="product-price">${{ product.price }}</span>
     </div>
   </div>
-  </a>
-</ng-container>
-<ng-template #clickableCard>
-  <a href="#" class="product-card" (click)="onCardClick($event)">
-    <div class="card-image-wrapper">
+</a>
+} @else {
+<a href="#" class="product-card" (click)="onCardClick($event)">
+  <div class="card-image-wrapper">
     <img [src]="product.image" [alt]="product.name" class="product-img">
-    
+
     <div class="card-badges">
-      <span *ngIf="product.isNew" class="badge badge-new">New</span>
-      <span *ngIf="product.isFeatured" class="badge badge-featured">Featured</span>
-      <span *ngIf="product.stock === 0" class="badge badge-out">Out of Stock</span>
+      @if (product.isNew) {
+      <span class="badge badge-new">New</span>
+      }
+      @if (product.isFeatured) {
+      <span class="badge badge-featured">Featured</span>
+      }
+      @if (product.stock === 0) {
+      <span class="badge badge-out">Out of Stock</span>
+      }
     </div>
 
     <button class="btn-add-cart" (click)="buyNow()">
@@ -48,14 +58,10 @@
       <span class="product-brand">{{ product.brand }}</span>
       <h3 class="product-name">{{ product.name }}</h3>
     </div>
-    
+
     <div class="card-footer">
       <span class="product-price">${{ product.price }}</span>
     </div>
   </div>
-  </a>
-</ng-template> 
-
-<!-- <a [routerLink]="['/client/product', product.id]" class="product-card">
-  
-</a> -->
+</a>
+}
