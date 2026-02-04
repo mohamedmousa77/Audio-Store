@@ -18,7 +18,8 @@ import { Category } from '../../../../../core/models/category';
   styleUrl: './category-showcase.css',
 })
 export class CategoryShowcase {
-    loading = signal<boolean>(true);
+  // Loading is managed by the parent HomePage; start as not loading here
+  loading = signal<boolean>(false);
 
   /**
    * Categories to display

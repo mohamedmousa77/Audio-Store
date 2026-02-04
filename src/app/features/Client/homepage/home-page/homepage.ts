@@ -13,10 +13,6 @@ import { Category } from '../../../../core/models/category';
 
 /**
  * Homepage Component
- * Optimized to load only necessary data:
- * - 1 new product (for hero banner)
- * - 3 featured products
- * - 3 top categories
  */
 @Component({
   selector: 'app-homepage',
@@ -45,12 +41,7 @@ export class Homepage implements OnInit {
   isLoading = signal<boolean>(false);
   error = signal<string | null>(null);
 
-  // Computed values
-  hasData = computed(() =>
-    this.newProduct() !== undefined ||
-    this.featuredProducts().length > 0 ||
-    this.topCategories().length > 0
-  );
+
 
   ngOnInit(): void {
     this.loadHomePageData();
@@ -63,29 +54,48 @@ export class Homepage implements OnInit {
   async loadHomePageData(): Promise<void> {
     this.isLoading.set(true);
     this.error.set(null);
+    console.log('🔄 Starting Homepage data load...');
 
     try {
-      // Execute all API calls in parallel for better performance
-      const [newProduct, featuredProducts, topCategories] = await Promise.all([
-        this.productService.loadNewProduct(),           // 1 product
-        this.productService.loadFeaturedProducts(3),    // 3 products
-        this.categoryService.loadTopCategories(3)       // 3 categories
-      ]);
+      // Independent requests - failures in one won't block others
+      const loadNewProduct = this.productService.loadNewProduct()
+        .then(data => {
+          this.newProduct.set(data);
+          console.log('✅ New product loaded');
+        })
+        .catch(error => {
+          console.error('❌ Error loading new product:', error);
+          // Don't set global error, just log it so other parts can show
+        });
 
-      // Update local state
-      this.newProduct.set(newProduct);
-      this.featuredProducts.set(featuredProducts);
-      this.topCategories.set(topCategories);
+      const loadFeatured = this.productService.loadFeaturedProducts(3)
+        .then(data => {
+          this.featuredProducts.set(data);
+          console.log(`✅ Featured products loaded (${data.length})`);
+        })
+        .catch(error => {
+          console.error('❌ Error loading featured products:', error);
+        });
 
-      console.log('✅ HomePage data loaded:', {
-        newProduct: newProduct?.name,
-        featuredCount: featuredProducts.length,
-        categoriesCount: topCategories.length
-      });
+      const loadCategories = this.categoryService.loadTopCategories(3)
+        .then(data => {
+          this.topCategories.set(data);
+          console.log(`✅ Top categories loaded (${data.length})`);
+        })
+        .catch(error => {
+          console.error('❌ Error loading top categories:', error);
+        });
+
+      // Wait for all requests to accumulate results (whether success or fail)
+      await Promise.all([loadNewProduct, loadFeatured, loadCategories]);
+
+      console.log('✅ All Homepage requests finished');
+
     } catch (error) {
-      console.error('Failed to load HomePage data:', error);
-      this.error.set('Errore nel caricamento dei dati');
+      console.error('❌ Unexpected error in Homepage load:', error);
+      this.error.set('Si è verificato un errore imprevisto. Riprova più tardi.');
     } finally {
+      console.log('🏁 HomePage loading finished, setting isLoading to false');
       this.isLoading.set(false);
     }
   }

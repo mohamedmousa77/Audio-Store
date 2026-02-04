@@ -20,7 +20,8 @@ import { Product } from '../../../../../core/models/product';
 })
 export class FeaturedProducts {
   private router = inject(Router);
-  loading = signal<boolean>(true);
+  // Loading is managed by the parent HomePage; start as not loading here
+  loading = signal<boolean>(false);
 
   /**
    * Featured products to display

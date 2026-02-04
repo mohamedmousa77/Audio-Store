@@ -66,8 +66,8 @@ export class ProductServices {
   async loadNewProduct(): Promise<Product | undefined> {
     this.catalogStore.loadingSignal.set(true);
     try {
-      // Get first product sorted by creation date (newest first)
-      const products = await firstValueFrom(this.catalogApi.getProducts());
+      // Get first product in list of new products.
+      const products = await firstValueFrom(this.catalogApi.getNewProducts());
 
       if (products.length > 0) {
         return products[0]; // Return newest product
@@ -92,10 +92,10 @@ export class ProductServices {
       const featured = await firstValueFrom(this.catalogApi.getFeaturedProducts());
 
       // Limit results if specified
-      const limitedFeatured = limit ? featured.slice(0, limit) : featured;
+      // const limitedFeatured = limit ? featured.slice(0, limit) : featured;
 
-      this.catalogStore.setProducts(limitedFeatured);
-      return limitedFeatured;
+      this.catalogStore.setProducts(featured);
+      return featured;
     } catch (error) {
       console.error('Failed to load featured products:', error);
       this.catalogStore.errorSignal.set('Failed to load featured products');

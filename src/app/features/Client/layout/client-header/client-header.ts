@@ -17,19 +17,27 @@ export class ClientHeader implements OnInit {
   private cartService = inject(CartServices);
   private productService = inject(ProductServices);
   private categoryService = inject(CategoryServices);
+  private authService = inject(AuthServices);
   private router = inject(Router);
 
   // Use Signals from Services
   categories = this.categoryService.categories;
+  // Cart item count reacts to both guest and authenticated carts
   cartItemCount = this.cartService.totalItems;
 
   searchTerm = '';
   mobileMenuOpen = false;
-  isLoggedIn = false; // Mock
+  isLoggedIn = false;
 
   ngOnInit(): void {
     // Load categories
     this.categoryService.loadCategories();
+
+    // Initialize authentication state
+    this.isLoggedIn = this.authService.isAuthenticated();
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isLoggedIn = isAuth;
+    });
   }
 
   goToCart(): void {

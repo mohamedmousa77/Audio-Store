@@ -68,7 +68,9 @@ export class CartServices {
     this.loadingSignal.set(true);
     try {
       const cart = await firstValueFrom(this.cartApi.getCart());
-      this.cartSignal.set(cart);
+      // Ensure cart is never null to prevent computed properties from crashing
+      this.cartSignal.set(cart || { items: [], totalItems: 0, totalPrice: 0 });
+      console.log('✅ Cart loaded successfully');
       this.errorSignal.set(null);
     } catch (error) {
       console.error('Failed to load cart:', error);
