@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    @if (!loading) {
+    @if (!loading()) {
     <div class="products-grid mt-8 ml-2">
       @for (product of products; track product.id) {
       <app-product-card [product]="product" />
@@ -56,7 +56,7 @@
     </div>
     }
 
-    @if (loading) {
+    @if (loading()) {
     <div class="loading-container">
       <div class="loader"></div>
     </div>

@@ -5,75 +5,85 @@
     <p class="login-prompt">Already have an account? <a href="#">Log in to pre-fill your details.</a></p>
   </header>
   <!-- Error Message -->
-  <div *ngIf="errorMessage" class="error-banner">
+  @if (errorMessage()) {
+  <div class="error-banner">
     <span class="error-icon">⚠️</span>
-    <span class="error-text">{{ errorMessage }}</span>
+    <span class="error-text">{{ errorMessage() }}</span>
   </div>
+  }
+
   <div class="checkout-content">
     <div class="checkout-forms-area">
-      
+
       <section class="form-section">
         <div class="section-header">
           <span class="step-badge">1</span>
           <h2>Shipping Details</h2>
         </div>
-        
+
         <form [formGroup]="shippingForm" class="form-grid">
           <div class="form-group">
             <label>First Name</label>
             <input type="text" formControlName="firstName" placeholder="e.g. Alex">
-            <span class="error" *ngIf="shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched">
-              <!-- Il nome è obbligatorio e deve avere almeno 2 caratteri -->
-               The first name is required and must have at least 2 characters.
+            @if (shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched) {
+            <span class="error">
+              The first name is required and must have at least 2 characters.
             </span>
+            }
           </div>
           <div class="form-group">
             <label>Last Name</label>
             <input type="text" formControlName="lastName" placeholder="e.g. Doe">
-            <span class="error" *ngIf="shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched">
-              <!-- Il cognome è obbligatorio e deve avere almeno 2 caratteri -->
-               The last name is required and must have at least 2 characters.
+            @if (shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched) {
+            <span class="error">
+              The last name is required and must have at least 2 characters.
             </span>
+            }
           </div>
           <div class="form-group full-width">
             <label>Email Address</label>
             <input type="email" formControlName="email" placeholder="alex@example.com">
-            <span class="error" *ngIf="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched">
-              <!-- Un indirizzo email valido è obbligatorio -->
-               A valid email address is required.
+            @if (shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched) {
+            <span class="error">
+              A valid email address is required.
             </span>
+            }
           </div>
           <div class="form-group full-width">
             <label>Phone Number</label>
             <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
-            <span class="error" *ngIf="shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched">
-              <!-- Un numero di telefono valido è obbligatorio -->
-               A valid phone number is required.
+            @if (shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched) {
+            <span class="error">
+              A valid phone number is required.
             </span>
+            }
           </div>
           <div class="form-group full-width">
             <label>Street Address</label>
             <input type="text" formControlName="address" placeholder="123 Audio Lane, Apt 4B">
-            <span class="error" *ngIf="shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched">
-              <!-- L'indirizzo è obbligatorio e deve avere almeno 5 caratteri -->
+            @if (shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched) {
+            <span class="error">
               The address is required and must have at least 5 characters.
             </span>
+            }
           </div>
           <div class="form-group">
             <label>ZIP / Postal Code</label>
             <input type="text" formControlName="zipCode" placeholder="10001">
-            <span class="error" *ngIf="shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched">
-              <!-- Un codice postale valido (5 cifre) è obbligatorio -->
-               The postal code is required and must have 5 digits.
+            @if (shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched) {
+            <span class="error">
+              The postal code is required and must have 5 digits.
             </span>
+            }
           </div>
           <div class="form-group">
             <label>City</label>
             <input type="text" formControlName="city" placeholder="New York">
-            <span class="error" *ngIf="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched">
-              <!-- La città è obbligatoria -->
+            @if (shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched) {
+            <span class="error">
               The city is required.
             </span>
+            }
           </div>
           <div class="form-group full-width">
             <label>Country</label>
@@ -90,7 +100,7 @@
           <span class="step-badge">2</span>
           <h2>Payment Method</h2>
         </div>
-        
+
         <div class="payment-card-selector selected">
           <div class="payment-info">
             <div class="payment-icon">
@@ -108,16 +118,18 @@
 
     <aside class="order-summary-card">
       <h3>Order Summary</h3>
-      
+
       <div class="summary-product-list">
-        <div *ngFor="let item of cart.items" class="summary-product-item">
+        @for (item of items(); track item.id) {
+        <div class="summary-product-item">
           <img [src]="item.image" [alt]="item.name" class="mini-thumb">
           <div class="mini-details">
             <p class="mini-name">{{ item.name }}</p>
-            <p class="mini-meta">{{ item.category }} • Qty: {{ item.quantity }}</p>
+            <p class="mini-meta">Qty: {{ item.quantity }}</p>
           </div>
           <span class="mini-price">€{{ (item.price * item.quantity).toFixed(2) }}</span>
         </div>
+        }
       </div>
 
       <div class="summary-divider"></div>
@@ -125,14 +137,14 @@
       <div class="cost-breakdown">
         <div class="cost-row">
           <span>Subtotal</span>
-          <span class="cost-val">€{{ cart.totalPrice.toFixed(2) }}</span>
+          <span class="cost-val">€{{ totalPrice().toFixed(2) }}</span>
         </div>
         <div class="cost-row">
           <span>Shipping</span>
           <span class="cost-val text-green">Free</span>
         </div>
         <div class="cost-row">
-          <span>VAT (20%)</span>
+          <span>VAT (10%)</span>
           <span class="cost-val">€{{ getTaxAmount().toFixed(2) }}</span>
         </div>
       </div>
@@ -142,13 +154,17 @@
           <span class="total-label">Order Total</span>
           <div class="total-amount-group">
             <span class="total-price">€{{ getTotalAmount().toFixed(2) }}</span>
-            <span class="tax-note">USD, taxes included</span>
+            <span class="tax-note">Includes all taxes</span>
           </div>
         </div>
-        
-        <button class="btn-confirm-order" (click)="placeOrder()" >
+
+        <button class="btn-confirm-order" (click)="placeOrder()" [disabled]="isProcessing()">
+          @if (isProcessing()) {
+          Processing...
+          } @else {
           Confirm Order
           <span class="material-symbols-outlined">arrow_forward</span>
+          }
         </button>
       </div>
 

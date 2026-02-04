@@ -1,1 +1,52 @@
-<p>order-history works!</p>
+<div class="order-history-container">
+    <h2>Order History</h2>
+
+    @if (loading()) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your orders...</p>
+    </div>
+    }
+
+    @if (!loading() && !hasOrders()) {
+    <div class="empty-state">
+        <p>You haven't placed any orders yet.</p>
+        <a routerLink="/" class="btn-shop">Start Shopping</a>
+    </div>
+    }
+
+    @if (!loading() && hasOrders()) {
+    <div class="orders-list">
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (order of orders(); track order.id) {
+                <tr>
+                    <td class="order-number">#{{ order.orderNumber }}</td>
+                    <td>{{ formatDate(order.orderDate) }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="getStatusClass(order.orderStatus)">
+                            {{ getStatusLabel(order.orderStatus) }}
+                        </span>
+                    </td>
+                    <td class="order-total">€{{ order.totalAmount.toFixed(2) }}</td>
+                    <td>
+                        <button class="btn-view" (click)="viewOrderDetails(order.id)">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</div>

@@ -1,27 +1,26 @@
 <section class="hero-banner">
+  @if (product) {
   <div class="hero-container">
     <!-- Content -->
     <div class="hero-content">
-      <h1 class="hero-title">{{ banner.title }}</h1>
-      <p class="hero-description">{{ banner.product.bannerDescription }}</p>
+      <h1 class="hero-title">{{ product.name }}</h1>
+      <p class="hero-description">{{ product.bannerDescription || product.description }}</p>
 
       <div class="hero-actions">
         <button class="btn btn-primary" (click)="addToCart()">
-           <span class="material-symbols-outlined">shopping_cart</span>
+          <span class="material-symbols-outlined">shopping_cart</span>
           Shop Now
         </button>
-        <button class="btn btn-secondary" (click)="goToPageDetails(1)">
+        <button class="btn btn-secondary" (click)="goToPageDetails(product.id)">
           Learn More
-        </button>        
+        </button>
       </div>
     </div>
 
     <!-- Image -->
     <div class="hero-image-container">
-      <div
-        class="hero-image"
-        [style.backgroundImage]="'url(' + banner.product.image + ')'"
-      ></div>
+      <div class="hero-image" [style.backgroundImage]="'url(' + product.image + ')'"></div>
     </div>
   </div>
+  }
 </section>

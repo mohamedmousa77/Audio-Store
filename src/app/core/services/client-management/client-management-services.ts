@@ -7,7 +7,7 @@ import { API_ENDPOINTS } from '../constants/api-endpoints';
   providedIn: 'root',
 })
 export class ClientManagementServices extends BaseApiServices {
-  private readonly endpoint = API_ENDPOINTS.customers;
+  private readonly endpoint = API_ENDPOINTS.admin.customers;
 
   // Consultazione lista completa clienti
   getCustomers(): Observable<any[]> {

@@ -13,8 +13,8 @@
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         Home
       </a>
-      @for (category of categories; track category.path) {
-      <a [routerLink]="category.path" routerLinkActive="active">
+      @for (category of categories(); track category.id) {
+      <a [routerLink]="['/client/category', category.name]" routerLinkActive="active">
         {{ category.name }}
       </a>
       }
@@ -42,9 +42,9 @@
       <!-- Cart -->
       <div (click)="goToCart()" class="action-btn cart-btn" title="Shopping Cart">
         <span class="material-icons">shopping_cart</span>
-        @if (cartItemCount > 0) {
+        @if (cartItemCount() > 0) {
         <span class="cart-badge">
-          {{ cartItemCount }}
+          {{ cartItemCount() }}
         </span>
         }
       </div>
@@ -65,8 +65,8 @@
       <a routerLink="/" (click)="closeMobileMenu()" class="mobile-nav-link">
         Home
       </a>
-      @for (category of categories; track category.path) {
-      <a [routerLink]="category.path" (click)="closeMobileMenu()" class="mobile-nav-link">
+      @for (category of categories(); track category.id) {
+      <a [routerLink]="['/client/category', category.name]" (click)="closeMobileMenu()" class="mobile-nav-link">
         {{ category.name }}
       </a>
       }

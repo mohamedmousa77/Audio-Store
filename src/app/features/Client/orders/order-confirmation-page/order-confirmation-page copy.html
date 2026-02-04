@@ -1,13 +1,15 @@
-
 <div class="confirmation-container">
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-state">
+  @if (loading) {
+  <div class="loading-state">
     <div class="spinner"></div>
     <p>Processing your order...</p>
   </div>
+  }
 
   <!-- Confirmation State -->
-  <div *ngIf="!loading && order" class="confirmation-content">
+  @if (!loading && order) {
+  <div class="confirmation-content">
     <!-- Success Header -->
     <div class="confirmation-header">
       <div class="success-icon">✓</div>
@@ -75,7 +77,8 @@
           <div class="col-qty">Quantity</div>
           <div class="col-total">Total</div>
         </div>
-        <div *ngFor="let item of order.items" class="table-row">
+        @for (item of order.items; track item.id) {
+        <div class="table-row">
           <div class="col-product">
             <img [src]="item.image" [alt]="item.name" class="product-thumb">
             <div class="product-info">
@@ -87,6 +90,7 @@
           <div class="col-qty">{{ item.quantity }}</div>
           <div class="col-total">€{{ (item.price * item.quantity).toFixed(2) }}</div>
         </div>
+        }
       </div>
     </div>
 
@@ -161,12 +165,15 @@
       </button>
     </div>
   </div>
+  }
 
   <!-- Error State -->
-  <div *ngIf="!loading && !order" class="error-state">
+  @if (!loading && !order) {
+  <div class="error-state">
     <div class="error-icon">✗</div>
     <h2>Order Not Found</h2>
     <p>We couldn't find your order. Please check the order number and try again.</p>
     <button class="btn-back" (click)="continueShopping()">Back to Home</button>
   </div>
+  }
 </div>
