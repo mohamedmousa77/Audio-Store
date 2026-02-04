@@ -1,100 +1,192 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
 import { Badge } from '../../../../shared/components/badge/badge';
-import { Product } from '../../../../core/models/product';
 import { ProductForm } from '../product-form/product-form';
+import { ProductServices } from '../../../../core/services/product/product-services';
+import { CategoryServices } from '../../../../core/services/category/category-services';
+import { Product, CreateProductRequest, UpdateProductRequest } from '../../../../core/models/product';
+
+/**
+ * Products Management Page (Admin)
+ * Updated to use ProductServices with Signals and full CRUD operations
+ * 
+ * Breaking Changes:
+ * - Uses Signals instead of hardcoded data
+ * - Product model updated (id is number, not string)
+ * - Reactive filtering with computed()
+ * - CRUD operations integrated with backend API
+ */
 @Component({
   selector: 'app-products-page',
   imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, Badge, ProductForm],
   templateUrl: './products-page.html',
   styleUrl: './products-page.css',
 })
-export class ProductsPage implements OnInit{
-  products: Product[] = [
-    {
-      id: '1',
-      name: 'Sony WH-1000XM5',
-      brand: 'Sony',
-      sku: 'SNY-XM5-BLK',
-      category: 'Headphones',
-      price: 348.00,
-      stock: 12,
-      status: 'Available',
-      isFeatured: true,
-      isNew: true,
-      image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=400&fit=crop'
-    },
-    {
-      id: '2',
-      name: 'Yeti Blue Microphone',
-      brand: 'Logitech',
-      sku: 'LOG-YET-SLV',
-      category: 'Microphones',
-      price: 120.00,
-      stock: 0,
-      status: 'Unavailable',
-      isFeatured: false,
-      isNew: false,
-      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&h=400&fit=crop'
-    },
-    {
-      id: '3',
-      name: 'KRK Rokit 5 G4',
-      brand: 'KRK Systems',
-      sku: 'KRK-ROK-5',
-      category: 'Speakers',
-      price: 189.00,
-      stock: 4,
-      status: 'Low Stock',
-      isFeatured: true,
-      isNew: false,
-      image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop'
-    },
-    {
-      id: '4',
-      name: 'AirPods Pro 2',
-      brand: 'Apple',
-      sku: 'APP-PRO-2',
-      category: 'Headphones',
-      price: 249.00,
-      stock: 85,
-      status: 'Available',
-      isFeatured: false,
-      isNew: false,
-      image: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=400&h=400&fit=crop'
-    },
-    {
-      id: '5',
-      name: 'AT-LP60X',
-      brand: 'Audio-Technica',
-      sku: 'AT-LP60',
-      category: 'Turntables',
-      price: 149.00,
-      stock: 20,
-      status: 'Available',
-      isFeatured: false,
-      isNew: true,
-      image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&h=400&fit=crop'
-    }
-  ];
+export class ProductsPage implements OnInit {
+  private productService = inject(ProductServices);
+  private categoryService = inject(CategoryServices);
 
-  isFormOpen = false;
-  filteredProducts: Product[] = [];
-  searchTerm = '';
-  selectedCategory = '';
-  selectedStatus = '';
-  showProductModal = false;
-  editingProduct: Product | null = null;
+  // Use Signals from ProductServices
+  products = this.productService.products;
+  categories = this.categoryService.categories;
+  loading = this.productService.isLoading;
+  error = this.productService.error;
 
-  categories = ['Headphones', 'Speakers', 'Microphones', 'Turntables', 'Accessories'];
+  // Local state
+  searchTerm = signal<string>('');
+  selectedCategory = signal<number | null>(null);
+  selectedStatus = signal<string>('');
+  isFormOpen = signal<boolean>(false);
+  editingProduct = signal<Product | null>(null);
 
-  ngOnInit(): void {
-    this.filteredProducts = [...this.products];
+  // Computed filtered products
+  filteredProducts = computed(() => {
+    const allProducts = this.products();
+    const search = this.searchTerm().toLowerCase();
+    const categoryId = this.selectedCategory();
+    const status = this.selectedStatus();
+
+    return allProducts.filter(product => {
+      // Search filter
+      const matchesSearch = !search ||
+        product.name.toLowerCase().includes(search) ||
+        product.sku.toLowerCase().includes(search) ||
+        product.brand.toLowerCase().includes(search);
+
+      // Category filter
+      const matchesCategory = !categoryId || product.categoryId === categoryId;
+
+      // Status filter
+      const matchesStatus = !status || product.status === status;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  });
+
+  async ngOnInit(): Promise<void> {
+    await this.loadData();
   }
-  // Metodo per scorrere al form
+
+  /**
+   * Load all data
+   */
+  async loadData(): Promise<void> {
+    await Promise.all([
+      this.productService.loadCatalogData(),
+      this.categoryService.loadCategories()
+    ]);
+  }
+
+  /**
+   * Open add product form
+   */
+  openAddProduct(): void {
+    this.editingProduct.set(null);
+    this.isFormOpen.set(true);
+    this.scrollToForm();
+  }
+
+  /**
+   * Edit existing product
+   */
+  editProduct(product: Product): void {
+    this.editingProduct.set(product);
+    this.isFormOpen.set(true);
+    this.scrollToForm();
+  }
+
+  /**
+   * Close form
+   */
+  closeForm(): void {
+    this.isFormOpen.set(false);
+    this.editingProduct.set(null);
+  }
+
+  /**
+   * Save product (create or update)
+   */
+  async saveProduct(productData: CreateProductRequest | UpdateProductRequest): Promise<void> {
+    const editing = this.editingProduct();
+
+    if (editing) {
+      // Update existing product
+      const updateData: UpdateProductRequest = {
+        ...productData,
+        id: editing.id
+      };
+      const result = await this.productService.updateProduct(editing.id, updateData);
+      if (result) {
+        alert('Product updated successfully!');
+        this.closeForm();
+      } else {
+        alert('Failed to update product');
+      }
+    } else {
+      // Create new product
+      const result = await this.productService.createProduct(productData as CreateProductRequest);
+      if (result) {
+        alert('Product created successfully!');
+        this.closeForm();
+      } else {
+        alert('Failed to create product');
+      }
+    }
+  }
+
+  /**
+   * Delete product
+   */
+  async deleteProduct(product: Product): Promise<void> {
+    if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+      const result = await this.productService.deleteProduct(product.id);
+      if (result) {
+        alert('Product deleted successfully!');
+      } else {
+        alert('Failed to delete product');
+      }
+    }
+  }
+
+  /**
+   * Update product stock
+   */
+  async updateStock(product: Product, newStock: number): Promise<void> {
+    if (newStock < 0) {
+      alert('Stock cannot be negative');
+      return;
+    }
+
+    const result = await this.productService.updateStock(product.id, newStock);
+    if (result) {
+      console.log(`Stock updated for ${product.name}: ${newStock}`);
+    } else {
+      alert('Failed to update stock');
+    }
+  }
+
+  /**
+   * Apply filters (reactive via computed)
+   */
+  applyFilters(): void {
+    // Filters are automatically applied via computed signal
+  }
+
+  /**
+   * Clear all filters
+   */
+  clearFilters(): void {
+    this.searchTerm.set('');
+    this.selectedCategory.set(null);
+    this.selectedStatus.set('');
+  }
+
+  /**
+   * Scroll to form section
+   */
   private scrollToForm(): void {
     setTimeout(() => {
       const element = document.getElementById('product-form-section');
@@ -103,63 +195,56 @@ export class ProductsPage implements OnInit{
       }
     }, 100);
   }
-  
-  openAddProduct(): void {
-    this.isFormOpen = true;
-    this.editingProduct = {
-      id: '', name: '', brand: '', category: '', price: 0, 
-      stock: 1, sku: '', description: '', 
-      specs: '', image: '', gallery: [], isNew: false, 
-      isFeatured: false, status: 'Available'
-    };
-    this.scrollToForm();
+
+  /**
+   * Get category name by ID
+   */
+  getCategoryName(categoryId: number): string {
+    const category = this.categories().find(c => c.id === categoryId);
+    return category?.name || 'Unknown';
   }
 
-  editProduct(product: any): void {
-    this.isFormOpen = true;
-    this.editingProduct = { ...product }; // Copia per non modificare l'originale subito
-    this.scrollToForm();
-  }
-
-  closeForm(): void {
-    this.isFormOpen = false;
-    this.editingProduct = null;
-  }
-
-  saveProduct(): void {
-    // Logica di salvataggio futura
-    this.closeForm();
-  }
-
-  applyFilters(): void {
-    this.filteredProducts = this.products.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                           product.sku.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesCategory = !this.selectedCategory || product.category === this.selectedCategory;
-      const matchesStatus = !this.selectedStatus || product.status === this.selectedStatus;
-      
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }
-
-  clearFilters(): void {
-    this.searchTerm = '';
-    this.selectedCategory = '';
-    this.selectedStatus = '';
-    this.filteredProducts = [...this.products];
-  }
-
-  deleteProduct(product: Product): void {
-    if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
-      this.products = this.products.filter(p => p.id !== product.id);
-      this.applyFilters();
+  /**
+   * Get status badge class
+   */
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Available':
+        return 'status-available';
+      case 'Low Stock':
+        return 'status-low-stock';
+      case 'Unavailable':
+        return 'status-unavailable';
+      default:
+        return '';
     }
   }
 
-  closeModal(): void {
-    this.showProductModal = false;
-    this.editingProduct = null;
+  /**
+   * Format price
+   */
+  formatPrice(price: number): string {
+    return `€${price.toFixed(2)}`;
   }
 
+  /**
+   * Get total products count
+   */
+  getTotalProducts(): number {
+    return this.products().length;
+  }
 
+  /**
+   * Get low stock count
+   */
+  getLowStockCount(): number {
+    return this.products().filter(p => p.status === 'Low Stock').length;
+  }
+
+  /**
+   * Get out of stock count
+   */
+  getOutOfStockCount(): number {
+    return this.products().filter(p => p.status === 'Unavailable').length;
+  }
 }

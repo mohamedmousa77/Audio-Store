@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Product } from '../../models/product';
+import { Product, CreateProductRequest, UpdateProductRequest } from '../../models/product';
 import { CatalogStore } from '../../../features/Client/state/catalog-store';
 import { CatalogApiService } from '../catalog-api.service';
 
@@ -125,6 +125,115 @@ export class ProductServices {
     } catch (error) {
       console.error(`Failed to search products with query "${query}":`, error);
       this.catalogStore.errorSignal.set('Failed to search products');
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  // ============================================
+  // ADMIN OPERATIONS
+  // ============================================
+
+  /**
+   * Create new product (Admin only)
+   * @param product Product data
+   */
+  async createProduct(product: CreateProductRequest): Promise<Product | undefined> {
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      const newProduct = await firstValueFrom(this.catalogApi.createProduct(product));
+
+      // Add to store
+      const currentProducts = this.catalogStore.productsSignal();
+      this.catalogStore.setProducts([...currentProducts, newProduct]);
+
+      console.log(`✅ Created product: ${newProduct.name}`);
+      return newProduct;
+    } catch (error) {
+      console.error('Failed to create product:', error);
+      this.catalogStore.errorSignal.set('Failed to create product');
+      return undefined;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  /**
+   * Update existing product (Admin only)
+   * @param id Product ID
+   * @param product Updated product data
+   */
+  async updateProduct(id: number, product: UpdateProductRequest): Promise<Product | undefined> {
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      const updatedProduct = await firstValueFrom(this.catalogApi.updateProduct(id, product));
+
+      // Update in store
+      const currentProducts = this.catalogStore.productsSignal();
+      const updatedProducts = currentProducts.map(p =>
+        p.id === id ? updatedProduct : p
+      );
+      this.catalogStore.setProducts(updatedProducts);
+
+      console.log(`✅ Updated product: ${updatedProduct.name}`);
+      return updatedProduct;
+    } catch (error) {
+      console.error(`Failed to update product ${id}:`, error);
+      this.catalogStore.errorSignal.set('Failed to update product');
+      return undefined;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  /**
+   * Delete product (Admin only)
+   * @param id Product ID
+   */
+  async deleteProduct(id: number): Promise<boolean> {
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      await firstValueFrom(this.catalogApi.deleteProduct(id));
+
+      // Remove from store
+      const currentProducts = this.catalogStore.productsSignal();
+      const filteredProducts = currentProducts.filter(p => p.id !== id);
+      this.catalogStore.setProducts(filteredProducts);
+
+      console.log(`✅ Deleted product ${id}`);
+      return true;
+    } catch (error) {
+      console.error(`Failed to delete product ${id}:`, error);
+      this.catalogStore.errorSignal.set('Failed to delete product');
+      return false;
+    } finally {
+      this.catalogStore.loadingSignal.set(false);
+    }
+  }
+
+  /**
+   * Update product stock (Admin only)
+   * @param id Product ID
+   * @param quantity New stock quantity
+   */
+  async updateStock(id: number, quantity: number): Promise<boolean> {
+    this.catalogStore.loadingSignal.set(true);
+    try {
+      await firstValueFrom(this.catalogApi.updateStock(id, quantity));
+
+      // Update stock in store
+      const currentProducts = this.catalogStore.productsSignal();
+      const updatedProducts = currentProducts.map(p =>
+        p.id === id ? { ...p, stock: quantity } : p
+      );
+      this.catalogStore.setProducts(updatedProducts);
+
+      console.log(`✅ Updated stock for product ${id}: ${quantity}`);
+      return true;
+    } catch (error) {
+      console.error(`Failed to update stock for product ${id}:`, error);
+      this.catalogStore.errorSignal.set('Failed to update stock');
+      return false;
     } finally {
       this.catalogStore.loadingSignal.set(false);
     }

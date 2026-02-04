@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from './http/http.service';
 import { API_ENDPOINTS } from './constants/api-endpoints';
-import { Product, ProductQueryParams } from '../models/product';
+import { Product, ProductQueryParams, CreateProductRequest, UpdateProductRequest } from '../models/product';
 import { Category } from '../models/category';
 
 /**
@@ -78,6 +78,59 @@ export class CatalogApiService {
    */
   getProductsByPriceRange(minPrice: number, maxPrice: number): Observable<Product[]> {
     return this.getProducts({ minPrice, maxPrice });
+  }
+
+  // ============================================
+  // ADMIN OPERATIONS - Products
+  // ============================================
+
+  /**
+   * Create new product (Admin only)
+   * POST /api/products
+   * @param product Product data
+   */
+  createProduct(product: CreateProductRequest): Observable<Product> {
+    return this.httpService.post<Product>(
+      API_ENDPOINTS.products.base,
+      product
+    );
+  }
+
+  /**
+   * Update existing product (Admin only)
+   * PUT /api/products/{id}
+   * @param id Product ID
+   * @param product Updated product data
+   */
+  updateProduct(id: number, product: UpdateProductRequest): Observable<Product> {
+    return this.httpService.put<Product>(
+      API_ENDPOINTS.products.byId(id),
+      product
+    );
+  }
+
+  /**
+   * Delete product (Admin only)
+   * DELETE /api/products/{id}
+   * @param id Product ID
+   */
+  deleteProduct(id: number): Observable<void> {
+    return this.httpService.delete<void>(
+      API_ENDPOINTS.products.byId(id)
+    );
+  }
+
+  /**
+   * Update product stock (Admin only)
+   * PATCH /api/products/{id}/stock
+   * @param id Product ID
+   * @param quantity New stock quantity
+   */
+  updateStock(id: number, quantity: number): Observable<void> {
+    return this.httpService.patch<void>(
+      `${API_ENDPOINTS.products.byId(id)}/stock`,
+      quantity
+    );
   }
 
   // ============================================
