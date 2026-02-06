@@ -78,7 +78,7 @@ export class ProductDetails implements OnInit {
 
       if (this.product) {
         this.productImages = [
-          this.product.image || 'https://via.placeholder.com/500x500?text=Product',
+          this.product.mainImage || 'https://via.placeholder.com/500x500?text=Product',
           'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=500&h=500&fit=crop',
           'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&h=500&fit=crop'
         ];
@@ -173,7 +173,7 @@ export class ProductDetails implements OnInit {
   }
 
   get currentImage(): string {
-    return this.productImages[this.selectedImageIndex] || this.product?.image || '';
+    return this.productImages[this.selectedImageIndex] || this.product?.mainImage || '';
   }
 
   onRelatedProductSelected(productId: number): void {

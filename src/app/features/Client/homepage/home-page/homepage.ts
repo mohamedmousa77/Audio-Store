@@ -61,7 +61,8 @@ export class Homepage implements OnInit {
       const loadNewProduct = this.productService.loadNewProduct()
         .then(data => {
           this.newProduct.set(data);
-          console.log('✅ New product loaded');
+          console.log('✅ New product loaded:', data?.name);
+          console.log('🔍 New product image URL:', data?.mainImage);
         })
         .catch(error => {
           console.error('❌ Error loading new product:', error);
@@ -72,6 +73,10 @@ export class Homepage implements OnInit {
         .then(data => {
           this.featuredProducts.set(data);
           console.log(`✅ Featured products loaded (${data.length})`);
+          if (data.length > 0) {
+            console.log('🔍 First featured product:', data[0].name);
+            console.log('🔍 First featured image:', data[0].mainImage);
+          }
         })
         .catch(error => {
           console.error('❌ Error loading featured products:', error);

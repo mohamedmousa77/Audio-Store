@@ -69,7 +69,7 @@
                 [class.active-row]="editingProduct()?.id === product.id">
                 <td>
                   <div class="product-info-cell">
-                    <img [src]="product.image" [alt]="product.name" class="product-thumb" />
+                    <img [src]="product.mainImage" [alt]="product.name" class="product-thumb" />
                     <div class="product-texts">
                       <p class="product-name">{{ product.name }}</p>
                       <p class="product-sku">{{ product.brand }} • SKU: {{ product.sku }}</p>

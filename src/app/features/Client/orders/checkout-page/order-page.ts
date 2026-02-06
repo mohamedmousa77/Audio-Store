@@ -34,7 +34,7 @@ export class OrderPage implements OnInit {
   // Use Signals from CartServices
   cart = this.cartService.cart;
   items = this.cartService.items;
-  totalPrice = this.cartService.totalPrice;
+  totalPrice = this.cartService.totalAmount;
   isEmpty = this.cartService.isEmpty;
 
   // Forms

@@ -29,7 +29,10 @@ export class CartPage implements OnInit {
   cart = this.cartService.cart;
   items = this.cartService.items;
   totalItems = this.cartService.totalItems;
-  totalPrice = this.cartService.totalPrice;
+  totalAmount = this.cartService.totalAmount;
+  subtotal = this.cartService.subtotal;
+  tax = this.cartService.tax;
+  shippingCost = this.cartService.shippingCost;
   isEmpty = this.cartService.isEmpty;
 
   loading = this.cartService.loadingSignal;

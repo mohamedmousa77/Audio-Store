@@ -1,7 +1,7 @@
 @if (!clickable) {
 <a [routerLink]="['/client/product', product.id]" class="product-card">
   <div class="card-image-wrapper">
-    <img [src]="product.image" [alt]="product.name" class="product-img">
+    <img [src]="product.mainImage" [alt]="product.name" class="product-img">
 
     <div class="card-badges">
       @if (product.isNew) {
@@ -34,7 +34,7 @@
 } @else {
 <a href="#" class="product-card" (click)="onCardClick($event)">
   <div class="card-image-wrapper">
-    <img [src]="product.image" [alt]="product.name" class="product-img">
+    <img [src]="product.mainImage" [alt]="product.name" class="product-img">
 
     <div class="card-badges">
       @if (product.isNew) {

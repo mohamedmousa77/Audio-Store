@@ -32,7 +32,7 @@ export class ProductCard {
   // }
 
   get productImageUrl(): string {
-    return this.product.image || 'https://via.placeholder.com/400x400?text=No+Image';
+    return this.product.mainImage || 'https://via.placeholder.com/400x400?text=No+Image';
   }
 
     addToCart(): void {

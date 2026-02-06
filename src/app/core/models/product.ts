@@ -14,7 +14,7 @@ export interface Product {
     price: number;
     stock: number;
     status: 'Available' | 'Low Stock' | 'Unavailable';
-    image?: string;
+    mainImage?: string;       // Primary product image (matches BE ProductDTO.MainImage)
     gallery?: string[];
     isFeatured?: boolean;
     isNew?: boolean;

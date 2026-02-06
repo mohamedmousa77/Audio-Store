@@ -255,7 +255,7 @@ export class OrderServices {
     return cart.items.map(item => ({
       productId: item.productId,
       quantity: item.quantity,
-      unitPrice: item.price
+      unitPrice: item.unitPrice
     }));
   }
 

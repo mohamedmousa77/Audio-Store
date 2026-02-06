@@ -122,12 +122,12 @@
       <div class="summary-product-list">
         @for (item of items(); track item.id) {
         <div class="summary-product-item">
-          <img [src]="item.image" [alt]="item.name" class="mini-thumb">
+          <img [src]="item.productImage" [alt]="item.productImage" class="mini-thumb">
           <div class="mini-details">
-            <p class="mini-name">{{ item.name }}</p>
+            <p class="mini-name">{{ item.productName }}</p>
             <p class="mini-meta">Qty: {{ item.quantity }}</p>
           </div>
-          <span class="mini-price">€{{ (item.price * item.quantity).toFixed(2) }}</span>
+          <span class="mini-price">€{{ (item.unitPrice * item.quantity).toFixed(2) }}</span>
         </div>
         }
       </div>

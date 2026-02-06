@@ -4,10 +4,10 @@
 export interface CartItem {
   id: number;
   productId: number;
-  name: string;
-  price: number;
+  productName: string;
+  unitPrice: number;
   quantity: number;
-  image: string;
+  productImage: string;
   categoryId?: number;
   categoryName?: string;
   stock?: number;
@@ -21,7 +21,11 @@ export interface Cart {
   userId?: number;
   items: CartItem[];
   totalItems: number;
-  totalPrice: number;
+  // totalPrice: number;
+  TotalAmount: number;
+  Tax: number;
+  ShippingCost: number;
+  Subtotal: number;
   createdAt?: string;
   updatedAt?: string;
 }

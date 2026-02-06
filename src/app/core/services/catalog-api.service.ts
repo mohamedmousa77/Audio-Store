@@ -26,7 +26,7 @@ export class CatalogApiService {
    */
   getProducts(params?: ProductQueryParams): Observable<Product[]> {
     return this.httpService.get<Product[]>(
-      API_ENDPOINTS.products.base,
+      API_ENDPOINTS.products.featured,
       params as Record<string, any>
     );
   }

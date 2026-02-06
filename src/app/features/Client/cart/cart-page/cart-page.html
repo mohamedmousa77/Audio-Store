@@ -49,10 +49,10 @@
             <tr class="cart-row">
               <td class="product-cell">
                 <div class="product-info-wrapper">
-                  <img [src]="item.image" [alt]="item.name" class="item-img">
+                  <img [src]="item.productImage" [alt]="item.productName" class="item-img">
                   <div class="item-text">
-                    <h3 class="item-name">{{ item.name }}</h3>
-                    <p class="item-cat">Unit Price: € {{ item.price.toFixed(2) }}</p>
+                    <h3 class="item-name">{{ item.productName }}</h3>
+                    <p class="item-cat">Unit Price: € {{ item.unitPrice.toFixed(2) }}</p>
                   </div>
                 </div>
               </td>
@@ -68,7 +68,7 @@
                   </button>
                 </div>
               </td>
-              <td class="total-cell">€ {{ (item.price * item.quantity).toFixed(2) }}</td>
+              <td class="total-cell">€ {{ (item.unitPrice * item.quantity).toFixed(2) }}</td>
               <td class="action-cell">
                 <button class="remove-link" (click)="removeItem(item.id)">
                   <span class="material-symbols-outlined">delete_outline</span>
@@ -91,7 +91,7 @@
           <div class="summary-details">
             <div class="detail-row">
               <span>Subtotal</span>
-              <span class="price-val">€ {{ totalPrice().toFixed(2) }}</span>
+              <span class="price-val">€ {{ cart().Subtotal || '0.00' }}</span>
             </div>
             <div class="detail-row">
               <span>Shipping</span>
@@ -99,7 +99,7 @@
             </div>
             <div class="detail-row">
               <span>Tax (10%)</span>
-              <span class="price-val">€ {{ (totalPrice() * 0.10).toFixed(2) }}</span>
+              <span class="price-val">€ {{ cart().Tax || '0.00' }}</span>
             </div>
           </div>
 
@@ -107,7 +107,7 @@
 
           <div class="total-row">
             <span>Estimated Total</span>
-            <span class="final-price">€ {{ (totalPrice() + (totalPrice() * 0.10)).toFixed(2) }}</span>
+            <span class="final-price">€ {{ cart().TotalAmount || '0.00' }}</span>
           </div>
 
           <button (click)="proceedToCheckout()" class="btn-checkout">
