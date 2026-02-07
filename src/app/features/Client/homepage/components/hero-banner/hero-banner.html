@@ -19,7 +19,8 @@
 
     <!-- Image -->
     <div class="hero-image-container">
-      <div class="hero-image" [style.backgroundImage]="'url(' + product.mainImage + ')'"></div>
+      <div class="hero-image"
+        [style.backgroundImage]="'url(' + (product.mainImage || '/assets/product-placeholder.png') + ')'"></div>
     </div>
   </div>
   }

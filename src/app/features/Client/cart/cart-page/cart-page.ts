@@ -6,15 +6,6 @@ import { CartServices } from '../../../../core/services/cart/cart-services';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
 
-/**
- * Cart Page Component
- * Updated to use Signals from CartServices
- * 
- * Breaking Changes:
- * - Uses Signals instead of Observables
- * - Item IDs are now numbers (not strings)
- * - Methods are async
- */
 @Component({
   selector: 'app-cart-page',
   imports: [CommonModule, FormsModule, ClientHeader, ClientFooter],
@@ -54,6 +45,7 @@ export class CartPage implements OnInit {
    */
   async loadCart(): Promise<void> {
     await this.cartService.loadCart();
+    console.log('Cart loaded:', this.cart(), 'Total Items:', this.totalItems(), 'Total Amount:', this.totalAmount(), 'Subtotal:', this.subtotal(), 'Tax:', this.tax(), 'Shipping Cost:', this.shippingCost());
   }
 
   /**

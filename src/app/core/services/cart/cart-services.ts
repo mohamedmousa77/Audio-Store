@@ -30,11 +30,10 @@ export class CartServices {
   private cartSignal = signal<Cart>({
     items: [],
     totalItems: 0,
-    // totalPrice: 0
-    Subtotal: 0,
-    ShippingCost: 0,
-    Tax: 0,
-    TotalAmount: 0
+    subtotal: 0,
+    shippingCost: 0,
+    tax: 0,
+    totalAmount: 0
   });
 
   loadingSignal = signal<boolean>(false);
@@ -44,10 +43,10 @@ export class CartServices {
   cart = computed(() => this.cartSignal());
   items = computed(() => this.cartSignal().items);
   totalItems = computed(() => this.cartSignal().totalItems);
-  totalAmount = computed(() => this.cartSignal().TotalAmount);
-  subtotal = computed(() => this.cartSignal().Subtotal);
-  tax = computed(() => this.cartSignal().Tax);
-  shippingCost = computed(() => this.cartSignal().ShippingCost);
+  totalAmount = computed(() => this.cartSignal().totalAmount);
+  subtotal = computed(() => this.cartSignal().subtotal);
+  tax = computed(() => this.cartSignal().tax);
+  shippingCost = computed(() => this.cartSignal().shippingCost);
   isEmpty = computed(() => this.cartSignal().items.length === 0);
 
   // ============================================
@@ -78,26 +77,30 @@ export class CartServices {
 
       // Diagnostic logging
       console.log('🔍 Raw cart data from BE:', cart);
+
+      // Ensure cart is never null to prevent computed properties from crashing
+      this.cartSignal.set(cart
+        || {
+        items: [],
+        totalItems: 0,
+        subtotal: 0,
+        shippingCost: 0,
+        tax: 0,
+        totalAmount: 0
+      });
+
       if (cart?.items?.length > 0) {
         console.log('🔍 First cart item:', cart.items[0]);
         console.log('🔍 Image URL:', cart.items[0].productImage);
       }
       console.log('🔍 Cart pricing:', {
-        Subtotal: cart?.Subtotal,
-        Tax: cart?.Tax,
-        ShippingCost: cart?.ShippingCost,
-        TotalAmount: cart?.TotalAmount
+        "Subtotal": this.subtotal(),
+        "Tax": this.tax(),
+        "ShippingCost": this.shippingCost(),
+        "TotalAmount": this.totalAmount()
       });
 
-      // Ensure cart is never null to prevent computed properties from crashing
-      this.cartSignal.set(cart || {
-        items: [],
-        totalItems: 0,
-        Subtotal: 0,
-        ShippingCost: 0,
-        Tax: 0,
-        TotalAmount: 0
-      });
+
       console.log('✅ Cart loaded successfully');
       this.errorSignal.set(null);
     } catch (error) {
@@ -107,10 +110,10 @@ export class CartServices {
       this.cartSignal.set({
         items: [],
         totalItems: 0,
-        Subtotal: 0,
-        ShippingCost: 0,
-        Tax: 0,
-        TotalAmount: 0
+        subtotal: 0,
+        shippingCost: 0,
+        tax: 0,
+        totalAmount: 0
       });
     } finally {
       this.loadingSignal.set(false);
@@ -216,10 +219,10 @@ export class CartServices {
       this.cartSignal.set({
         items: [],
         totalItems: 0,
-        Subtotal: 0,
-        ShippingCost: 0,
-        Tax: 0,
-        TotalAmount: 0
+        subtotal: 0,
+        shippingCost: 0,
+        tax: 0,
+        totalAmount: 0
       });
 
       console.log('✅ Cart cleared');

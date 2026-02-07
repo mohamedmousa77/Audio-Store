@@ -17,7 +17,7 @@ export class ProductCard {
     private router: Router,
     // private productService: ProductServices,
     private cartService: CartServices
-  ) {}
+  ) { }
   @Input() product!: Product;
   @Input() clickable: boolean = false;
   @Output() productSelected = new EventEmitter<number>();
@@ -32,13 +32,13 @@ export class ProductCard {
   // }
 
   get productImageUrl(): string {
-    return this.product.mainImage || 'https://via.placeholder.com/400x400?text=No+Image';
+    return this.product.mainImage || '/assets/images/product-placeholder.png';
   }
 
-    addToCart(): void {
+  addToCart(): void {
     // console.log(`Added ${this.quantity} of ${this.product?.name} to cart`);
     // Implementazione aggiunta al carrello
-     if (!this.product) return;
+    if (!this.product) return;
 
     this.cartService.addToCart(this.product, 1);
   }
@@ -56,5 +56,14 @@ export class ProductCard {
       event.stopPropagation();
       this.productSelected.emit(this.product.id);
     }
+  }
+
+  getProductCardImage(): string {
+    if (!this.product.mainImage) {
+      console.warn('PRODUCT CARD: Product main image not loaded, using placeholder');
+      return '/assets/product-placeholder.png';
+    }
+    console.log('PRODUCT CARD: Product main image:', this.product.mainImage);
+    return this.product.mainImage;
   }
 }

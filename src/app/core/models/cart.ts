@@ -21,11 +21,10 @@ export interface Cart {
   userId?: number;
   items: CartItem[];
   totalItems: number;
-  // totalPrice: number;
-  TotalAmount: number;
-  Tax: number;
-  ShippingCost: number;
-  Subtotal: number;
+  subtotal: number;        // BE serializes as camelCase in JSON
+  shippingCost: number;    // BE serializes as camelCase in JSON
+  tax: number;             // BE serializes as camelCase in JSON
+  totalAmount: number;     // BE serializes as camelCase in JSON
   createdAt?: string;
   updatedAt?: string;
 }
