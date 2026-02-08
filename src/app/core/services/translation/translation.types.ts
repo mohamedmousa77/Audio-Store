@@ -1,0 +1,207 @@
+/**
+ * Translation system type definitions
+ * Provides type safety for language selection and translation keys
+ */
+
+export type Language = 'it' | 'en';
+
+export interface Translations {
+    common: {
+        yes: string;
+        no: string;
+        save: string;
+        cancel: string;
+        delete: string;
+        edit: string;
+        add: string;
+        remove: string;
+        close: string;
+        confirm: string;
+        loading: string;
+        error: string;
+        success: string;
+        hello: string;
+        continueShopping: string;
+    };
+    header: {
+        logoText: string;
+        searchPlaceholder: string;
+        account: string;
+        cart: string;
+        menu: string;
+        home: string;
+        support: string;
+    };
+    hero: {
+        shopNow: string;
+        learnMore: string;
+    };
+    product: {
+        addToCart: string;
+        viewDetails: string;
+        outOfStock: string;
+        inStock: string;
+        price: string;
+        description: string;
+        specifications: string;
+        reviews: string;
+        addedToCart: string;
+        bestSeller: string;
+        new: string;
+        save: string;
+        only: string;
+        piecesAvailable: string;
+        color: string;
+        battery: string;
+        wireless: string;
+    };
+    cart: {
+        title: string;
+        emptyCart: string;
+        continueShopping: string;
+        checkout: string;
+        subtotal: string;
+        total: string;
+        quantity: string;
+        remove: string;
+        updateCart: string;
+    };
+    checkout: {
+        title: string;
+        shippingAddress: string;
+        paymentMethod: string;
+        orderSummary: string;
+        placeOrder: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
+        address: string;
+        city: string;
+        zipCode: string;
+        country: string;
+        selected: string;
+        shipping: string;
+        free: string;
+        orderTotal: string;
+        includesTaxes: string;
+        confirmOrder: string;
+        secure: string;
+        insured: string;
+        support: string;
+    };
+    orders: {
+        title: string;
+        orderNotFound: string;
+        orderNotFoundMessage: string;
+        thankYou: string;
+        confirmationEmailSent: string;
+        orderPlaced:string;
+        successfully: string;
+        returnToShopping: string;
+        downloadInvoice: string;
+        itemsOrdered: string;
+        items: string;
+        payUponReceipt: string;
+        taxEst: string;
+        orderStatus:string;
+        orderNumber: string;
+        orderDate: string;
+        status: string;
+        total: string;
+        viewDetails: string;
+        noOrders: string;
+        pending: string;
+        processing: string;
+        shipped: string;
+        delivered: string;
+        cancelled: string;
+    };
+    auth: {
+        login: string;
+        register: string;
+        logout: string;
+        email: string;
+        password: string;
+        confirmPassword: string;
+        forgotPassword: string;
+        rememberMe: string;
+        noAccount: string;
+        haveAccount: string;
+        signUp: string;
+        signIn: string;
+        loginSubtitle: string; 
+        registrationSubtitle: string;
+        registrationImageTitle: string;
+        and: string;
+        Privacy: string;
+        Terms: string; 
+        TermsAndCoditionsAgree: string;
+    };
+    profile: {
+        title: string;
+        hello: string;
+        personalInfo: string;
+        myAddresses: string;
+        orderHistory: string;
+        addresses: string;
+        settings: string;
+        editProfile: string;
+        changePassword: string;
+        firstName: string;
+        lastName: string;
+        phone: string;
+        email: string;
+        saveChanges: string;
+    };
+    productDetails: {
+        addToCart: string;
+        buyNow: string;
+        description: string;
+        specifications: string;
+        reviews: string;
+        relatedProducts: string;
+        inStock: string;
+        outOfStock: string;
+        quantity: string;
+        sku: string;
+        category: string;
+        brand: string;
+        productDescription: string;
+        keyFeatures: string;
+        youMayAlsoLike: string;
+    };
+    admin: {
+        dashboard: string;
+        products: string;
+        categories: string;
+        orders: string;
+        customers: string;
+        settings: string;
+        addNew: string;
+        edit: string;
+        delete: string;
+        save: string;
+        cancel: string;
+        search: string;
+        filter: string;
+        export: string;
+        import: string;
+    };
+    footer: {
+        aboutUs: string;
+        contactUs: string;
+        privacyPolicy: string;
+        termsOfService: string;
+        followUs: string;
+        copyright: string;
+    };
+    errors: {
+        generic: string;
+        notFound: string;
+        serverError: string;
+        unauthorized: string;
+        invalidInput: string;
+        networkError: string;
+    };
+}

@@ -1,8 +1,8 @@
 <app-client-header />
 <div class="checkout-container">
   <header class="checkout-header">
-    <h1>Checkout</h1>
-    <p class="login-prompt">Already have an account? <a href="#">Log in to pre-fill your details.</a></p>
+    <h1>{{ translations().checkout.title }}</h1>
+    <p class="login-prompt">{{ translations().auth.haveAccount }} <a href="auth/login">{{ translations().auth.login }}.</a></p>
   </header>
   <!-- Error Message -->
   @if (errorMessage()) {
@@ -18,12 +18,12 @@
       <section class="form-section">
         <div class="section-header">
           <span class="step-badge">1</span>
-          <h2>Shipping Details</h2>
+          <h2>{{ translations().checkout.shippingAddress }}</h2>
         </div>
 
         <form [formGroup]="shippingForm" class="form-grid">
           <div class="form-group">
-            <label>First Name</label>
+            <label>{{ translations().checkout.firstName }}</label>
             <input type="text" formControlName="firstName" placeholder="e.g. Alex">
             @if (shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched) {
             <span class="error">
@@ -32,7 +32,7 @@
             }
           </div>
           <div class="form-group">
-            <label>Last Name</label>
+            <label>{{ translations().checkout.lastName }}</label>
             <input type="text" formControlName="lastName" placeholder="e.g. Doe">
             @if (shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched) {
             <span class="error">
@@ -41,7 +41,7 @@
             }
           </div>
           <div class="form-group full-width">
-            <label>Email Address</label>
+            <label>{{ translations().checkout.email }}</label>
             <input type="email" formControlName="email" placeholder="alex@example.com">
             @if (shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched) {
             <span class="error">
@@ -50,7 +50,7 @@
             }
           </div>
           <div class="form-group full-width">
-            <label>Phone Number</label>
+            <label>{{ translations().checkout.phone }}</label>
             <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
             @if (shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched) {
             <span class="error">
@@ -59,7 +59,7 @@
             }
           </div>
           <div class="form-group full-width">
-            <label>Street Address</label>
+            <label>{{ translations().checkout.address }}</label>
             <input type="text" formControlName="address" placeholder="123 Audio Lane, Apt 4B">
             @if (shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched) {
             <span class="error">
@@ -68,7 +68,7 @@
             }
           </div>
           <div class="form-group">
-            <label>ZIP / Postal Code</label>
+            <label>{{ translations().checkout.zipCode }}</label>
             <input type="text" formControlName="zipCode" placeholder="10001">
             @if (shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched) {
             <span class="error">
@@ -77,7 +77,7 @@
             }
           </div>
           <div class="form-group">
-            <label>City</label>
+            <label>{{ translations().checkout.city }}</label>
             <input type="text" formControlName="city" placeholder="New York">
             @if (shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched) {
             <span class="error">
@@ -86,7 +86,7 @@
             }
           </div>
           <div class="form-group full-width">
-            <label>Country</label>
+            <label>{{ translations().checkout.country }}</label>
             <select formControlName="country">
               <option value="United States">United States</option>
               <option value="Italy">Italy</option>
@@ -98,7 +98,7 @@
       <section class="form-section">
         <div class="section-header Payment-Method">
           <span class="step-badge">2</span>
-          <h2>Payment Method</h2>
+          <h2>{{ translations().checkout.paymentMethod }}</h2>
         </div>
 
         <div class="payment-card-selector selected">
@@ -111,13 +111,13 @@
               <p>Pay securely when your order arrives at your doorstep.</p>
             </div>
           </div>
-          <span class="status-badge">SELECTED</span>
+          <span class="status-badge">{{ translations().checkout.selected }}</span>
         </div>
       </section>
     </div>
 
     <aside class="order-summary-card">
-      <h3>Order Summary</h3>
+      <h3>{{ translations().checkout.orderSummary }}</h3>
 
       <div class="summary-product-list">
         @for (item of items(); track item.id) {
@@ -125,7 +125,7 @@
           <img [src]="item.productImage" [alt]="item.productImage" class="mini-thumb">
           <div class="mini-details">
             <p class="mini-name">{{ item.productName }}</p>
-            <p class="mini-meta">Qty: {{ item.quantity }}</p>
+            <p class="mini-meta">{{ translations().cart.quantity }}: {{ item.quantity }}</p>
           </div>
           <span class="mini-price">€{{ (item.unitPrice * item.quantity).toFixed(2) }}</span>
         </div>
@@ -136,12 +136,12 @@
 
       <div class="cost-breakdown">
         <div class="cost-row">
-          <span>Subtotal</span>
+          <span>{{ translations().cart.subtotal }}</span>
           <span class="cost-val">€{{ totalPrice().toFixed(2) }}</span>
         </div>
         <div class="cost-row">
-          <span>Shipping</span>
-          <span class="cost-val text-green">Free</span>
+          <span>{{ translations().checkout.shipping }}</span>
+          <span class="cost-val text-green">{{ translations().checkout.free }}</span>
         </div>
         <div class="cost-row">
           <span>VAT (10%)</span>
@@ -151,27 +151,30 @@
 
       <div class="total-section">
         <div class="total-row">
-          <span class="total-label">Order Total</span>
+          <span class="total-label">{{ translations().checkout.orderTotal }}</span>
           <div class="total-amount-group">
             <span class="total-price">€{{ getTotalAmount().toFixed(2) }}</span>
-            <span class="tax-note">Includes all taxes</span>
+            <span class="tax-note">{{ translations().checkout.includesTaxes }}</span>
           </div>
         </div>
 
         <button class="btn-confirm-order" (click)="placeOrder()" [disabled]="isProcessing()">
           @if (isProcessing()) {
-          Processing...
+          {{ translations().common.loading }}
           } @else {
-          Confirm Order
+          {{ translations().checkout.confirmOrder }}
           <span class="material-symbols-outlined">arrow_forward</span>
           }
         </button>
       </div>
 
       <div class="trust-footer">
-        <div class="trust-item"><span class="material-symbols-outlined">shield_with_heart</span> Secure</div>
-        <div class="trust-item"><span class="material-symbols-outlined">package_2</span> Insured</div>
-        <div class="trust-item"><span class="material-symbols-outlined">support_agent</span> 24/7 Help</div>
+        <div class="trust-item"><span class="material-symbols-outlined">shield_with_heart</span> {{
+          translations().checkout.secure }}</div>
+        <div class="trust-item"><span class="material-symbols-outlined">package_2</span> {{
+          translations().checkout.insured }}</div>
+        <div class="trust-item"><span class="material-symbols-outlined">support_agent</span> {{
+          translations().checkout.support }}</div>
       </div>
     </aside>
   </div>

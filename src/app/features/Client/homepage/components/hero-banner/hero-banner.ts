@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Product } from '../../../../../core/models/product';
 import { CartServices } from '../../../../../core/services/cart/cart-services';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
 
 /**
  * Hero Banner Component
@@ -21,12 +22,15 @@ import { CartServices } from '../../../../../core/services/cart/cart-services';
 export class HeroBanner {
   private router = inject(Router);
   private cartService = inject(CartServices);
+  private translationService = inject(TranslationService);
 
   /**
    * Product to display in hero banner
    * Passed from parent Homepage component
    */
   @Input() product?: Product;
+
+  translations = this.translationService.translations;
 
   /**
    * Navigate to product details page

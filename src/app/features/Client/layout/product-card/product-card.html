@@ -11,7 +11,7 @@
       <span class="badge badge-featured">Featured</span>
       }
       @if (product.stock === 0) {
-      <span class="badge badge-out">Out of Stock</span>
+      <span class="badge badge-out">{{ translations().product.outOfStock }}</span>
       }
     </div>
 
@@ -44,7 +44,7 @@
       <span class="badge badge-featured">Featured</span>
       }
       @if (product.stock === 0) {
-      <span class="badge badge-out">Out of Stock</span>
+      <span class="badge badge-out">{{ translations().product.outOfStock }}</span>
       }
     </div>
 

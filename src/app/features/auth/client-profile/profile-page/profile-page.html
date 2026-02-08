@@ -3,16 +3,16 @@
   <header class="profile-header">
     <div class="header-content">
       <div class="user-greeting">
-        <h1>Hello, {{ currentUser?.firstName ?? 'Mousa' }}</h1>
+        <h1>{{ translations().profile.hello }}, {{ currentUser?.firstName ?? 'Mousa' }}</h1>
         <!-- <p>Manage your profile</p> -->
-        <p>{{ memberSince  }}</p>
+        <p>{{ memberSince }}</p>
       </div>
       <!-- <button class="logout-btn" (click)="logout()" title="Logout">
         <span class="material-symbols-outlined">logout</span>
       </button> -->
       <button class="btn-continue-top" (click)="continueShopping()">
-          <span class="material-symbols-outlined">keyboard_backspace</span>
-          Continue Shopping
+        <span class="material-symbols-outlined">keyboard_backspace</span>
+        {{ translations().common.continueShopping }}
       </button>
     </div>
   </header>
@@ -23,19 +23,15 @@
     <aside class="profile-sidebar">
       <nav class="menu">
         <ng-container *ngFor="let item of menuItems">
-          <button
-            class="menu-item"
-            [class.active]="activeMenu === item.id"
-            (click)="navigateToSection(item)"
-          >
+          <button class="menu-item" [class.active]="activeMenu === item.id" (click)="navigateToSection(item)">
             <span class="menu-icon material-symbols-outlined">{{ item.icon }}</span>
             <span class="menu-label">{{ item.label }}</span>
           </button>
         </ng-container>
         <div class="menu-spacer"></div>
-        <button class="menu-item logout-menu-item" (click)="logout()" title="Logout">
+        <button class="menu-item logout-menu-item" (click)="logout()" [title]="translations().auth.logout">
           <span class="menu-icon material-symbols-outlined">logout</span>
-          <span class="menu-label">Logout</span>
+          <span class="menu-label">{{ translations().auth.logout }}</span>
         </button>
       </nav>
     </aside>
@@ -43,32 +39,18 @@
     <!-- Sections Container -->
     <div class="profile-sections">
       <!-- Personal Information Section -->
-      <section
-        #personalInfoSection
-        id="personalInfoSection"
-        class="profile-section"
-        [class.active]="activeMenu === 'personal-info'"
-      >
+      <section #personalInfoSection id="personalInfoSection" class="profile-section"
+        [class.active]="activeMenu === 'personal-info'">
         <app-personal-info></app-personal-info>
       </section>
 
       <!-- Address Section -->
-      <section
-        #addressSection
-        id="addressSection"
-        class="profile-section"
-        [class.active]="activeMenu === 'address'"
-      >
+      <section #addressSection id="addressSection" class="profile-section" [class.active]="activeMenu === 'address'">
         <app-personal-address></app-personal-address>
       </section>
 
       <!-- Orders Section -->
-      <section
-        #ordersSection
-        id="ordersSection"
-        class="profile-section"
-        [class.active]="activeMenu === 'orders'"
-      >
+      <section #ordersSection id="ordersSection" class="profile-section" [class.active]="activeMenu === 'orders'">
         <app-personal-orders></app-personal-orders>
       </section>
     </div>

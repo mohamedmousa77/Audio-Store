@@ -15,6 +15,7 @@ import { AuthServices } from '../../../core/services/auth/auth-services';
 import { RegisterRequest } from '../../../core/models/user';
 import { ErrorHandlingService } from '../../../core/services/error/error-handling.service';
 import { CommonModule } from '@angular/common';
+import { TranslationService } from '../../../core/services/translation/translation.service';
 
 @Component({
   selector: 'app-register',
@@ -34,6 +35,10 @@ export class Register implements OnDestroy, OnInit {
 
   private destroy$ = new Subject<void>();
   private errorService = inject(ErrorHandlingService);
+  private translationService = inject(TranslationService);
+
+  // Translations
+  translations = this.translationService.translations;
 
   constructor(
     private formBuilder: FormBuilder,

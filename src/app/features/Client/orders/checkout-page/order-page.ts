@@ -7,6 +7,7 @@ import { OrderServices } from '../../../../core/services/order/order-services';
 import { CreateOrderRequest } from '../../../../core/models/order';
 import { ClientHeader } from "../../layout/client-header/client-header";
 import { AuthServices } from '../../../../core/services/auth/auth-services';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 /**
  * Checkout Page Component (OrderPage)
@@ -30,12 +31,16 @@ export class OrderPage implements OnInit {
   private orderService = inject(OrderServices);
   private authService = inject(AuthServices);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
 
   // Use Signals from CartServices
   cart = this.cartService.cart;
   items = this.cartService.items;
   totalPrice = this.cartService.totalAmount;
   isEmpty = this.cartService.isEmpty;
+
+  // Translations
+  translations = this.translationService.translations;
 
   // Forms
   shippingForm!: FormGroup;
@@ -77,9 +82,9 @@ export class OrderPage implements OnInit {
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9\-\+\s]+$/)]],
-      street: ['', [Validators.required, Validators.minLength(5)]],
+      address: ['', [Validators.required, Validators.minLength(5)]],
       city: ['', [Validators.required, Validators.minLength(2)]],
-      postalCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]],
+      zipCode: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]],
       country: ['Italy', Validators.required]
     });
   }
@@ -141,9 +146,9 @@ export class OrderPage implements OnInit {
       // Create order request
       const orderRequest: CreateOrderRequest = {
         // Shipping address (required)
-        shippingStreet: formData.street,
+        shippingStreet: formData.address,
         shippingCity: formData.city,
-        shippingPostalCode: formData.postalCode,
+        shippingPostalCode: formData.zipCode,
         shippingCountry: formData.country,
 
         // Order items (converted from cart)

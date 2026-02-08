@@ -23,10 +23,10 @@
           @if (product.isFeatured || product.isNew) {
           <div class="product-badges">
             @if (product.isFeatured) {
-            <span class="badge badge-featured">BEST SELLER</span>
+            <span class="badge badge-featured">{{ translations().product.bestSeller }}</span>
             }
             @if (product.isNew) {
-            <span class="badge badge-new">NEW</span>
+            <span class="badge badge-new">{{ translations().product.new }}</span>
             }
           </div>
           }
@@ -65,7 +65,7 @@
           @if (product.price < 400) { <span class="original-price">
             ${{ (product.price * 1.15).toFixed(2) }}
             </span>
-            <span class="discount">Save 13%</span>
+            <span class="discount">{{ translations().product.save }} 13%</span>
             }
         </div>
 
@@ -78,15 +78,16 @@
         <div class="stock-status" [class.in-stock]="product.stock > 0">
           <span class="material-icons">{{ product.stock > 0 ? 'check_circle' : 'cancel' }}</span>
           @if (product.stock > 0) {
-          <span>In Stock - Only {{ product.stock }} pieces available</span>
+          <span>{{ translations().productDetails.inStock }} - {{ translations().product.only }} {{ product.stock }} {{
+            translations().product.piecesAvailable }}</span>
           } @else {
-          <span>Out of Stock</span>
+          <span>{{ translations().productDetails.outOfStock }}</span>
           }
         </div>
 
         <!-- Color Selection -->
         <div class="color-selection">
-          <label>Color:</label>
+          <label>{{ translations().product.color }}:</label>
           <div class="color-options">
             <button class="color-btn" [class.active]="selectedColor === 'black'" (click)="selectedColor = 'black'"
               style="background: #000" title="Black"></button>
@@ -111,7 +112,7 @@
 
           <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="product.stock === 0">
             <span class="material-icons">shopping_bag</span>
-            Add to Cart
+            {{ translations().productDetails.addToCart }}
           </button>
         </div>
 
@@ -120,14 +121,14 @@
           <div class="feature">
             <span class="material-icons">battery_charging_full</span>
             <div>
-              <p class="feature-label">Battery</p>
+              <p class="feature-label">{{ translations().product.battery }}</p>
               <p class="feature-value">50 Hours</p>
             </div>
           </div>
           <div class="feature">
             <span class="material-icons">bluetooth</span>
             <div>
-              <p class="feature-label">Wireless</p>
+              <p class="feature-label">{{ translations().product.wireless }}</p>
               <p class="feature-value">Bluetooth 5.0</p>
             </div>
           </div>
@@ -138,20 +139,20 @@
     <!-- Details Tabs -->
     <div class="details-section">
       <div class="details-tabs">
-        <button class="tab-btn active">Description</button>
-        <button class="tab-btn">Specifications</button>
-        <button class="tab-btn">Reviews</button>
+        <button class="tab-btn active">{{ translations().productDetails.description }}</button>
+        <button class="tab-btn">{{ translations().productDetails.specifications }}</button>
+        <button class="tab-btn">{{ translations().productDetails.reviews }}</button>
       </div>
 
       <div class="tab-content">
         <div class="description-tab">
-          <h3>Product Description</h3>
+          <h3>{{ translations().productDetails.productDescription }}</h3>
           <p>
             The {{ product.name }} is a premium audio device designed for discerning audiophiles
             and music professionals. With cutting-edge technology and superior sound quality, it delivers
             an unparalleled listening experience.
           </p>
-          <h4>Key Features:</h4>
+          <h4>{{ translations().productDetails.keyFeatures }}:</h4>
           <ul>
             <li>Advanced noise cancellation technology</li>
             <li>High-fidelity audio drivers</li>
@@ -166,7 +167,7 @@
     <!-- Related Products -->
     @if (relatedProducts.length > 0) {
     <section class="related-products">
-      <h2 class="section-title">You May Also Like</h2>
+      <h2 class="section-title">{{ translations().productDetails.youMayAlsoLike }}</h2>
       <div class="related-grid">
         @for (relatedProduct of relatedProducts; track relatedProduct.id) {
         <app-product-card [product]="relatedProduct" [clickable]="true"

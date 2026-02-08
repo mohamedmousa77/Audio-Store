@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AuthServices } from '../../../core/services/auth/auth-services';
 import { LoginRequest } from '../../../core/models/user';
 import { ErrorHandlingService } from '../../../core/services/error/error-handling.service';
+import { TranslationService } from '../../../core/services/translation/translation.service';
 
 @Component({
   selector: 'app-login-form',
@@ -21,11 +22,14 @@ export class LoginForm implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   loading = false;
   error: string | null = null;
-  errorMessage = '';
   showPassword = false;
   private destroy$ = new Subject<void>();
 
   private errorService = inject(ErrorHandlingService);
+  private translationService = inject(TranslationService);
+
+  // Translations
+  translations = this.translationService.translations;
 
   constructor(
     private formBuilder: FormBuilder,

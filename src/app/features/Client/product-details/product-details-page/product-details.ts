@@ -9,6 +9,7 @@ import { ProductServices } from '../../../../core/services/product/product-servi
 import { CategoryServices } from '../../../../core/services/category/category-services';
 import { Product } from '../../../../core/models/product';
 import { CartServices } from '../../../../core/services/cart/cart-services';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -24,19 +25,20 @@ import { CartServices } from '../../../../core/services/cart/cart-services';
   styleUrl: './product-details.css',
 })
 export class ProductDetails implements OnInit {
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private productService: ProductServices,
-    private categoryService: CategoryServices,
-    private cartService: CartServices
-  ) { }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private productService = inject(ProductServices);
+  private categoryService = inject(CategoryServices);
+  private cartService = inject(CartServices);
+  private translationService = inject(TranslationService);
+
+  // Translations
+  translations = this.translationService.translations;
 
   product: Product | null = null;
   relatedProducts: Product[] = [];
   quantity = 1;
   selectedColor: string = '';
-  isWishlisted = false;
   loading = false;
   selectedImageIndex = 0;
 
@@ -64,19 +66,29 @@ export class ProductDetails implements OnInit {
     });
   }
 
-  async loadProduct(id: string): Promise<void> {
+  async loadProduct(id: number): Promise<void> {
     this.loading = true;
     console.log('Loading product with ID:', id);
     try {
-      await this.productService.loadCatalogData();
-      await this.categoryService.loadCategories();
+      // Load categories only if not already loaded (caching)
+      if (this.categoryService.categories().length === 0) {
+        await this.categoryService.loadCategories();
+      }
+
+      // Load catalog data only if not already loaded (caching)
       const allProducts = this.productService.products();
-      console.log('All products:', allProducts);
+      if (allProducts.length === 0) {
+        await this.productService.loadCatalogData();
+      }
 
-      this.product = allProducts.find(p => p.id === +id) || null;
-      console.log('Found product:', this.product);
+      // Get product details - this will check store first, then API if needed
+      const product = await this.productService.getProductDetails(id);
 
-      if (this.product) {
+      if (product) {
+        this.product = product;
+        console.log('Found product:', this.product);
+
+        // Setup product images
         this.productImages = [
           this.product.mainImage || 'https://via.placeholder.com/500x500?text=Product',
           'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=500&h=500&fit=crop',
@@ -93,8 +105,9 @@ export class ProductDetails implements OnInit {
           { label: this.product.name, path: `/client/product/${this.product.id}` }
         ];
 
-        // Load related products
-        this.relatedProducts = allProducts
+        // Load related products from already loaded catalog
+        const products = this.productService.products();
+        this.relatedProducts = products
           .filter(p => p.categoryId === this.product?.categoryId && p.id !== this.product?.id)
           .slice(0, 4);
       } else {
@@ -105,10 +118,6 @@ export class ProductDetails implements OnInit {
     } finally {
       this.loading = false;
     }
-  }
-
-  toggleWishlist(): void {
-    this.isWishlisted = !this.isWishlisted;
   }
 
   incrementQuantity(): void {

@@ -5,7 +5,7 @@
   @if (isLoading()) {
   <div class="loading-container">
     <div class="spinner"></div>
-    <p>Caricamento...</p>
+    <p>{{ translations().common.loading }}</p>
   </div>
   }
 
@@ -13,7 +13,7 @@
   @else if (error()) {
   <div class="error-container">
     <p class="error-message">{{ error() }}</p>
-    <button class="retry-button" (click)="retryLoad()">Riprova</button>
+    <button class="retry-button" (click)="retryLoad()">{{ translations().common.cancel }}</button>
   </div>
   }
 

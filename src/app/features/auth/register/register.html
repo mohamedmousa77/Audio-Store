@@ -1,8 +1,8 @@
 <div class="register-page">
   <!-- Page Header (above the container) -->
   <div class="form-header">
-    <h1>Create your account</h1>
-    <p>Join us to track orders and get exclusive audio deals.</p>
+    <h1>{{ translations().auth.register }}</h1>
+    <p>{{ translations().auth.registrationSubtitle }}</p>
   </div>
 
   <div class="registration-container">
@@ -10,13 +10,9 @@
     <div class="registration-image-section">
       <div class="image-wrapper">
         <div class="product-showcase">
-          <img
-            src="register-cover-image.jpg"
-            alt="Premium Headphones"
-            class="product-image"
-          />
+          <img src="register-cover-image.jpg" alt="Premium Headphones" class="product-image" />
           <div class="image-quote">
-            <p>"The sound quality is unmatched. I hear details I never noticed before."</p>
+            <p>{{ translations().auth.registrationImageTitle }}</p>
           </div>
         </div>
       </div>
@@ -26,284 +22,208 @@
     <div class="registration-form-section">
       <div class="form-wrapper">
 
-      <!-- Error Message -->
-      <div *ngIf="error" class="error-alert">
-        <span class="material-symbols-outlined">error</span>
-        <div>
-          <strong>Registration Failed</strong>
-          <p>{{ error }}</p>
+        <!-- Error Message -->
+        <div *ngIf="error" class="error-alert">
+          <span class="material-symbols-outlined">error</span>
+          <div>
+            <strong>Registration Failed</strong>
+            <p>{{ error }}</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Registration Form -->
-      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
-        <!-- Name Row -->
-        <div class="form-row">
-          <!-- First Name -->
-          <div class="form-group">
-            <label for="firstName" class="form-label">First Name</label>
-            <div class="input-wrapper">
-              <input
-                id="firstName"
-                type="text"
-                formControlName="firstName"
-                class="form-input"
-                placeholder="Mohamed"
-                [class.error]="
+        <!-- Registration Form -->
+        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
+          <!-- Name Row -->
+          <div class="form-row">
+            <!-- First Name -->
+            <div class="form-group">
+              <label for="firstName" class="form-label">{{ translations().profile.firstName }}</label>
+              <div class="input-wrapper">
+                <input id="firstName" type="text" formControlName="firstName" class="form-input" placeholder="Mohamed"
+                  [class.error]="
                   registrationForm.get('firstName')?.invalid &&
                   registrationForm.get('firstName')?.touched
-                "
-              />
+                " />
+              </div>
+              <span class="error-message" *ngIf="firstNameError && registrationForm.get('firstName')?.touched">
+                {{ firstNameError }}
+              </span>
             </div>
-            <span
-              class="error-message"
-              *ngIf="firstNameError && registrationForm.get('firstName')?.touched"
-            >
-              {{ firstNameError }}
-            </span>
-          </div>
 
-          <!-- Last Name -->
-          <div class="form-group">
-            <label for="lastName" class="form-label">Last Name</label>
-            <div class="input-wrapper">
-              <input
-                id="lastName"
-                type="text"
-                formControlName="lastName"
-                class="form-input"
-                placeholder="Mousa"
-                [class.error]="
+            <!-- Last Name -->
+            <div class="form-group">
+              <label for="lastName" class="form-label">{{ translations().profile.lastName }}</label>
+              <div class="input-wrapper">
+                <input id="lastName" type="text" formControlName="lastName" class="form-input" placeholder="Mousa"
+                  [class.error]="
                   registrationForm.get('lastName')?.invalid &&
                   registrationForm.get('lastName')?.touched
-                "
-              />
+                " />
+              </div>
+              <span class="error-message" *ngIf="lastNameError && registrationForm.get('lastName')?.touched">
+                {{ lastNameError }}
+              </span>
             </div>
-            <span
-              class="error-message"
-              *ngIf="lastNameError && registrationForm.get('lastName')?.touched"
-            >
-              {{ lastNameError }}
-            </span>
           </div>
-        </div>
 
-        <!-- Email Address -->
-        <div class="form-group">
-          <label for="email" class="form-label">Email Address</label>
-          <div class="input-wrapper">
-            <span class="input-icon material-symbols-outlined">mail</span>
-            <input
-              id="email"
-              type="email"
-              formControlName="email"
-              class="form-input"
-              placeholder="mohamed.mousa@example.com"
-              [class.error]="
+          <!-- Email Address -->
+          <div class="form-group">
+            <label for="email" class="form-label">{{ translations().auth.email }}</label>
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">mail</span>
+              <input id="email" type="email" formControlName="email" class="form-input"
+                placeholder="mohamed.mousa@example.com" [class.error]="
                 registrationForm.get('email')?.invalid &&
                 registrationForm.get('email')?.touched
-              "
-            />
-            <span
-              *ngIf="
+              " />
+              <span *ngIf="
                 registrationForm.get('email')?.valid &&
                 registrationForm.get('email')?.touched &&
                 !emailAlreadyRegistered
-              "
-              class="input-success material-symbols-outlined"
-            >
-              check_circle
+              " class="input-success material-symbols-outlined">
+                check_circle
+              </span>
+            </div>
+            <span class="error-message" *ngIf="emailError && registrationForm.get('email')?.touched">
+              {{ emailError }}
             </span>
           </div>
-          <span
-            class="error-message"
-            *ngIf="emailError && registrationForm.get('email')?.touched"
-          >
-            {{ emailError }}
-          </span>
-        </div>
 
-        <!-- Phone Number -->
-        <div class="form-group">
-          <label for="phone" class="form-label">Phone Number</label>
-          <div class="input-wrapper">
-            <span class="input-icon material-symbols-outlined">phone</span>
-            <input
-              id="phone"
-              type="tel"
-              formControlName="phone"
-              class="form-input"
-              placeholder="+39 000-000-0000"
-              [class.error]="
+          <!-- Phone Number -->
+          <div class="form-group">
+            <label for="phone" class="form-label">{{ translations().profile.phone }}</label>
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">phone</span>
+              <input id="phone" type="tel" formControlName="phone" class="form-input" placeholder="+39 000-000-0000"
+                [class.error]="
                 registrationForm.get('phone')?.invalid &&
                 registrationForm.get('phone')?.touched
-              "
-            />
-          </div>
-          <span
-            class="error-message"
-            *ngIf="phoneError && registrationForm.get('phone')?.touched"
-          >
-            {{ phoneError }}
-          </span>
-        </div>
-
-        <!-- Password -->
-        <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <div class="input-wrapper">
-            <span class="input-icon material-symbols-outlined">lock</span>
-            <input
-              id="password"
-              [type]="showPassword ? 'text' : 'password'"
-              formControlName="password"
-              class="form-input"
-              placeholder="••••••••"
-              [class.error]="
-                registrationForm.get('password')?.invalid &&
-                registrationForm.get('password')?.touched
-              "
-            />
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
-            >
-              <span class="material-symbols-outlined">
-                {{ showPassword ? 'visibility_off' : 'visibility' }}
-              </span>
-            </button>
-          </div>
-
-          <!-- Password Strength Indicator -->
-          <div class="password-strength" *ngIf="registrationForm.get('password')?.value">
-            <div class="strength-bar">
-              <div
-                class="strength-fill"
-                [ngClass]="passwordStrength"
-              ></div>
+              " />
             </div>
-            <span class="strength-text" [ngClass]="passwordStrength">
-              {{ passwordStrengthMessage }}
+            <span class="error-message" *ngIf="phoneError && registrationForm.get('phone')?.touched">
+              {{ phoneError }}
             </span>
           </div>
 
-          <span
-            class="error-message"
-            *ngIf="passwordError && registrationForm.get('password')?.touched"
-          >
-            {{ passwordError }}
-          </span>
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">{{ translations().auth.password }}</label>
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">lock</span>
+              <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                class="form-input" placeholder="••••••••" [class.error]="
+                registrationForm.get('password')?.invalid &&
+                registrationForm.get('password')?.touched
+              " />
+              <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
+                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                <span class="material-symbols-outlined">
+                  {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+            </div>
 
-          <!-- Password Requirements -->
-          <ul class="password-requirements">
-            <li [class.met]="registrationForm.get('password')?.value?.length >= 8">
-              <span class="material-symbols-outlined">{{ registrationForm.get('password')?.value?.length >= 8 ? 'check_circle' : 'circle' }}</span>
-              At least 8 characters
-            </li>
-            <li [class.met]="/[A-Z]/.test(registrationForm.get('password')?.value || '')">
-              <span class="material-symbols-outlined">{{ /[A-Z]/.test(registrationForm.get('password')?.value || '') ? 'check_circle' : 'circle' }}</span>
-              One uppercase letter
-            </li>
-            <li [class.met]="/\d/.test(registrationForm.get('password')?.value || '')">
-              <span class="material-symbols-outlined">{{ /\d/.test(registrationForm.get('password')?.value || '') ? 'check_circle' : 'circle' }}</span>
-              One number
-            </li>
-          </ul>
-        </div>
+            <!-- Password Strength Indicator -->
+            <div class="password-strength" *ngIf="registrationForm.get('password')?.value">
+              <div class="strength-bar">
+                <div class="strength-fill" [ngClass]="passwordStrength"></div>
+              </div>
+              <span class="strength-text" [ngClass]="passwordStrength">
+                {{ passwordStrengthMessage }}
+              </span>
+            </div>
 
-        <!-- Confirm Password -->
-        <div class="form-group">
-          <label for="confirmPassword" class="form-label">Confirm Password</label>
-          <div class="input-wrapper">
-            <span class="input-icon material-symbols-outlined">lock</span>
-            <input
-              id="confirmPassword"
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              formControlName="confirmPassword"
-              class="form-input"
-              placeholder="••••••••"
-              [class.error]="
+            <span class="error-message" *ngIf="passwordError && registrationForm.get('password')?.touched">
+              {{ passwordError }}
+            </span>
+
+            <!-- Password Requirements -->
+            <ul class="password-requirements">
+              <li [class.met]="registrationForm.get('password')?.value?.length >= 8">
+                <span class="material-symbols-outlined">{{ registrationForm.get('password')?.value?.length >= 8 ?
+                  'check_circle' : 'circle' }}</span>
+                At least 8 characters
+              </li>
+              <li [class.met]="/[A-Z]/.test(registrationForm.get('password')?.value || '')">
+                <span class="material-symbols-outlined">{{ /[A-Z]/.test(registrationForm.get('password')?.value || '') ?
+                  'check_circle' : 'circle' }}</span>
+                One uppercase letter
+              </li>
+              <li [class.met]="/\d/.test(registrationForm.get('password')?.value || '')">
+                <span class="material-symbols-outlined">{{ /\d/.test(registrationForm.get('password')?.value || '') ?
+                  'check_circle' : 'circle' }}</span>
+                One number
+              </li>
+            </ul>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">{{ translations().auth.confirmPassword }}</label>
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">lock</span>
+              <input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+                formControlName="confirmPassword" class="form-input" placeholder="••••••••" [class.error]="
                 registrationForm.get('confirmPassword')?.invalid &&
                 registrationForm.get('confirmPassword')?.touched
-              "
-            />
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="toggleConfirmPasswordVisibility()"
-              [attr.aria-label]="
+              " />
+              <button type="button" class="password-toggle" (click)="toggleConfirmPasswordVisibility()"
+                [attr.aria-label]="
                 showConfirmPassword ? 'Hide password' : 'Show password'
-              "
-            >
-              <span class="material-symbols-outlined">
-                {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
-              </span>
-            </button>
-          </div>
-          <span
-            class="error-message"
-            *ngIf="
+              ">
+                <span class="material-symbols-outlined">
+                  {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+            </div>
+            <span class="error-message" *ngIf="
               confirmPasswordError && registrationForm.get('confirmPassword')?.touched
-            "
-          >
-            {{ confirmPasswordError }}
-          </span>
-        </div>
+            ">
+              {{ confirmPasswordError }}
+            </span>
+          </div>
 
-        <!-- Terms & Conditions -->
-        <div class="checkbox-group">
-          <div class="checkbox-wrapper">
-            <input
-              id="agreedToTerms"
-              type="checkbox"
-              formControlName="agreedToTerms"
-              class="checkbox-input"
-              [class.error]="
+          <!-- Terms & Conditions -->
+          <div class="checkbox-group">
+            <div class="checkbox-wrapper">
+              <input id="agreedToTerms" type="checkbox" formControlName="agreedToTerms" class="checkbox-input"
+                [class.error]="
                 registrationForm.get('agreedToTerms')?.invalid &&
                 registrationForm.get('agreedToTerms')?.touched
-              "
-            />
-            <label for="agreedToTerms" class="checkbox-label">
-              I agree to the
-              <a href="#" class="link">Terms of Service</a>
-              and
-              <a href="#" class="link">Privacy Policy</a>
-            </label>
-          </div>
-          <span
-            class="error-message"
-            *ngIf="
+              " />
+              <label for="agreedToTerms" class="checkbox-label">
+               {{translations().auth.TermsAndCoditionsAgree}} 
+               <a href="#" class="link">{{ translations().auth.Terms }}</a>                
+                {{ translations().auth.and }}
+                <a href="#" class="link">{{ translations().auth.Privacy }}</a>
+              </label>
+            </div>
+            <span class="error-message" *ngIf="
               registrationForm.get('agreedToTerms')?.invalid &&
               registrationForm.get('agreedToTerms')?.touched
-            "
-          >
-            You must agree to the terms to continue
-          </span>
+            ">
+              You must agree to the terms to continue
+            </span>
+          </div>
+
+          <!-- Create Account Button -->
+          <button type="submit" class="btn-create-account" [disabled]="registrationForm.invalid || loading">
+            <span *ngIf="!loading">{{ translations().auth.register }}</span>
+            <span *ngIf="loading" class="loading-spinner">
+              <span class="spinner"></span>
+              {{ translations().common.loading }}
+            </span>
+          </button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-link">
+          <p>{{ translations().auth.haveAccount }} <a (click)="navigateToLogin()" class="link">{{
+              translations().auth.signIn }}</a></p>
         </div>
-
-        <!-- Create Account Button -->
-        <button
-          type="submit"
-          class="btn-create-account"
-          [disabled]="registrationForm.invalid || loading"
-        >
-          <span *ngIf="!loading">Create Account</span>
-          <span *ngIf="loading" class="loading-spinner">
-            <span class="spinner"></span>
-            Creating Account...
-          </span>
-        </button>
-      </form>
-
-      <!-- Login Link -->
-      <div class="login-link">
-        <p>Already have an account? <a (click)="navigateToLogin()" class="link">Log in</a></p>
       </div>
     </div>
-  </div>
 
-  
-</div>
+
+  </div>
 </div>

@@ -27,20 +27,26 @@
     <div class="header-search">
       <form (ngSubmit)="onSearch()" class="search-form">
         <span class="material-icons search-icon">search</span>
-        <input type="text" [(ngModel)]="searchTerm" name="search" placeholder="Search products..."
-          class="search-input" />
+        <input type="text" [(ngModel)]="searchTerm" name="search"
+          [placeholder]="translations().header.searchPlaceholder" class="search-input" />
       </form>
     </div>
 
     <!-- Header Actions -->
     <div class="header-actions">
+      <!-- Language Switcher -->
+      <button class="action-btn language-btn" (click)="toggleLanguage()"
+        [title]="currentLanguage() === 'it' ? 'Switch to English' : 'Passa all\'Italiano'">
+        {{ getLanguageCode() }}
+      </button>
+
       <!-- Account -->
-      <button class="action-btn account-btn" (click)="Navigate()" title="Account">
+      <button class="action-btn account-btn" (click)="Navigate()" [title]="translations().header.account">
         <span class="material-icons">person</span>
       </button>
 
       <!-- Cart -->
-      <div (click)="goToCart()" class="action-btn cart-btn" title="Shopping Cart">
+      <div (click)="goToCart()" class="action-btn cart-btn" [title]="translations().header.cart">
         <span class="material-icons">shopping_cart</span>
         @if (cartItemCount() > 0) {
         <span class="cart-badge">
@@ -50,7 +56,7 @@
       </div>
 
       <!-- Mobile Menu Toggle -->
-      <button class="mobile-menu-btn" (click)="toggleMobileMenu()" title="Menu">
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [title]="translations().header.menu">
         <span class="material-icons">
           {{ mobileMenuOpen ? 'close' : 'menu' }}
         </span>

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 @Component({
   selector: 'app-cart-page',
@@ -15,6 +16,7 @@ import { ClientFooter } from '../../layout/client-footer/client-footer';
 export class CartPage implements OnInit {
   private cartService = inject(CartServices);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
 
   // Use Signals from CartServices
   cart = this.cartService.cart;
@@ -25,6 +27,9 @@ export class CartPage implements OnInit {
   tax = this.cartService.tax;
   shippingCost = this.cartService.shippingCost;
   isEmpty = this.cartService.isEmpty;
+
+  // Translations
+  translations = this.translationService.translations;
 
   loading = this.cartService.loadingSignal;
   error = this.cartService.errorSignal;

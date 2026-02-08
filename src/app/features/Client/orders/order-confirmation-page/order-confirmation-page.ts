@@ -6,6 +6,7 @@ import { Order, OrderStatus } from '../../../../core/models/order';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
 import { jsPDF } from 'jspdf';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 /**
  * Order Confirmation Page Component
@@ -26,6 +27,10 @@ export class OrderConfirmationPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private orderService = inject(OrderServices);
+  private translationService = inject(TranslationService);
+
+  // Translations
+  translations = this.translationService.translations;
 
   // State
   order = signal<Order | null>(null);

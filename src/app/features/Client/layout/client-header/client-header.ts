@@ -6,6 +6,7 @@ import { AuthServices } from '../../../../core/services/auth/auth-services';
 import { CategoryServices } from '../../../../core/services/category/category-services';
 import { FormsModule } from '@angular/forms';
 import { CartServices } from '../../../../core/services/cart/cart-services';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 @Component({
   selector: 'app-client-header',
@@ -19,11 +20,16 @@ export class ClientHeader implements OnInit {
   // private categoryService = inject(CategoryServices);
   private authService = inject(AuthServices);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
 
   // Use Signals from Services
   // categories = this.categoryService.categories;
   // Cart item count reacts to both guest and authenticated carts
   cartItemCount = this.cartService.totalItems;
+
+  // Translation signals
+  currentLanguage = this.translationService.currentLanguage;
+  translations = this.translationService.translations;
 
   searchTerm = '';
   mobileMenuOpen = false;
@@ -63,5 +69,15 @@ export class ClientHeader implements OnInit {
     this.mobileMenuOpen = false;
   }
 
+  toggleLanguage(): void {
+    this.translationService.toggleLanguage();
+  }
 
+  translate(key: string): string {
+    return this.translationService.translate(key);
+  }
+
+  getLanguageCode(): string {
+    return this.translationService.getLanguageCode();
+  }
 }

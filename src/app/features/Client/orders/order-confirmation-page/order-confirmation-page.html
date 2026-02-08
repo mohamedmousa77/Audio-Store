@@ -7,7 +7,7 @@
     @if (loading()) {
     <div class="state-card">
       <div class="loader-circle"></div>
-      <p>Stiamo caricando i dettagli del tuo acquisto...</p>
+      <p>{{ translations().common.loading }}...</p>
     </div>
     }
 
@@ -15,9 +15,10 @@
     @if (!loading() && error()) {
     <div class="state-card">
       <span class="material-symbols-outlined error-icon">sentiment_very_dissatisfied</span>
-      <h2>Oops! Ordine non trovato</h2>
-      <p>Non siamo riusciti a trovare l'ordine <strong>{{ orderNumber() }}</strong>.</p>
-      <button class="btn-primary-custom" (click)="continueShopping()">Torna allo Shop</button>
+      <h2>{{ translations().orders.orderNotFound }}</h2>
+      <p>{{ translations().orders.orderNotFoundMessage }} <strong>{{ orderNumber() }}</strong>.</p>
+      <button class="btn-primary-custom" (click)="continueShopping()">{{ translations().common.continueShopping
+        }}</button>
     </div>
     }
 
@@ -30,18 +31,18 @@
         <div class="check-wrapper">
           <span class="material-symbols-outlined">check_circle</span>
         </div>
-        <h1>Thank you for your order!</h1>
+        <h1>{{ translations().orders.thankYou }}</h1>
         <p class="hero-text">
-          We've sent a confirmation email to
-          <strong>{{ order()!.customerEmail }}</strong>. Your order
-          <strong>#{{ order()!.orderNumber }}</strong> has been placed successfully.
+          {{ translations().orders.confirmationEmailSent }}
+          <strong>{{ order()!.customerEmail }}</strong>. {{ translations().orders.orderPlaced }}
+          <strong>#{{ order()!.orderNumber }}</strong> {{ translations().orders.successfully }}.
         </p>
         <div class="hero-buttons">
           <button class="btn-orange-filled" (click)="continueShopping()">
-            Return to Shopping
+            {{ translations().orders.returnToShopping }}
           </button>
           <button class="btn-white-outline" (click)="downloadInvoice()">
-            Download Invoice
+            {{ translations().orders.downloadInvoice }}
           </button>
         </div>
       </section>
@@ -55,8 +56,8 @@
           <!-- ITEMS ORDERED SECTION -->
           <section class="premium-card">
             <div class="card-header">
-              <h3>Items Ordered</h3>
-              <span class="count-pill">{{ order()!.items.length }} Items</span>
+              <h3>{{ translations().orders.itemsOrdered }}</h3>
+              <span class="count-pill">{{ order()!.items.length }} {{ translations().orders.items }}</span>
             </div>
             <div class="items-container">
               @for (item of order()!.items; track item.id) {
@@ -64,7 +65,7 @@
                 <img [src]="item.productImage" [alt]="item.productName" class="product-image" />
                 <div class="product-info">
                   <p class="p-name">{{ item.productName }}</p>
-                  <p class="p-qty">Qty: {{ item.quantity }}</p>
+                  <p class="p-qty">{{ translations().cart.quantity }}: {{ item.quantity }}</p>
                 </div>
                 <div class="product-price">
                   €{{ item.subtotal.toFixed(2) }}
@@ -81,7 +82,7 @@
             <section class="premium-card">
               <h4 class="card-title">
                 <span class="material-symbols-outlined">local_shipping</span>
-                Shipping Address
+                {{ translations().checkout.shippingAddress }}
               </h4>
               <div class="address-box">
                 <p>
@@ -103,11 +104,11 @@
             <section class="premium-card">
               <h4 class="card-title">
                 <span class="material-symbols-outlined">payments</span>
-                Payment Method
+                {{ translations().checkout.paymentMethod }}
               </h4>
               <div class="payment-box">
                 <p>{{ order()!.paymentMethod || 'Cash on Delivery' }}</p>
-                <span class="badge-payment">Pay upon receipt</span>
+                <span class="badge-payment">{{ translations().orders.payUponReceipt }}</span>
               </div>
             </section>
           </div>
@@ -116,19 +117,19 @@
         <!-- RIGHT COLUMN - Order Summary Sidebar -->
         <aside class="right-col">
           <div class="summary-premium-card">
-            <h3>Order Summary</h3>
+            <h3>{{ translations().checkout.orderSummary }}</h3>
 
             <div class="summary-lines">
               <div class="s-line">
-                <span>Subtotal</span>
+                <span>{{ translations().cart.subtotal }}</span>
                 <span>€{{ order()!.subtotal.toFixed(2) }}</span>
               </div>
               <div class="s-line">
-                <span>Shipping</span>
+                <span>{{ translations().checkout.shipping }}</span>
                 <span class="text-green">€{{ order()!.shippingCost.toFixed(2) }}</span>
               </div>
               <div class="s-line">
-                <span>Tax Est.</span>
+                <span>{{ translations().orders.taxEst }}</span>
                 <span>€{{ order()!.tax.toFixed(2) }}</span>
               </div>
             </div>
@@ -138,8 +139,8 @@
             <!-- TOTAL -->
             <div class="s-total">
               <div class="total-label-group">
-                <span class="total-title">Total</span>
-                <span class="total-note">Includes all taxes and duties</span>
+                <span class="total-title">{{ translations().cart.total }}</span>
+                <span class="total-note">{{ translations().checkout.includesTaxes }}</span>
               </div>
               <span class="total-price-val">€{{ order()!.totalAmount.toFixed(2) }}</span>
             </div>
@@ -148,7 +149,7 @@
             <div class="estimate-box">
               <span class="material-symbols-outlined">info</span>
               <div class="estimate-text">
-                <p>Order Status</p>
+                <p>{{ translations().orders.orderStatus }}</p>
                 <strong>{{ getStatusText(order()!.orderStatus) }}</strong>
               </div>
             </div>

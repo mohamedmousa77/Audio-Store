@@ -5,6 +5,7 @@ import { OrderServices } from '../../../../core/services/order/order-services';
 import { OrderStatus } from '../../../../core/models/order';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 /**
  * Order History Component
@@ -24,12 +25,16 @@ import { ClientFooter } from '../../layout/client-footer/client-footer';
 export class OrderHistory implements OnInit {
   private orderService = inject(OrderServices);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
 
   // Use Signals from OrderServices
   orders = this.orderService.orders;
   loading = this.orderService.loadingSignal;
   error = this.orderService.errorSignal;
   hasOrders = this.orderService.hasOrders;
+
+  // Translations
+  translations = this.translationService.translations;
 
   // Expose OrderStatus enum to template
   OrderStatus = OrderStatus;

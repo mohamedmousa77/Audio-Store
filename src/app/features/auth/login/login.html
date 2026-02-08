@@ -1,8 +1,8 @@
 <div class="login-page">
   <!-- Page Header (above the container) -->
   <div class="form-header">
-    <h1>Welcome back</h1>
-    <p>Sign in to access your saved items and order history.</p>
+    <h1>{{ translations().auth.signIn }}</h1>
+    <p>{{ translations().auth.loginSubtitle }}</p>
   </div>
 
   <div class="login-container">
@@ -10,94 +10,77 @@
     <div class="login-form-section">
       <div class="form-wrapper">
 
-      <!-- Error Message -->
-      <div *ngIf="error" class="error-alert">
-        <span class="material-symbols-outlined">error</span>
-        <div>
-          <strong>Login Failed</strong>
-          <p>{{ error }}</p>
-        </div>
-      </div>
-
-      <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-        <!-- Email Field -->
-        <div class="form-group">
-          <label for="email" class="form-label">Email Address</label>
-          <div class="input-wrapper">
-            <span class="input-icon material-symbols-outlined">mail</span>
-            <input
-              id="email"
-              type="email"
-              formControlName="email"
-              class="form-input"
-              placeholder="john.doe@example.com"
-              [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-            />
+        <!-- Error Message -->
+        <div *ngIf="error" class="error-alert">
+          <span class="material-symbols-outlined">error</span>
+          <div>
+            <strong>{{ translations().errors.unauthorized }}</strong>
+            <p>{{ error }}</p>
           </div>
-          <span class="error-message" *ngIf="emailError && loginForm.get('email')?.touched">
-            {{ emailError }}
-          </span>
         </div>
 
-        <!-- Password Field -->
-        <div class="form-group">
-          <div class="password-header">
-            <label for="password" class="form-label">Password</label>
-            <a href="#" class="forgot-password">Forgot password?</a>
+        <!-- Login Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email" class="form-label">{{ translations().auth.email }}</label>
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">mail</span>
+              <input id="email" type="email" formControlName="email" class="form-input"
+                placeholder="john.doe@example.com"
+                [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
+            </div>
+            <span class="error-message" *ngIf="emailError && loginForm.get('email')?.touched">
+              {{ emailError }}
+            </span>
           </div>
-          <div class="input-wrapper">
-            <span class="input-icon material-symbols-outlined">lock</span>
-            <input
-              id="password"
-              [type]="showPassword ? 'text' : 'password'"
-              formControlName="password"
-              class="form-input"
-              placeholder="••••••••"
-              [class.error]="
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <div class="password-header">
+              <label for="password" class="form-label">{{ translations().auth.password }}</label>
+              <a href="#" class="forgot-password">{{ translations().auth.forgotPassword }}</a>
+            </div>
+            <div class="input-wrapper">
+              <span class="input-icon material-symbols-outlined">lock</span>
+              <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                class="form-input" placeholder="••••••••" [class.error]="
                 loginForm.get('password')?.invalid && loginForm.get('password')?.touched
-              "
-            />
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
-            >
-              <span class="material-symbols-outlined">
-                {{ showPassword ? 'visibility_off' : 'visibility' }}
-              </span>
-            </button>
+              " />
+              <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
+                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                <span class="material-symbols-outlined">
+                  {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+            </div>
+            <span class="error-message" *ngIf="passwordError && loginForm.get('password')?.touched">
+              {{ passwordError }}
+            </span>
           </div>
-          <span class="error-message" *ngIf="passwordError && loginForm.get('password')?.touched">
-            {{ passwordError }}
-          </span>
+
+          <!-- Sign In Button -->
+          <button type="submit" class="btn-signin" [disabled]="loginForm.invalid || loading">
+            <span *ngIf="!loading">{{ translations().auth.signIn }}</span>
+            <span *ngIf="loading" class="loading-spinner">
+              <span class="spinner"></span>
+              {{ translations().common.loading }}
+            </span>
+          </button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="register-link">
+          <p>{{ translations().auth.noAccount }} <a (click)="navigateToRegister()" class="link">{{
+              translations().auth.signUp }}</a></p>
         </div>
+      </div>
+    </div>
 
-        <!-- Sign In Button -->
-        <button type="submit" class="btn-signin" [disabled]="loginForm.invalid || loading">
-          <span *ngIf="!loading">Sign In</span>
-          <span *ngIf="loading" class="loading-spinner">
-            <span class="spinner"></span>
-            Signing In...
-          </span>
-        </button>
-      </form>
-
-      <!-- Register Link -->
-      <div class="register-link">
-        <p>New here? <a (click)="navigateToRegister()" class="link">Create an account</a></p>
+    <!-- Right Section - Image -->
+    <div class="login-image-section">
+      <div class="image-wrapper">
+        <img src="login-cover-image.jpg" alt="Audio Product" />
       </div>
     </div>
   </div>
-
-  <!-- Right Section - Image -->
-  <div class="login-image-section">
-    <div class="image-wrapper">
-      <img
-        src="login-cover-image.jpg"
-        alt="Audio Product"
-      />
-    </div>
-  </div>
-</div>

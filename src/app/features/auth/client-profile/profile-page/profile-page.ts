@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewChildren, QueryList, ElementRef, AfterViewInit, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ViewChildren, QueryList, ElementRef, AfterViewInit, NgZone, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthServices } from '../../../../core/services/auth/auth-services';
 import { User } from '../../../../core/models/user';
@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 import { PersonalAddress } from '../components/personal-address/personal-address';
 import { PersonalInfo } from '../components/personal-info/personal-info';
 import { PersonalOrders } from '../components/personal-orders/personal-orders';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 interface MenuItem {
   id: string;
@@ -27,11 +28,12 @@ interface MenuItem {
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css',
 })
-export class ProfilePage implements OnInit, OnDestroy, AfterViewInit{
+export class ProfilePage implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('personalInfoSection') personalInfoSection!: ElementRef;
   @ViewChild('addressSection') addressSection!: ElementRef;
   @ViewChild('ordersSection') ordersSection!: ElementRef;
   @ViewChildren('section') sections!: QueryList<ElementRef>;
+  private translationService = inject(TranslationService);
 
   currentUser: User | null = null;
   activeMenu = 'personal-info';
@@ -64,7 +66,10 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit{
     private authService: AuthServices,
     private router: Router,
     private ngZone: NgZone
-  ) {}
+  ) { }
+
+  // Translations
+  translations = this.translationService.translations;
 
   ngOnInit(): void {
     // Carica l'utente corrente
@@ -131,7 +136,7 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit{
   }
 
   private calculateMemberSince(): void {
-    
+
     // if (!this.currentUser?.registrationDate) {
     //   this.memberSince = 'Member since registration';
     //   return;

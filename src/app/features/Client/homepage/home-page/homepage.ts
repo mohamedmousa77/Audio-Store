@@ -10,6 +10,7 @@ import { HeroBanner } from '../components/hero-banner/hero-banner';
 import { FeaturedProducts } from '../components/featured-products/featured-products';
 import { Product } from '../../../../core/models/product';
 import { Category } from '../../../../core/models/category';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 /**
  * Homepage Component
@@ -31,6 +32,7 @@ import { Category } from '../../../../core/models/category';
 export class Homepage implements OnInit {
   private productService = inject(ProductServices);
   private categoryService = inject(CategoryServices);
+  private translationService = inject(TranslationService);
 
   // Local state for HomePage-specific data
   newProduct = signal<Product | undefined>(undefined);
@@ -40,6 +42,9 @@ export class Homepage implements OnInit {
   // Loading/error states
   isLoading = signal<boolean>(false);
   error = signal<string | null>(null);
+
+  // Translations
+  translations = this.translationService.translations;
 
 
 

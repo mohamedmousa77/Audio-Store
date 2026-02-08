@@ -4,12 +4,12 @@
   <div class="cart-container">
     <header class="cart-title-row">
       <div class="title-group">
-        <h1 class="page-title">Your Shopping Cart</h1>
+        <h1 class="page-title">{{ translations().cart.title }}</h1>
         <span class="items-info">You have {{ totalItems() }} items in your cart</span>
       </div>
       <button class="btn-continue-top" (click)="continueShopping()">
         <span class="material-symbols-outlined">keyboard_backspace</span>
-        Continue Shopping
+        {{ translations().cart.continueShopping }}
       </button>
 
     </header>
@@ -20,11 +20,11 @@
         <div class="icon-circle">
           <span class="material-symbols-outlined">shopping_basket</span>
         </div>
-        <h2>Your shopping cart is empty</h2>
+        <h2>{{ translations().cart.emptyCart }}</h2>
         <p>Give it some love by adding premium audio equipment from our catalog.</p>
         <button class="btn-primary-large" (click)="continueShopping()">
           <span class="material-symbols-outlined">keyboard_backspace</span>
-          EXPLORE CATALOG
+          {{ translations().cart.continueShopping }}
         </button>
       </div>
     </div>
@@ -39,8 +39,8 @@
           <thead>
             <tr>
               <th class="col-product">Product</th>
-              <th class="col-qty">Quantity</th>
-              <th class="col-total">Total</th>
+              <th class="col-qty">{{ translations().cart.quantity }}</th>
+              <th class="col-total">{{ translations().cart.total }}</th>
               <th class="col-action"></th>
             </tr>
           </thead>
@@ -87,11 +87,11 @@
       @if (!isEmpty()) {
       <aside class="summary-section">
         <div class="summary-card">
-          <h2 class="summary-header">Order Summary</h2>
+          <h2 class="summary-header">{{ translations().checkout.orderSummary }}</h2>
 
           <div class="summary-details">
             <div class="detail-row">
-              <span>Subtotal</span>
+              <span>{{ translations().cart.subtotal }}</span>
               <span class="price-val">€ {{ subtotal() || '0.00' }}</span>
             </div>
             <div class="detail-row">
@@ -107,12 +107,12 @@
           <div class="total-divider"></div>
 
           <div class="total-row">
-            <span>Estimated Total</span>
+            <span>{{ translations().cart.total }}</span>
             <span class="final-price">€ {{ totalAmount() || '0.00' }}</span>
           </div>
 
           <button (click)="proceedToCheckout()" class="btn-checkout">
-            Proceed to Checkout
+            {{ translations().cart.checkout }}
             <span class="material-symbols-outlined">arrow_forward</span>
           </button>
         </div>
