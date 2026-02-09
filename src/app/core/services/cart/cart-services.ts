@@ -140,7 +140,10 @@ export class CartServices {
       };
 
       const response = await firstValueFrom(this.cartApi.addItem(request));
-      this.cartSignal.set(response.cart);
+
+      // ✅ FIX: Backend returns CartDTO directly
+      const cartData = (response as any).cart || response;
+      this.cartSignal.set(cartData as Cart);
 
       console.log(`✅ Added ${product.name} to cart (quantity: ${quantity})`);
     } catch (error) {
@@ -168,12 +171,30 @@ export class CartServices {
         return;
       }
 
-      const response = await firstValueFrom(
-        this.cartApi.updateItemQuantity(itemId, { quantity })
-      );
-      this.cartSignal.set(response.cart);
+      console.log('🔄 Updating quantity:', { itemId, quantity });
 
-      console.log(`✅ Updated cart item ${itemId} to quantity ${quantity}`);
+      const response = await firstValueFrom(
+        this.cartApi.updateItemQuantity(itemId, { Quantity: quantity, CartItemId: itemId })
+      );
+
+      // 🔍 DEBUG: Log the response
+      console.log('📦 Backend response:', response);
+      console.log('📦 Response type:', typeof response);
+
+      // ✅ FIX: Backend returns CartDTO directly, not wrapped in { cart: CartDTO }
+      // Check if response has 'cart' property (CartResponse) or is CartDTO directly
+      const cartData = (response as any).cart || response;
+
+      console.log('📦 Cart data:', cartData);
+
+      if (cartData && Array.isArray(cartData.items)) {
+        this.cartSignal.set(cartData as Cart);
+        console.log(`✅ Updated cart item ${itemId} to quantity ${quantity}`);
+      } else {
+        console.error('❌ Invalid cart data:', cartData);
+        // Reload cart as fallback
+        await this.loadCart();
+      }
     } catch (error) {
       console.error('Failed to update quantity:', error);
       this.errorSignal.set('Failed to update quantity');
@@ -192,9 +213,21 @@ export class CartServices {
     this.errorSignal.set(null);
 
     try {
-      const response = await firstValueFrom(this.cartApi.removeItem(itemId));
-      this.cartSignal.set(response.cart);
+      console.log('🗑️ Removing item:', itemId);
+      console.log('📦 Cart BEFORE removal:', this.cartSignal());
 
+      const response = await firstValueFrom(this.cartApi.removeItem(itemId));
+
+      // ✅ FIX: Backend returns CartDTO directly
+      const cartData = (response as any).cart || response;
+
+      console.log('📦 Backend returned cart:', cartData);
+      console.log('📦 Items in returned cart:', cartData?.items?.length);
+
+      this.cartSignal.set(cartData as Cart);
+
+      console.log('📦 Cart AFTER update:', this.cartSignal());
+      console.log('📦 Items signal:', this.items());
       console.log(`✅ Removed cart item ${itemId}`);
     } catch (error) {
       console.error('Failed to remove from cart:', error);
@@ -268,7 +301,9 @@ export class CartServices {
         this.cartApi.mergeGuestCart(sessionId)
       );
 
-      this.cartSignal.set(response.cart);
+      // ✅ FIX: Backend returns CartDTO directly
+      const cartData = (response as any).cart || response;
+      this.cartSignal.set(cartData as Cart);
 
       // Clear SessionId after successful merge
       this.sessionManager.clearSessionId();

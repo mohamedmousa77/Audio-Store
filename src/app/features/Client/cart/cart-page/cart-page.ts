@@ -6,6 +6,7 @@ import { CartServices } from '../../../../core/services/cart/cart-services';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-cart-page',
@@ -17,6 +18,7 @@ export class CartPage implements OnInit {
   private cartService = inject(CartServices);
   private router = inject(Router);
   private translationService = inject(TranslationService);
+  private confirmDialog = inject(ConfirmDialogService);
 
   // Use Signals from CartServices
   cart = this.cartService.cart;
@@ -59,13 +61,22 @@ export class CartPage implements OnInit {
    * @param newQuantity New quantity
    */
   async updateQuantity(itemId: number, newQuantity: number): Promise<void> {
+    console.log(`🔄 updateQuantity called: itemId=${itemId}, newQuantity=${newQuantity}`);
+
     if (newQuantity < 1) {
       // If quantity is 0 or less, remove item
+      console.log('⚠️ Quantity < 1, removing item');
       await this.removeItem(itemId);
       return;
     }
 
-    await this.cartService.updateQuantity(itemId, newQuantity);
+    try {
+      console.log('📤 Calling cartService.updateQuantity...');
+      await this.cartService.updateQuantity(itemId, newQuantity);
+      console.log('✅ Quantity updated successfully');
+    } catch (error) {
+      console.error('❌ Error updating quantity:', error);
+    }
   }
 
   /**
@@ -73,8 +84,9 @@ export class CartPage implements OnInit {
    * @param itemId Cart item ID (number)
    */
   async removeItem(itemId: number): Promise<void> {
-    const confirmed = confirm('Vuoi rimuovere questo prodotto dal carrello?');
+    const confirmed = await this.confirmDialog.confirmRemoveItem();
     if (confirmed) {
+      console.log('Customer confirmed item removal, calling cartService.removeFromCart...');
       await this.cartService.removeFromCart(itemId);
     }
   }
@@ -83,7 +95,7 @@ export class CartPage implements OnInit {
    * Clear entire cart
    */
   async clearCart(): Promise<void> {
-    const confirmed = confirm('Vuoi svuotare completamente il carrello?');
+    const confirmed = await this.confirmDialog.confirmClearCart();
     if (confirmed) {
       await this.cartService.clearCart();
     }

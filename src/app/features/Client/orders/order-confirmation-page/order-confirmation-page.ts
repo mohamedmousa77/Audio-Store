@@ -68,6 +68,15 @@ export class OrderConfirmationPage implements OnInit {
     try {
       const orderData = await this.orderService.getOrderByNumber(orderNumber);
 
+      // 🔍 DEBUG: Log the full order data
+      console.log('📦 Full order data received:', orderData);
+      console.log('💰 Financial details:', {
+        subtotal: orderData?.subtotal,
+        shippingCost: orderData?.shippingCost,
+        tax: orderData?.tax,
+        totalAmount: orderData?.totalAmount
+      });
+
       if (orderData && orderData.items && orderData.items.length > 0) {
         console.log('✅ Order loaded successfully:', orderData);
         this.order.set(orderData);

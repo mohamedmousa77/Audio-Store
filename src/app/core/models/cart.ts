@@ -45,7 +45,8 @@ export interface AddToCartRequest {
  * Update cart item quantity request
  */
 export interface UpdateCartItemRequest {
-  quantity: number;
+  Quantity: number;
+  CartItemId: number;
 }
 
 /**
