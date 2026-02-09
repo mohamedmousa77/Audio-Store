@@ -92,10 +92,10 @@ export class ProductServices {
       const featured = await firstValueFrom(this.catalogApi.getFeaturedProducts());
 
       // Limit results if specified
-      // const limitedFeatured = limit ? featured.slice(0, limit) : featured;
+      const limitedFeatured = limit ? featured.slice(0, limit) : featured;
 
-      this.catalogStore.setProducts(featured);
-      return featured;
+      this.catalogStore.setProducts(limitedFeatured);
+      return limitedFeatured;
     } catch (error) {
       console.error('Failed to load featured products:', error);
       this.catalogStore.errorSignal.set('Failed to load featured products');

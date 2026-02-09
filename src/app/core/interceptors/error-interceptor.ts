@@ -61,18 +61,30 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           // Unauthorized
           errorMessage = 'Unauthorized. Please login again.';
 
+          // ✅ FIX: Only show session expired dialog if user was actually logged in
+          const hadAuthToken = localStorage.getItem('auth_token') !== null;
+
           // Clear auth data
           localStorage.removeItem('auth_token');
           localStorage.removeItem('user');
           localStorage.removeItem('token_expiry');
+          localStorage.removeItem('refresh_token');
 
-          // Show auth error dialog
-          errorDialog.showAuthError();
+          // Only show dialog and redirect if user was logged in
+          if (hadAuthToken) {
+            // Show auth error dialog
+            errorDialog.showAuthError();
 
-          // Redirect to login
-          router.navigate(['/auth/login']).catch(err =>
-            console.error('Navigation error:', err)
-          );
+            // Redirect to login
+            router.navigate(['/auth/login']).catch(err =>
+              console.error('Navigation error:', err)
+            );
+          } else {
+            // Anonymous user - just log the error, don't show dialog
+            if (environment.enableLogging) {
+              console.log('401 error for anonymous user - no action needed');
+            }
+          }
           break;
 
         case 403:

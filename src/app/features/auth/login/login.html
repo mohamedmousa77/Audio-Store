@@ -11,13 +11,15 @@
       <div class="form-wrapper">
 
         <!-- Error Message -->
-        <div *ngIf="error" class="error-alert">
+        @if (error) {
+        <div class="error-alert">
           <span class="material-symbols-outlined">error</span>
           <div>
             <strong>{{ translations().errors.unauthorized }}</strong>
             <p>{{ error }}</p>
           </div>
         </div>
+        }
 
         <!-- Login Form -->
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
@@ -30,9 +32,11 @@
                 placeholder="john.doe@example.com"
                 [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
             </div>
-            <span class="error-message" *ngIf="emailError && loginForm.get('email')?.touched">
+            @if (emailError && loginForm.get('email')?.touched) {
+            <span class="error-message">
               {{ emailError }}
             </span>
+            }
           </div>
 
           <!-- Password Field -->
@@ -54,18 +58,24 @@
                 </span>
               </button>
             </div>
-            <span class="error-message" *ngIf="passwordError && loginForm.get('password')?.touched">
+            @if (passwordError && loginForm.get('password')?.touched) {
+            <span class="error-message">
               {{ passwordError }}
             </span>
+            }
           </div>
 
           <!-- Sign In Button -->
           <button type="submit" class="btn-signin" [disabled]="loginForm.invalid || loading">
-            <span *ngIf="!loading">{{ translations().auth.signIn }}</span>
-            <span *ngIf="loading" class="loading-spinner">
+            @if (!loading) {
+            <span>{{ translations().auth.signIn }}</span>
+            }
+            @if (loading) {
+            <span class="loading-spinner">
               <span class="spinner"></span>
               {{ translations().common.loading }}
             </span>
+            }
           </button>
         </form>
 
@@ -84,3 +94,4 @@
       </div>
     </div>
   </div>
+</div>

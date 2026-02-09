@@ -5,33 +5,35 @@
       <h2>Personal Information</h2>
       <p>Manage your profile and contact details</p>
     </div>
-    <button
-      class="btn btn-edit"
-      (click)="toggleEdit()"
-      *ngIf="!isEditing"
-    >
+    @if (!isEditing) {
+    <button class="btn btn-edit" (click)="toggleEdit()">
       <span class="material-symbols-outlined">edit</span>
       Edit
     </button>
+    }
   </div>
 
   <!-- Success Message -->
-  <div *ngIf="saveSuccess" class="success-alert">
+  @if (saveSuccess) {
+  <div class="success-alert">
     <span class="material-symbols-outlined">check_circle</span>
     <div>
       <strong>Success!</strong>
       <p>Your personal information has been updated.</p>
     </div>
   </div>
+  }
 
   <!-- Error Message -->
-  <div *ngIf="saveError" class="error-alert">
+  @if (saveError) {
+  <div class="error-alert">
     <span class="material-symbols-outlined">error</span>
     <div>
       <strong>Error</strong>
       <p>{{ saveError }}</p>
     </div>
   </div>
+  }
 
   <!-- Form -->
   <form [formGroup]="personalForm" (ngSubmit)="onSave()" class="personal-form">
@@ -40,41 +42,25 @@
       <!-- First Name -->
       <div class="form-group">
         <label for="firstName" class="form-label">First Name</label>
-        <input
-          id="firstName"
-          type="text"
-          formControlName="firstName"
-          class="form-input"
-          [readonly]="!isEditing"
-          [class.readonly]="!isEditing"
-          placeholder="John"
-        />
-        <span
-          class="error-message"
-          *ngIf="firstNameError && personalForm.get('firstName')?.touched"
-        >
+        <input id="firstName" type="text" formControlName="firstName" class="form-input" [readonly]="!isEditing"
+          [class.readonly]="!isEditing" placeholder="John" />
+        @if (firstNameError && personalForm.get('firstName')?.touched) {
+        <span class="error-message">
           {{ firstNameError }}
         </span>
+        }
       </div>
 
       <!-- Last Name -->
       <div class="form-group">
         <label for="lastName" class="form-label">Last Name</label>
-        <input
-          id="lastName"
-          type="text"
-          formControlName="lastName"
-          class="form-input"
-          [readonly]="!isEditing"
-          [class.readonly]="!isEditing"
-          placeholder="Doe"
-        />
-        <span
-          class="error-message"
-          *ngIf="lastNameError && personalForm.get('lastName')?.touched"
-        >
+        <input id="lastName" type="text" formControlName="lastName" class="form-input" [readonly]="!isEditing"
+          [class.readonly]="!isEditing" placeholder="Doe" />
+        @if (lastNameError && personalForm.get('lastName')?.touched) {
+        <span class="error-message">
           {{ lastNameError }}
         </span>
+        }
       </div>
     </div>
 
@@ -83,22 +69,14 @@
       <label for="email" class="form-label">Email Address</label>
       <div class="input-wrapper">
         <span class="input-icon material-symbols-outlined">mail</span>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          class="form-input"
-          [readonly]="!isEditing"
-          [class.readonly]="!isEditing"
-          placeholder="john.doe@example.com"
-        />
+        <input id="email" type="email" formControlName="email" class="form-input" [readonly]="!isEditing"
+          [class.readonly]="!isEditing" placeholder="john.doe@example.com" />
       </div>
-      <span
-        class="error-message"
-        *ngIf="emailError && personalForm.get('email')?.touched"
-      >
+      @if (emailError && personalForm.get('email')?.touched) {
+      <span class="error-message">
         {{ emailError }}
       </span>
+      }
     </div>
 
     <!-- Phone Number -->
@@ -106,45 +84,34 @@
       <label for="phone" class="form-label">Phone Number</label>
       <div class="input-wrapper">
         <span class="input-icon material-symbols-outlined">phone</span>
-        <input
-          id="phone"
-          type="tel"
-          formControlName="phone"
-          class="form-input"
-          [readonly]="!isEditing"
-          [class.readonly]="!isEditing"
-          placeholder="+1 (555) 000-0000"
-        />
+        <input id="phone" type="tel" formControlName="phone" class="form-input" [readonly]="!isEditing"
+          [class.readonly]="!isEditing" placeholder="+1 (555) 000-0000" />
       </div>
-      <span
-        class="error-message"
-        *ngIf="phoneError && personalForm.get('phone')?.touched"
-      >
+      @if (phoneError && personalForm.get('phone')?.touched) {
+      <span class="error-message">
         {{ phoneError }}
       </span>
+      }
     </div>
 
     <!-- Action Buttons -->
-    <div class="form-actions" *ngIf="isEditing">
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="personalForm.invalid || isSaving"
-      >
-        <span *ngIf="!isSaving">Save Changes</span>
-        <span *ngIf="isSaving" class="loading-spinner">
+    @if (isEditing) {
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="personalForm.invalid || isSaving">
+        @if (!isSaving) {
+        <span>Save Changes</span>
+        }
+        @if (isSaving) {
+        <span class="loading-spinner">
           <span class="spinner"></span>
           Saving...
         </span>
+        }
       </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="toggleEdit()"
-        [disabled]="isSaving"
-      >
+      <button type="button" class="btn btn-secondary" (click)="toggleEdit()" [disabled]="isSaving">
         Cancel
       </button>
     </div>
+    }
   </form>
 </div>

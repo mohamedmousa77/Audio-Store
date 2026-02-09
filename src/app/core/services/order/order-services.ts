@@ -253,9 +253,9 @@ export class OrderServices {
    */
   convertCartToOrderItems(cart: Cart): CreateOrderItem[] {
     return cart.items.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice
+      ProductId: item.productId,
+      Quantity: item.quantity,
+      UnitPrice: item.unitPrice
     }));
   }
 

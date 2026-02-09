@@ -36,6 +36,21 @@ export interface Translations {
         shopNow: string;
         learnMore: string;
     };
+    featured: {
+        title: string;
+        viewAll: string;
+    };
+    categorySection: {
+        title: string;
+        exploreCategory: string;
+    };
+    newsletterSignup: {
+        title: string;
+        subtitle: string;
+        emailPlaceholder: string;
+        submitButton: string;
+        successMessage: string;
+    };
     product: {
         addToCart: string;
         viewDetails: string;

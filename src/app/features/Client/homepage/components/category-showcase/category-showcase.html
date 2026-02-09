@@ -1,7 +1,7 @@
 <section class="category-section">
   <div class="category-container">
     <!-- Header -->
-    <h2 class="category-title">Shop by Category</h2>
+    <h2 class="category-title">{{ translations().categorySection.title}}</h2>
 
     <!-- Loading State -->
     @if (loading()) {
@@ -10,24 +10,38 @@
     </div>
     }
 
-    <!-- Categories Grid -->
+    <!-- Categories Carousel -->
     @if (!loading()) {
-    <div class="categories-grid">
-      @for (category of categories; track category.id) {
-      <a [routerLink]="['/client/category', category.name]" class="category-card">
-        <div class="category-image" [style.backgroundImage]="'url(' + getCategoryImage(category) + ')'">
-          <div class="category-overlay"></div>
-        </div>
+    <div class="categories-wrapper">
+      @if (categories.length > 3) {
+      <button class="scroll-btn left" (click)="scrollLeft()" aria-label="Scroll left">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      }
 
-        <div class="category-content">
-          <h3 class="category-name">{{ category.name }}</h3>
-          <p class="category-description">{{ category.description }}</p>
-        </div>
+      <div class="categories-grid" #scrollContainer>
+        @for (category of categories; track category.id) {
+        <a [routerLink]="['/client/category', category.name]" class="category-card">
+          <div class="category-image" [style.backgroundImage]="'url(' + getCategoryImage(category) + ')'">
+            <div class="category-overlay"></div>
+          </div>
 
-        <button class="category-btn">
-          Explore {{ category.name }}
-        </button>
-      </a>
+          <div class="category-content">
+            <h3 class="category-name">{{ category.name }}</h3>
+            <p class="category-description">{{ category.description }}</p>
+          </div>
+
+          <button class="category-btn">
+            {{ translations().categorySection.exploreCategory }} {{ category.name }}
+          </button>
+        </a>
+        }
+      </div>
+
+      @if (categories.length > 3) {
+      <button class="scroll-btn right" (click)="scrollRight()" aria-label="Scroll right">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
       }
     </div>
     }

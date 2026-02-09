@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductCard } from '../../../layout/product-card/product-card';
 import { Product } from '../../../../../core/models/product';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
 
 /**
  * Featured Products Component
@@ -22,12 +23,16 @@ export class FeaturedProducts {
   private router = inject(Router);
   // Loading is managed by the parent HomePage; start as not loading here
   loading = signal<boolean>(false);
+  private translationService = inject(TranslationService);
+
 
   /**
    * Featured products to display
    * Passed from parent Homepage component
    */
   @Input() products: Product[] = [];
+
+  translations = this.translationService.translations;
 
   /**
    * Navigate to product details page

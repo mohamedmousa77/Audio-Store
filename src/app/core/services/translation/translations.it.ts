@@ -35,6 +35,22 @@ export const TRANSLATIONS_IT: Translations = {
         shopNow: 'Acquista Ora',
         learnMore: 'Scopri di Più',
     },
+    featured: {
+        title: 'Prodotti in Evidenza',
+        viewAll: 'Vedi Tutti',
+    },
+    categorySection: {
+        title: 'Acquista per Categoria',
+        exploreCategory: 'Esplora',
+    },
+    newsletterSignup:{
+        title: 'Unisciti alla Rivoluzione Audio Store',
+        subtitle: 'Iscriviti alla nostra newsletter per ricevere aggiornamenti sulle nuove uscite, offerte speciali e consigli audio.',
+        submitButton: 'Iscriviti',
+        successMessage: 'Grazie per l\'iscrizione! Controlla la tua email per conferma.',
+        emailPlaceholder: 'Inserisci la tua email',
+
+    },
     product: {
         addToCart: 'Aggiungi al Carrello',
         viewDetails: 'Vedi Dettagli',
@@ -106,8 +122,8 @@ export const TRANSLATIONS_IT: Translations = {
         orderNotFoundMessage: 'Non siamo riusciti a trovare l\'ordine',
         thankYou: 'Grazie per il tuo ordine!',
         confirmationEmailSent: 'Email di conferma inviata',
-        orderPlaced:'Ordine Effettuato',
-        successfully: 'Con successo',
+        orderPlaced:'Ordine',
+        successfully: 'Effettuato con successo',
         returnToShopping: 'Torna allo Shopping',
         downloadInvoice: 'Scarica Fattura',
         itemsOrdered: 'Articoli Ordinati',

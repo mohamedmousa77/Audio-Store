@@ -26,7 +26,7 @@ export class CatalogApiService {
    */
   getProducts(params?: ProductQueryParams): Observable<Product[]> {
     return this.httpService.get<Product[]>(
-      API_ENDPOINTS.products.featured,
+      API_ENDPOINTS.products.base,
       params as Record<string, any>
     );
   }
@@ -45,7 +45,9 @@ export class CatalogApiService {
    * Get featured products
    */
   getFeaturedProducts(): Observable<Product[]> {
-    return this.getProducts({ isFeatured: true });
+    return this.httpService.get<Product[]>(
+      API_ENDPOINTS.products.featured
+    );
   }
 
   /**

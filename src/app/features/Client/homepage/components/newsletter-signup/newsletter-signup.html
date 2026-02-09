@@ -1,18 +1,16 @@
 <section class="newsletter-section">
   <div class="newsletter-container">
-    <h2 class="newsletter-title">Join the Audio Revolution</h2>
-    <p class="newsletter-subtitle">
-      Sign up for our newsletter to receive updates on new product releases,
-      special offers, and audio tips.
-    </p>
+    <h2 class="newsletter-title">{{ translations().newsletterSignup.title }}</h2>
+    <p class="newsletter-subtitle">{{ translations().newsletterSignup.subtitle }}</p>
+    
 
     @if (!submitted) {
     <div class="newsletter-form">
       <form (ngSubmit)="onSubmit()" class="form-group">
-        <input type="email" [(ngModel)]="email" name="email" placeholder="Enter your email" class="email-input"
+        <input type="email" [(ngModel)]="email" name="email" placeholder="{{translations().newsletterSignup.emailPlaceholder}}" class="email-input"
           required />
         <button type="submit" class="subscribe-btn" [disabled]="loading || !email">
-          {{ loading ? 'Subscribing...' : 'Subscribe' }}
+          {{ loading ? 'Subscribing...' : translations().newsletterSignup.submitButton }}
         </button>
       </form>
     </div>
@@ -21,7 +19,7 @@
     @if (submitted) {
     <div class="success-message">
       <span class="material-icons">check_circle</span>
-      <p>Thanks for subscribing! Check your email for confirmation.</p>
+      <p>{{ translations().newsletterSignup.successMessage }}</p>
     </div>
     }
   </div>

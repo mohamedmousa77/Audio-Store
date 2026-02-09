@@ -23,13 +23,15 @@
       <div class="form-wrapper">
 
         <!-- Error Message -->
-        <div *ngIf="error" class="error-alert">
+        @if (error) {
+        <div class="error-alert">
           <span class="material-symbols-outlined">error</span>
           <div>
             <strong>Registration Failed</strong>
             <p>{{ error }}</p>
           </div>
         </div>
+        }
 
         <!-- Registration Form -->
         <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
@@ -45,9 +47,11 @@
                   registrationForm.get('firstName')?.touched
                 " />
               </div>
-              <span class="error-message" *ngIf="firstNameError && registrationForm.get('firstName')?.touched">
+              @if (firstNameError && registrationForm.get('firstName')?.touched) {
+              <span class="error-message">
                 {{ firstNameError }}
               </span>
+              }
             </div>
 
             <!-- Last Name -->
@@ -60,9 +64,11 @@
                   registrationForm.get('lastName')?.touched
                 " />
               </div>
-              <span class="error-message" *ngIf="lastNameError && registrationForm.get('lastName')?.touched">
+              @if (lastNameError && registrationForm.get('lastName')?.touched) {
+              <span class="error-message">
                 {{ lastNameError }}
               </span>
+              }
             </div>
           </div>
 
@@ -76,17 +82,18 @@
                 registrationForm.get('email')?.invalid &&
                 registrationForm.get('email')?.touched
               " />
-              <span *ngIf="
-                registrationForm.get('email')?.valid &&
-                registrationForm.get('email')?.touched &&
-                !emailAlreadyRegistered
-              " class="input-success material-symbols-outlined">
+              @if (registrationForm.get('email')?.valid && registrationForm.get('email')?.touched &&
+              !emailAlreadyRegistered) {
+              <span class="input-success material-symbols-outlined">
                 check_circle
               </span>
+              }
             </div>
-            <span class="error-message" *ngIf="emailError && registrationForm.get('email')?.touched">
+            @if (emailError && registrationForm.get('email')?.touched) {
+            <span class="error-message">
               {{ emailError }}
             </span>
+            }
           </div>
 
           <!-- Phone Number -->
@@ -100,9 +107,11 @@
                 registrationForm.get('phone')?.touched
               " />
             </div>
-            <span class="error-message" *ngIf="phoneError && registrationForm.get('phone')?.touched">
+            @if (phoneError && registrationForm.get('phone')?.touched) {
+            <span class="error-message">
               {{ phoneError }}
             </span>
+            }
           </div>
 
           <!-- Password -->
@@ -124,7 +133,8 @@
             </div>
 
             <!-- Password Strength Indicator -->
-            <div class="password-strength" *ngIf="registrationForm.get('password')?.value">
+            @if (registrationForm.get('password')?.value) {
+            <div class="password-strength">
               <div class="strength-bar">
                 <div class="strength-fill" [ngClass]="passwordStrength"></div>
               </div>
@@ -132,10 +142,13 @@
                 {{ passwordStrengthMessage }}
               </span>
             </div>
+            }
 
-            <span class="error-message" *ngIf="passwordError && registrationForm.get('password')?.touched">
+            @if (passwordError && registrationForm.get('password')?.touched) {
+            <span class="error-message">
               {{ passwordError }}
             </span>
+            }
 
             <!-- Password Requirements -->
             <ul class="password-requirements">
@@ -176,11 +189,11 @@
                 </span>
               </button>
             </div>
-            <span class="error-message" *ngIf="
-              confirmPasswordError && registrationForm.get('confirmPassword')?.touched
-            ">
+            @if (confirmPasswordError && registrationForm.get('confirmPassword')?.touched) {
+            <span class="error-message">
               {{ confirmPasswordError }}
             </span>
+            }
           </div>
 
           <!-- Terms & Conditions -->
@@ -192,27 +205,30 @@
                 registrationForm.get('agreedToTerms')?.touched
               " />
               <label for="agreedToTerms" class="checkbox-label">
-               {{translations().auth.TermsAndCoditionsAgree}} 
-               <a href="#" class="link">{{ translations().auth.Terms }}</a>                
+                {{translations().auth.TermsAndCoditionsAgree}}
+                <a href="#" class="link">{{ translations().auth.Terms }}</a>
                 {{ translations().auth.and }}
                 <a href="#" class="link">{{ translations().auth.Privacy }}</a>
               </label>
             </div>
-            <span class="error-message" *ngIf="
-              registrationForm.get('agreedToTerms')?.invalid &&
-              registrationForm.get('agreedToTerms')?.touched
-            ">
+            @if (registrationForm.get('agreedToTerms')?.invalid && registrationForm.get('agreedToTerms')?.touched) {
+            <span class="error-message">
               You must agree to the terms to continue
             </span>
+            }
           </div>
 
           <!-- Create Account Button -->
           <button type="submit" class="btn-create-account" [disabled]="registrationForm.invalid || loading">
-            <span *ngIf="!loading">{{ translations().auth.register }}</span>
-            <span *ngIf="loading" class="loading-spinner">
+            @if (!loading) {
+            <span>{{ translations().auth.register }}</span>
+            }
+            @if (loading) {
+            <span class="loading-spinner">
               <span class="spinner"></span>
               {{ translations().common.loading }}
             </span>
+            }
           </button>
         </form>
 

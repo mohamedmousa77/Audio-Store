@@ -146,25 +146,24 @@ export class OrderPage implements OnInit {
       // Create order request
       const orderRequest: CreateOrderRequest = {
         // Shipping address (required)
-        shippingStreet: formData.address,
-        shippingCity: formData.city,
-        shippingPostalCode: formData.zipCode,
-        shippingCountry: formData.country,
+        ShippingStreet: formData.address,
+        ShippingCity: formData.city,
+        ShippingPostalCode: formData.zipCode,
+        ShippingCountry: formData.country,
 
         // Order items (converted from cart)
-        items: this.orderService.convertCartToOrderItems(this.cart()),
+        Items: this.orderService.convertCartToOrderItems(this.cart()),
 
         // Customer info (optional - backend gets from JWT if authenticated)
-        customerFirstName: formData.firstName,
-        customerLastName: formData.lastName,
-        customerEmail: formData.email,
-        customerPhone: formData.phone,
-
-        // Optional notes
-        notes: undefined
+        CustomerFirstName: formData.firstName,
+        CustomerLastName: formData.lastName,
+        CustomerEmail: formData.email,
+        CustomerPhone: formData.phone
       };
 
       console.log('📦 Creating order:', orderRequest);
+      console.log('📦 Order items:', orderRequest.Items);
+      console.log('📦 Cart data:', this.cart());
 
       // Create order via OrderServices
       const confirmation = await this.orderService.createOrder(orderRequest);
@@ -180,9 +179,22 @@ export class OrderPage implements OnInit {
       } else {
         throw new Error('Order confirmation not received');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error creating order:', error);
-      this.errorMessage.set('Si è verificato un errore durante la creazione dell\'ordine. Per favore riprova.');
+
+      // Try to extract specific error message from backend
+      let errorMsg = 'Si è verificato un errore durante la creazione dell\'ordine. Per favore riprova.';
+
+      if (error?.error?.message) {
+        errorMsg = error.error.message;
+        console.error('Backend error message:', error.error.message);
+      }
+
+      if (error?.error?.errors) {
+        console.error('Backend validation errors:', error.error.errors);
+      }
+
+      this.errorMessage.set(errorMsg);
     } finally {
       this.isProcessing.set(false);
     }

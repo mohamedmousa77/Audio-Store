@@ -74,7 +74,7 @@ export class Homepage implements OnInit {
           // Don't set global error, just log it so other parts can show
         });
 
-      const loadFeatured = this.productService.loadFeaturedProducts(3)
+      const loadFeatured = this.productService.loadFeaturedProducts(4)
         .then(data => {
           this.featuredProducts.set(data);
           console.log(`✅ Featured products loaded (${data.length})`);
@@ -98,6 +98,12 @@ export class Homepage implements OnInit {
 
       // Wait for all requests to accumulate results (whether success or fail)
       await Promise.all([loadNewProduct, loadFeatured, loadCategories]);
+
+      // Fallback: If no new product, use first featured product for hero banner
+      if (!this.newProduct() && this.featuredProducts().length > 0) {
+        this.newProduct.set(this.featuredProducts()[0]);
+        console.log('⚠️ No new product found, using first featured product as hero');
+      }
 
       console.log('✅ All Homepage requests finished');
 

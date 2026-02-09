@@ -1,15 +1,13 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Category } from '../../../../../core/models/category';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
 
 /**
  * Category Showcase Component
  * Updated to accept categories via @Input() from parent
- * 
- * Breaking Changes:
- * - Now accepts categories via @Input() (not from service)
- * - Category ID is number (not string)
+ * Implements horizontal scrolling for multiple categories
  */
 @Component({
   selector: 'app-category-showcase',
@@ -20,12 +18,18 @@ import { Category } from '../../../../../core/models/category';
 export class CategoryShowcase {
   // Loading is managed by the parent HomePage; start as not loading here
   loading = signal<boolean>(false);
+  private translationService = inject(TranslationService);
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   /**
    * Categories to display
    * Passed from parent Homepage component
    */
   @Input() categories: Category[] = [];
+
+  translations = this.translationService.translations;
+
 
   /**
    * Category images mapping
@@ -53,5 +57,17 @@ export class CategoryShowcase {
 
     // Fallback to predefined images
     return this.categoryImages[category.name] || this.categoryImages['Headphones'];
+  }
+
+  scrollLeft() {
+    if (this.scrollContainer?.nativeElement) {
+      this.scrollContainer.nativeElement.scrollBy({ left: -350, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight() {
+    if (this.scrollContainer?.nativeElement) {
+      this.scrollContainer.nativeElement.scrollBy({ left: 350, behavior: 'smooth' });
+    }
   }
 }

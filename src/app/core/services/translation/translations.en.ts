@@ -35,6 +35,22 @@ export const TRANSLATIONS_EN: Translations = {
         shopNow: 'Shop Now',
         learnMore: 'Learn More',
     },
+    featured: {
+        title: 'Featured Products',
+        viewAll: 'View All',
+    },
+    categorySection: {
+        title: 'Shop by Category',
+        exploreCategory: 'Explore',
+    },
+    newsletterSignup:{
+        title: 'Join the Audio Revolution',
+        subtitle: 'Sign up for our newsletter to receive updates on new product releases, special offers, and audio tips.',
+        submitButton: 'Subscribe',
+        successMessage: 'Thanks for subscribing! Check your email for confirmation.',
+        emailPlaceholder: 'Enter your email',
+
+    },
     product: {
         addToCart: 'Add to Cart',
         viewDetails: 'View Details',
@@ -107,8 +123,8 @@ export const TRANSLATIONS_EN: Translations = {
         orderNotFoundMessage: 'We were unable to find that order',
         thankYou: 'Thank you for your order!',
         confirmationEmailSent: 'Confirmation email sent',
-        orderPlaced:'Order Placed',
-        successfully: 'Successfully',
+        orderPlaced:'Order',
+        successfully: 'Placed Successfully',
         returnToShopping: 'Return to Shopping',
         downloadInvoice: 'Download Invoice',
         itemsOrdered: 'Items Ordered',

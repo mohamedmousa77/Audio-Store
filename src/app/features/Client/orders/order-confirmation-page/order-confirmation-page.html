@@ -32,9 +32,7 @@
           <span class="material-symbols-outlined">check_circle</span>
         </div>
         <h1>{{ translations().orders.thankYou }}</h1>
-        <p class="hero-text">
-          {{ translations().orders.confirmationEmailSent }}
-          <strong>{{ order()!.customerEmail }}</strong>. {{ translations().orders.orderPlaced }}
+        <p class="hero-text"> {{ translations().orders.orderPlaced }}
           <strong>#{{ order()!.orderNumber }}</strong> {{ translations().orders.successfully }}.
         </p>
         <div class="hero-buttons">
@@ -107,7 +105,7 @@
                 {{ translations().checkout.paymentMethod }}
               </h4>
               <div class="payment-box">
-                <p>{{ order()!.paymentMethod || 'Cash on Delivery' }}</p>
+                <!-- <p>{{ order()!.paymentMethod || translations().orders.payUponReceipt }}</p> -->
                 <span class="badge-payment">{{ translations().orders.payUponReceipt }}</span>
               </div>
             </section>

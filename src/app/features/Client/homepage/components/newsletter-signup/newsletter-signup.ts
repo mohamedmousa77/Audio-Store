@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
+
 @Component({
   selector: 'app-newsletter-signup',
   imports: [CommonModule, FormsModule],
@@ -8,9 +10,14 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './newsletter-signup.css',
 })
 export class NewsletterSignup {
+  private translationService = inject(TranslationService);
    email = '';
   submitted = false;
   loading = false;
+
+  translations = this.translationService.translations;
+
+
 
   onSubmit(): void {
     if (!this.email || !this.email.includes('@')) {

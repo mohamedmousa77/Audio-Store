@@ -75,25 +75,25 @@ export interface OrderItem {
  * Matches backend CreateOrderDTO
  */
 export interface CreateOrderRequest {
-  userId?: number | null;         // Set by backend from JWT
+  UserId?: number | null;         // Set by backend from JWT
 
   // Customer Info (optional for authenticated users)
-  customerFirstName?: string;
-  customerLastName?: string;
-  customerEmail?: string;
-  customerPhone?: string;
+  CustomerFirstName?: string;
+  CustomerLastName?: string;
+  CustomerEmail?: string;
+  CustomerPhone?: string;
 
   // Shipping Address (required)
-  shippingStreet: string;
-  shippingCity: string;
-  shippingPostalCode: string;
-  shippingCountry: string;
+  ShippingStreet: string;
+  ShippingCity: string;
+  ShippingPostalCode: string;
+  ShippingCountry: string;
 
   // Order Items (from cart)
-  items: CreateOrderItem[];
+  Items: CreateOrderItem[];
 
   // Optional notes
-  notes?: string;
+  Notes?: string;
 }
 
 /**
@@ -101,9 +101,9 @@ export interface CreateOrderRequest {
  * Matches backend CreateOrderItemDTO
  */
 export interface CreateOrderItem {
-  productId: number;
-  quantity: number;
-  unitPrice: number;
+  ProductId: number;
+  Quantity: number;
+  UnitPrice: number;
 }
 
 /**
