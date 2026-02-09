@@ -43,6 +43,18 @@ export interface Translations {
     categorySection: {
         title: string;
         exploreCategory: string;
+        emptyCategoryTitle: string;
+        emptyCategorySubtitle: string;
+        backToHomepage: string;
+        sortTitle: string;
+        sortOptions: {
+            featured: string;
+            priceLowHigh: string;
+            priceHighLow: string;
+            newest: string;
+        };
+        filterTitle: string;
+        filterByBrand: string;
     };
     newsletterSignup: {
         title: string;
@@ -72,12 +84,17 @@ export interface Translations {
     };
     cart: {
         title: string;
+        subtitle: string;
+        subtitleCartItems: string;
         emptyCart: string;
+        emptyCartMessage: string;
         continueShopping: string;
         checkout: string;
         subtotal: string;
         total: string;
         quantity: string;
+        product: string;
+        unitPrice: string;
         remove: string;
         updateCart: string;
     };

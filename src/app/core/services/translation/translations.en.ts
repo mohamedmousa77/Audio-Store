@@ -42,6 +42,19 @@ export const TRANSLATIONS_EN: Translations = {
     categorySection: {
         title: 'Shop by Category',
         exploreCategory: 'Explore',
+        emptyCategoryTitle: 'No Products Found',
+        emptyCategorySubtitle: "We don't have any products in this category yet.",
+        backToHomepage: 'Back to Homepage',
+        sortTitle: 'Sort By',
+        sortOptions: {
+            featured: 'Featured',
+            priceLowHigh: 'Price: Low to High',
+            priceHighLow: 'Price: High to Low',
+            newest: 'Newest Arrivals',
+        },
+        filterTitle: 'Filters',
+        filterByBrand: 'Filter by Brand', // All Brands
+        // noBrands: 'No brands available',
     },
     newsletterSignup:{
         title: 'Join the Audio Revolution',
@@ -72,12 +85,17 @@ export const TRANSLATIONS_EN: Translations = {
     },
     cart: {
         title: 'Shopping Cart',
+        subtitle: 'You Have',
+        subtitleCartItems: 'items in your cart',
         emptyCart: 'Your cart is empty',
+        emptyCartMessage: 'Give it some love by adding premium audio equipment from our catalog.',
         continueShopping: 'Continue Shopping',
         checkout: 'Proceed to Checkout',
         subtotal: 'Subtotal',
         total: 'Total',
+        unitPrice: 'Unit Price:',
         quantity: 'Quantity',
+        product: 'Product',
         remove: 'Remove',
         updateCart: 'Update Cart',
     },

@@ -62,7 +62,10 @@ export class CatalogApiService {
    * @param categoryId Category ID
    */
   getProductsByCategory(categoryId: number): Observable<Product[]> {
-    return this.getProducts({ categoryId });
+    // return this.getProducts({ categoryId });
+    return this.httpService.get<Product[]>(
+      API_ENDPOINTS.products.byCategory(categoryId)
+    );
   }
 
   /**

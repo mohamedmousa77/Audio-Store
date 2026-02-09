@@ -1,8 +1,9 @@
 <app-client-header />
 
-<main class="category-page bg-[#f8f7f5]">
+<main class="category-page">
 
-  <!-- Hero Section -->
+  <!-- Hero Section - Only show if products exist -->
+  @if (!loading() && products.length > 0) {
   <section class="category-hero" [style.background-image]="'url(' + categoryImage() + ')'">
     <div class="hero-overlay">
       <div class="hero-content">
@@ -11,23 +12,25 @@
       </div>
     </div>
   </section>
-  <!-- Filters Section -->
+  }
+  <!-- Filters Section - Only show if products exist -->
+  @if (!loading() && products.length > 0) {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="filter-actions-bar">
       <div class="filter-controls-wrapper">
         <button (click)="toggleFilters()" class="btn-filters" [class.active]="isFiltersOpen()">
           <span class="material-symbols-outlined">{{ isFiltersOpen() ? 'close' : 'tune' }}</span>
-          <span>Filters</span>
+          <span>{{ translations().categorySection.filterTitle }}</span>
         </button>
 
         <div class="horizontal-filters-container" [class.open]="isFiltersOpen()">
           <div class="filter-group-inline">
             <select class="custom-select-small" [(ngModel)]="sortBy" (change)="applySort()">
-              <option value="default">Sort by</option>
-              <option value="featured">Featured</option>
-              <option value="newest">Newest</option>
-              <option value="price-low-high">Price: Low to High</option>
-              <option value="price-high-low">Price: High to Low</option>
+              <option value="default">{{ translations().categorySection.sortTitle }}</option>
+              <option value="featured">{{ translations().categorySection.sortOptions.featured }}</option>
+              <option value="newest">{{ translations().categorySection.sortOptions.newest }}</option>
+              <option value="price-low-high">{{ translations().categorySection.sortOptions.priceLowHigh }}</option>
+              <option value="price-high-low">{{ translations().categorySection.sortOptions.priceHighLow }}</option>
             </select>
           </div>
 
@@ -39,10 +42,11 @@
           </div>
 
           <div class="filter-group-inline">
-            <select class="custom-select-small">
-              <option>All Brands</option>
-              <option>Sony</option>
-              <option>Bose</option>
+            <select class="custom-select-small" [(ngModel)]="selectedBrand" (change)="applyFilters()">
+              <option value="">{{ translations().categorySection.filterByBrand }}</option>
+              @for (brand of availableBrands; track brand) {
+              <option [value]="brand">{{ brand }}</option>
+              }
             </select>
           </div>
         </div>
@@ -62,6 +66,29 @@
     </div>
     }
   </div>
+  }
+  <!-- Empty State - Show when no products -->
+  @if (!loading() && products.length === 0) {
+  <div class="empty-state-container">
+    <div class="empty-state-content">
+      <span class="material-symbols-outlined empty-icon">inventory_2</span>
+      <h2>{{ translations().categorySection.emptyCategoryTitle }}</h2>
+      <p>{{ translations().categorySection.emptyCategorySubtitle }}</p>
+
+      <div class="empty-state-actions">
+        <a routerLink="/" class="btn-primary">
+          <span class="material-symbols-outlined">home</span>
+          {{ translations().categorySection.backToHomepage }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Show other categories using category-showcase component -->
+  @if (otherCategories.length > 0) {
+  <app-category-showcase [categories]="otherCategories" />
+  }
+  }
 
 </main>
 

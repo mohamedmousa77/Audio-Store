@@ -42,6 +42,18 @@ export const TRANSLATIONS_IT: Translations = {
     categorySection: {
         title: 'Acquista per Categoria',
         exploreCategory: 'Esplora',
+        emptyCategoryTitle: 'Nessun Prodotto Trovato',
+        emptyCategorySubtitle: 'Non abbiamo nessun prodotto in questa categoria ancora.',
+        backToHomepage: 'Torna alla Pagina Home',
+        sortTitle: 'Ordina Per',
+        sortOptions: {
+            featured: 'In Evidenza',
+            priceLowHigh: 'Prezzo: Dal più basso al più alto',
+            priceHighLow: 'Prezzo: Dal più alto al più basso',
+            newest: 'Novità',
+        },
+        filterTitle: 'Filtri',
+        filterByBrand: 'Filtra per Marca', // All Brands
     },
     newsletterSignup:{
         title: 'Unisciti alla Rivoluzione Audio Store',
@@ -72,12 +84,17 @@ export const TRANSLATIONS_IT: Translations = {
     },
     cart: {
         title: 'Carrello',
+        subtitle: 'Hai',
+        subtitleCartItems: 'articoli in carrello',
         emptyCart: 'Il tuo carrello è vuoto',
+        emptyCartMessage: 'Dagli un po\' di amore aggiungendo attrezzatura audio premium dal nostro catalogo.',
         continueShopping: 'Continua lo Shopping',
         checkout: 'Procedi al Checkout',
         subtotal: 'Subtotale',
         total: 'Totale',
         quantity: 'Quantità',
+        unitPrice: 'Prezzo Unitario:',
+        product: 'Prodotto',
         remove: 'Rimuovi',
         updateCart: 'Aggiorna Carrello',
     },

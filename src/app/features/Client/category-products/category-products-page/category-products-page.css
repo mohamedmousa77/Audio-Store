@@ -20,7 +20,7 @@
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +37,7 @@
 }
 
 .category-description {
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.25rem;
   max-width: 600px;
   margin: 0 auto;
@@ -56,7 +56,7 @@
 .filter-controls-wrapper {
   display: flex;
   align-items: center;
-  gap: 1rem;  
+  gap: 1rem;
   flex: 1;
 }
 
@@ -72,14 +72,17 @@
 }
 
 .horizontal-filters-container.open {
-  max-width: 1000px; /* Larghezza sufficiente per i filtri */
+  max-width: 1000px;
+  /* Larghezza sufficiente per i filtri */
   opacity: 1;
   /* margin-left: 2rem;
   padding-right: 2rem; */
 }
+
 .filter-group-inline .flex {
   display: flex;
-  gap: 0.75rem; /* Aggiunge spazio tra 'Under $100' e '$100 - $500' */
+  gap: 0.75rem;
+  /* Aggiunge spazio tra 'Under $100' e '$100 - $500' */
 }
 
 .filter-group-inline {
@@ -101,10 +104,10 @@
   transition: all 0.3s;
 
   &:focus {
-      outline: none;
-      border-color: #f49d25;
-      box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.1);
-    }
+    outline: none;
+    border-color: #f49d25;
+    box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.1);
+  }
 }
 
 .chip-mini {
@@ -188,7 +191,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background:  linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+  background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(244, 157, 37, 0.2);
   border: none;
@@ -197,12 +200,13 @@
   border-radius: 0.75rem;
   font-size: 0.9375rem;
   font-weight: 700;
-   transition: all 0.3s ease;
+  transition: all 0.3s ease;
   text-decoration: none;
   font-family: inherit;
 }
 
-.btn-filters.active, .btn-filters:hover {
+.btn-filters.active,
+.btn-filters:hover {
   /* background: #f49d25; */
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(244, 157, 37, 0.4);
@@ -240,12 +244,24 @@
 
 /* Animations */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.animate-fade-in { animation: fadeInUp 0.8s ease-out; }
-.animate-fade-in-delayed { animation: fadeInUp 0.8s ease-out 0.2s both; }
+.animate-fade-in {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-fade-in-delayed {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
 
 .custom-select {
   background: #f8f7f5;
@@ -266,7 +282,9 @@
   transition: border-color 0.2s;
 }
 
-.chip:hover { border-color: #f49d25; }
+.chip:hover {
+  border-color: #f49d25;
+}
 
 .products-section {
   padding: 3rem 0;
@@ -312,7 +330,7 @@
   gap: 1.5rem;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
-;
+  ;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -378,6 +396,83 @@
     transform: rotate(360deg);
   }
 }
+
+/* ============================================ */
+/* Empty State Styles */
+/* ============================================ */
+.empty-state-container {
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  /* Remove top margin */
+  padding: 2rem 2rem 1rem 2rem;
+  /* Reduce top padding */
+  text-align: center;
+}
+
+.empty-state-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.empty-icon {
+  font-size: 6rem;
+  color: #e8ddce;
+  margin-bottom: 1rem;
+}
+
+.empty-state-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1c160d;
+  margin: 0;
+}
+
+.empty-state-content p {
+  font-size: 1.125rem;
+  color: #666;
+  margin: 0;
+}
+
+.empty-state-actions {
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(244, 157, 37, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 157, 37, 0.4);
+}
+
+.btn-primary .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .empty-icon {
+    font-size: 4rem;
+  }
+
+  .empty-state-content h2 {
+    font-size: 1.5rem;
+  }
+}
+
 
 .btn {
   display: inline-flex;

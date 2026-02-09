@@ -45,7 +45,13 @@ export class ProductCard {
     this.cartService.addToCart(this.product, 1);
   }
 
-  buyNow(): void {
+  buyNow(event?: Event): void {
+    // Stop event propagation to prevent navigation to product details
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     this.addToCart();
     setTimeout(() => {
       this.router.navigate(['/client/cart']);

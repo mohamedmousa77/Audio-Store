@@ -54,7 +54,7 @@ export class Homepage implements OnInit {
 
   /**
    * Load optimized data for HomePage
-   * Only loads: 1 new product + 3 featured products + 3 categories
+   * Loads: 1 new product + 4 featured products + all categories
    */
   async loadHomePageData(): Promise<void> {
     this.isLoading.set(true);
@@ -87,13 +87,14 @@ export class Homepage implements OnInit {
           console.error('❌ Error loading featured products:', error);
         });
 
-      const loadCategories = this.categoryService.loadTopCategories(3)
-        .then(data => {
-          this.topCategories.set(data);
-          console.log(`✅ Top categories loaded (${data.length})`);
+      const loadCategories = this.categoryService.loadCategories()
+        .then(() => {
+          const allCategories = this.categoryService.categories();
+          this.topCategories.set(allCategories);
+          console.log(`✅ All categories loaded (${allCategories.length})`);
         })
         .catch(error => {
-          console.error('❌ Error loading top categories:', error);
+          console.error('❌ Error loading categories:', error);
         });
 
       // Wait for all requests to accumulate results (whether success or fail)
