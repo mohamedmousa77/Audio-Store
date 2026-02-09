@@ -184,7 +184,7 @@ export const TRANSLATIONS_EN: Translations = {
         category: 'Category',
         brand: 'Brand',
         productDescription: 'Product Description',
-        keyFeatures: 'Key Features',
+        keyFeatures: 'Main Features',
         youMayAlsoLike: 'You May Also Like',
     },
     admin: {

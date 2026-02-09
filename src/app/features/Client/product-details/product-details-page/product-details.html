@@ -32,13 +32,15 @@
           }
         </div>
 
-        <!-- Thumbnail Gallery -->
+        <!-- Thumbnail Gallery - only show if multiple images -->
+        @if (productImages.length > 1) {
         <div class="thumbnail-gallery">
           @for (img of productImages; track $index) {
           <button class="thumbnail" [class.active]="$index === selectedImageIndex" (click)="selectImage($index)"
             [style.backgroundImage]="'url(' + img + ')'"></button>
           }
         </div>
+        }
       </div>
 
       <!-- Product Info Section -->
@@ -48,7 +50,7 @@
         <h1 class="product-title">{{ product.name }}</h1>
 
         <!-- Rating & Reviews -->
-        <div class="product-rating">
+        <!-- <div class="product-rating">
           <div class="stars">
             <span class="material-icons filled">star</span>
             <span class="material-icons filled">star</span>
@@ -57,7 +59,7 @@
             <span class="material-icons half">star_half</span>
           </div>
           <span class="review-count">(128 Reviews)</span>
-        </div>
+        </div> -->
 
         <!-- Price -->
         <div class="product-price-section">
@@ -75,10 +77,11 @@
         </p>
 
         <!-- Stock Status -->
-        <div class="stock-status" [class.in-stock]="product.stock > 0">
-          <span class="material-icons">{{ product.stock > 0 ? 'check_circle' : 'cancel' }}</span>
-          @if (product.stock > 0) {
-          <span>{{ translations().productDetails.inStock }} - {{ translations().product.only }} {{ product.stock }} {{
+        <div class="stock-status" [class.in-stock]="product.stockQuantity > 0">
+          <span class="material-icons">{{ product.stockQuantity > 0 ? 'check_circle' : 'cancel' }}</span>
+          @if (product.stockQuantity > 0) {
+          <span>{{ translations().productDetails.inStock }} - {{ translations().product.only }} {{ product.stockQuantity
+            }} {{
             translations().product.piecesAvailable }}</span>
           } @else {
           <span>{{ translations().productDetails.outOfStock }}</span>
@@ -86,7 +89,7 @@
         </div>
 
         <!-- Color Selection -->
-        <div class="color-selection">
+        <!-- <div class="color-selection">
           <label>{{ translations().product.color }}:</label>
           <div class="color-options">
             <button class="color-btn" [class.active]="selectedColor === 'black'" (click)="selectedColor = 'black'"
@@ -96,7 +99,7 @@
             <button class="color-btn" [class.active]="selectedColor === 'gold'" (click)="selectedColor = 'gold'"
               style="background: #ffd700" title="Gold"></button>
           </div>
-        </div>
+        </div> -->
 
         <!-- Quantity & Actions -->
         <div class="quantity-actions">
@@ -104,20 +107,20 @@
             <button (click)="decrementQuantity()" class="qty-btn">
               <span class="material-icons">remove</span>
             </button>
-            <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stock" class="qty-input" />
+            <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stockQuantity" class="qty-input" />
             <button (click)="incrementQuantity()" class="qty-btn">
               <span class="material-icons">add</span>
             </button>
           </div>
 
-          <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="product.stock === 0">
+          <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="product.stockQuantity === 0">
             <span class="material-icons">shopping_bag</span>
             {{ translations().productDetails.addToCart }}
           </button>
         </div>
 
         <!-- Features -->
-        <div class="features-grid">
+        <!-- <div class="features-grid">
           <div class="feature">
             <span class="material-icons">battery_charging_full</span>
             <div>
@@ -132,34 +135,32 @@
               <p class="feature-value">Bluetooth 5.0</p>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
     <!-- Details Tabs -->
     <div class="details-section">
       <div class="details-tabs">
-        <button class="tab-btn active">{{ translations().productDetails.description }}</button>
-        <button class="tab-btn">{{ translations().productDetails.specifications }}</button>
-        <button class="tab-btn">{{ translations().productDetails.reviews }}</button>
+        <button class="tab-btn active" (click)="scrollToSection('description')">{{
+          translations().productDetails.description }}</button>
+        @if (hasFeatures) {
+        <button class="tab-btn" (click)="scrollToSection('specifications')">{{
+          translations().productDetails.specifications }}</button>
+        }
       </div>
 
       <div class="tab-content">
-        <div class="description-tab">
+        <div id="description" class="description-tab">
           <h3>{{ translations().productDetails.productDescription }}</h3>
-          <p>
-            The {{ product.name }} is a premium audio device designed for discerning audiophiles
-            and music professionals. With cutting-edge technology and superior sound quality, it delivers
-            an unparalleled listening experience.
+          <p>{{ product.description }}
           </p>
-          <h4>{{ translations().productDetails.keyFeatures }}:</h4>
-          <ul>
-            <li>Advanced noise cancellation technology</li>
-            <li>High-fidelity audio drivers</li>
-            <li>Extended battery life</li>
-            <li>Premium materials and construction</li>
-            <li>Wireless connectivity</li>
-          </ul>
+          @if (hasFeatures) {
+          <div id="specifications">
+            <h4>{{ translations().productDetails.keyFeatures }}:</h4>
+            <p>{{ product.specs }}</p>
+          </div>
+          }
         </div>
       </div>
     </div>

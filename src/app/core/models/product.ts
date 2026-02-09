@@ -9,18 +9,18 @@ export interface Product {
     specs?: string;
     brand: string;
     sku: string;
-    categoryId: number;            // Changed from category: string to match backend
-    categoryName?: string;         // Optional: for UI display (populated from join)
+    categoryId: number;
+    categoryName?: string;
     price: number;
-    stock: number;
+    stockQuantity: number;    // Changed from 'stock' to match backend DTO
     status: 'Available' | 'Low Stock' | 'Unavailable';
-    mainImage?: string;       // Primary product image (matches BE ProductDTO.MainImage)
+    mainImage?: string;
     gallery?: string[];
     isFeatured?: boolean;
     isNew?: boolean;
     bannerDescription?: string;
-    createdAt?: string;            // Backend timestamp
-    updatedAt?: string;            // Backend timestamp
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 /**

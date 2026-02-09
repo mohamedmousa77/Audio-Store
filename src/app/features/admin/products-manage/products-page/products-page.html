@@ -84,10 +84,10 @@
                 </td>
                 <td>
                   <span class="stock-count" [ngClass]="{
-                      'stock-low': product.stock < 10 && product.stock > 0,
-                      'stock-out': product.stock === 0
+                      'stock-low': product.stockQuantity < 10 && product.stockQuantity > 0,
+                      'stock-out': product.stockQuantity === 0
                     }">
-                    {{ product.stock }}
+                    {{ product.stockQuantity }}
                   </span>
                 </td>
                 <td>

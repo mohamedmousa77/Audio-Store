@@ -88,12 +88,10 @@ export class ProductDetails implements OnInit {
         this.product = product;
         console.log('Found product:', this.product);
 
-        // Setup product images
-        this.productImages = [
-          this.product.mainImage || 'https://via.placeholder.com/500x500?text=Product',
-          'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=500&h=500&fit=crop',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&h=500&fit=crop'
-        ];
+        // Setup product images - only use actual product image
+        this.productImages = this.product.mainImage
+          ? [this.product.mainImage]
+          : [];
 
         // Get category name
         const categoryName = this.product.categoryName || this.getCategoryName(this.product.categoryId);
@@ -121,7 +119,7 @@ export class ProductDetails implements OnInit {
   }
 
   incrementQuantity(): void {
-    if (this.product && this.quantity < this.product.stock) {
+    if (this.product && this.quantity < this.product.stockQuantity) {
       this.quantity++;
     }
   }
@@ -190,6 +188,23 @@ export class ProductDetails implements OnInit {
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
+  }
+
+  /**
+   * Scroll to a specific section on the page
+   */
+  scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  /**
+   * Check if product has features/specs
+   */
+  get hasFeatures(): boolean {
+    return !!(this.product?.specs && this.product.specs.trim().length > 0);
   }
 
 }

@@ -10,7 +10,7 @@
       @if (product.isFeatured) {
       <span class="badge badge-featured">Featured</span>
       }
-      @if (product.stock === 0) {
+      @if (product.stockQuantity === 0) {
       <span class="badge badge-out">{{ translations().product.outOfStock }}</span>
       }
     </div>
@@ -43,7 +43,7 @@
       @if (product.isFeatured) {
       <span class="badge badge-featured">Featured</span>
       }
-      @if (product.stock === 0) {
+      @if (product.stockQuantity === 0) {
       <span class="badge badge-out">{{ translations().product.outOfStock }}</span>
       }
     </div>
