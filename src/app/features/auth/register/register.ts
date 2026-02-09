@@ -165,8 +165,9 @@ export class Register implements OnDestroy, OnInit {
       firstName: this.registrationForm.value.firstName,
       lastName: this.registrationForm.value.lastName,
       email: this.registrationForm.value.email,
-      phone: this.registrationForm.value.phone,
-      password: this.registrationForm.value.password
+      phoneNumber: this.registrationForm.value.phone,  // Map 'phone' to 'phoneNumber'
+      password: this.registrationForm.value.password,
+      confirmPassword: this.registrationForm.value.confirmPassword  // Add confirmPassword
     };
 
     this.authService

@@ -80,14 +80,14 @@ export class CartApiService {
     }
 
     /**
-     * Merge guest cart with user cart after login
+     * Merge guest cart with authenticated user cart after login/registration
      * @param sessionId Guest session ID to merge
      */
     mergeGuestCart(sessionId: string): Observable<CartResponse> {
         // Backend expects plain string in body: [FromBody] string sessionId
         return this.httpService.post<CartResponse>(
             API_ENDPOINTS.cart.merge,
-            JSON.stringify(sessionId) // Send as JSON string
+            JSON.stringify(sessionId)
         );
     }
 }

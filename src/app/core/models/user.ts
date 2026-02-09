@@ -31,8 +31,9 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;  // Changed from 'phone' to match backend
   password: string;
+  confirmPassword: string;  // Added to match backend
 }
 
 export interface RefreshTokenRequest {

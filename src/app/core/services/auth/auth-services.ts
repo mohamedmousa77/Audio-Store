@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, interval, timer } from 'rxjs';
 import { AuthResponse, User, LoginRequest, RegisterRequest, RefreshTokenRequest, TokenResponse } from '../../models/user';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, switchMap, retry } from 'rxjs/operators';
 import { HttpService } from '../http/http.service';
 import { ErrorHandlingService } from '../error/error-handling.service';
+import { CartApiService } from '../cart/cart-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ import { ErrorHandlingService } from '../error/error-handling.service';
 export class AuthServices {
   private httpService = inject(HttpService);
   private errorService = inject(ErrorHandlingService);
+  private cartApi = inject(CartApiService);
 
   // Reactive state
   private currentUserSubject = new BehaviorSubject<User | null>(null);
@@ -31,10 +33,29 @@ export class AuthServices {
    * Login with email and password
    */
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.httpService.post<AuthResponse>(API_ENDPOINTS.auth.login, credentials)
+    return this.httpService.post<any>(API_ENDPOINTS.auth.login, credentials)
       .pipe(
+        map(response => {
+          // Map backend LoginResponseDTO to frontend AuthResponse
+          const authResponse: AuthResponse = {
+            token: response.token.accessToken,
+            refreshToken: response.token.refreshToken,
+            expiresIn: 3600, // 1 hour in seconds
+            user: {
+              id: response.userId,
+              firstName: response.firstName,
+              lastName: response.lastName,
+              email: response.email,
+              role: response.roles && response.roles.length > 0 ? response.roles[0] : 'Customer',
+              name: `${response.firstName} ${response.lastName}`
+            }
+          };
+          return authResponse;
+        }),
         tap(response => {
           this.setUser(response.user, response.token, response.refreshToken, response.expiresIn);
+          // Merge guest cart if exists
+          this.mergeGuestCartIfNeeded();
         }),
         catchError(error => {
           this.errorService.handleHttpError(error);
@@ -47,10 +68,29 @@ export class AuthServices {
    * Register new user
    */
   register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.httpService.post<AuthResponse>(API_ENDPOINTS.auth.register, userData)
+    return this.httpService.post<any>(API_ENDPOINTS.auth.register, userData)
       .pipe(
+        map(response => {
+          // Map backend LoginResponseDTO to frontend AuthResponse
+          const authResponse: AuthResponse = {
+            token: response.token.accessToken,
+            refreshToken: response.token.refreshToken,
+            expiresIn: 3600, // 1 hour in seconds
+            user: {
+              id: response.userId,
+              firstName: response.firstName,
+              lastName: response.lastName,
+              email: response.email,
+              role: response.roles && response.roles.length > 0 ? response.roles[0] : 'Customer',
+              name: `${response.firstName} ${response.lastName}`
+            }
+          };
+          return authResponse;
+        }),
         tap(response => {
           this.setUser(response.user, response.token, response.refreshToken, response.expiresIn);
+          // Merge guest cart if exists
+          this.mergeGuestCartIfNeeded();
         }),
         catchError(error => {
           this.errorService.handleHttpError(error);
@@ -292,5 +332,32 @@ export class AuthServices {
     }
 
     return colors[Math.abs(hash) % colors.length];
+  }
+
+  /**
+   * Merge guest cart to user cart after login/registration
+   * This is called automatically after successful authentication
+   */
+  private mergeGuestCartIfNeeded(): void {
+    const guestSessionId = localStorage.getItem('guest_session_id');
+
+    if (guestSessionId) {
+      console.log('🔄 Merging guest cart with session ID:', guestSessionId);
+
+      this.cartApi.mergeGuestCart(guestSessionId).subscribe({
+        next: (cart) => {
+          console.log('✅ Guest cart merged successfully:', cart);
+          // Remove guest session ID after successful merge
+          localStorage.removeItem('guest_session_id');
+        },
+        error: (error) => {
+          console.error('❌ Failed to merge guest cart:', error);
+          // Remove guest session ID even on error to prevent retry loops
+          localStorage.removeItem('guest_session_id');
+        }
+      });
+    } else {
+      console.log('ℹ️ No guest cart to merge');
+    }
   }
 }
