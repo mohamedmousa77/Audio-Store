@@ -55,7 +55,7 @@ export const TRANSLATIONS_IT: Translations = {
         filterTitle: 'Filtri',
         filterByBrand: 'Filtra per Marca', // All Brands
     },
-    newsletterSignup:{
+    newsletterSignup: {
         title: 'Unisciti alla Rivoluzione Audio Store',
         subtitle: 'Iscriviti alla nostra newsletter per ricevere aggiornamenti sulle nuove uscite, offerte speciali e consigli audio.',
         submitButton: 'Iscriviti',
@@ -88,7 +88,7 @@ export const TRANSLATIONS_IT: Translations = {
         subtitleCartItems: 'articoli in carrello',
         emptyCart: 'Il tuo carrello è vuoto',
         emptyCartMessage: 'Dagli un po\' di amore aggiungendo attrezzatura audio premium dal nostro catalogo.',
-        continueShopping: 'Continua lo Shopping',
+        continueShopping: 'Continua gli Acquisti',
         checkout: 'Procedi al Checkout',
         subtotal: 'Subtotale',
         total: 'Totale',
@@ -135,11 +135,11 @@ export const TRANSLATIONS_IT: Translations = {
         shipped: 'Spedito',
         delivered: 'Consegnato',
         cancelled: 'Annullato',
-        orderNotFound:'Oops! Ordine non trovato',
+        orderNotFound: 'Oops! Ordine non trovato',
         orderNotFoundMessage: 'Non siamo riusciti a trovare l\'ordine',
         thankYou: 'Grazie per il tuo ordine!',
         confirmationEmailSent: 'Email di conferma inviata',
-        orderPlaced:'Ordine',
+        orderPlaced: 'Ordine',
         successfully: 'Effettuato con successo',
         returnToShopping: 'Torna allo Shopping',
         downloadInvoice: 'Scarica Fattura',
@@ -147,7 +147,7 @@ export const TRANSLATIONS_IT: Translations = {
         items: 'Articoli',
         payUponReceipt: 'Paga alla Consegna',
         taxEst: 'Stima Tasse',
-        orderStatus:'Stato Ordine',        
+        orderStatus: 'Stato Ordine',
     },
     auth: {
         login: 'Accedi',
@@ -169,14 +169,15 @@ export const TRANSLATIONS_IT: Translations = {
         Terms: 'Termini di Servizio',
         Privacy: 'Privacy Policy',
         and: 'e',
-        
+
     },
     profile: {
         title: 'Il Mio Profilo',
         hello: 'Ciao',
+        memberSince: 'Membro da dalla registrazione:',
         personalInfo: 'Dati Personali',
-        myAddresses: 'I Miei Indirizzi',
-        orderHistory: 'Storico Ordini',
+        myAddresses: 'Miei Indirizzi',
+        orderHistory: 'Miei Ordini',
         addresses: 'Indirizzi',
         settings: 'Impostazioni',
         editProfile: 'Modifica Profilo',
@@ -186,6 +187,31 @@ export const TRANSLATIONS_IT: Translations = {
         phone: 'Telefono',
         email: 'Email',
         saveChanges: 'Salva Modifiche',
+        personalInfoSection: {
+            title: 'Informazioni Personali',
+            subtitle: 'Gestisci le tue informazioni personali',
+            editButton: 'Modifica',
+            errors: {
+                firstNameRequired: 'Il nome è obbligatorio',
+                firstNameMinLength: 'Deve contenere almeno 2 caratteri',
+                lastNameRequired: 'Il cognome è obbligatorio',
+                lastNameMinLength: 'Deve contenere almeno 2 caratteri',
+                emailRequired: 'L\'email è obbligatoria',
+                emailInvalid: 'Inserisci un\'email valida',
+                phoneRequired: 'Il numero di telefono è obbligatorio',
+                phoneInvalid: 'Inserisci un numero di telefono valido'
+            },
+            savePersonalInfo: {
+                success: 'Successo!',
+                successMessage: 'Le tue informazioni personali sono state aggiornate.',
+                error: 'Errore!',
+                errorMessage: 'Si è verificato un errore durante il salvataggio. Riprova più tardi.',
+                saveButton: 'Salva Modifiche',
+                saveLoading: 'Salvando...',
+                cancelButton: 'Annulla',
+            }
+
+        }
     },
     productDetails: {
         addToCart: 'Aggiungi al Carrello',

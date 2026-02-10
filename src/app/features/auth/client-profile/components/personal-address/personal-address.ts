@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -8,7 +8,8 @@ import {
 } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Address } from '../../../../../core/models/user-address';
+import { ProfileApiService, AddressResponse, SaveAddressRequest } from '../../../../../core/services/profile/profile-api.service';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
 
 @Component({
   selector: 'app-personal-address',
@@ -20,17 +21,25 @@ import { Address } from '../../../../../core/models/user-address';
   styleUrl: './personal-address.css',
 })
 export class PersonalAddress implements OnInit, OnDestroy {
+  private profileApi = inject(ProfileApiService);
+  private translationService = inject(TranslationService);
+  private formBuilder = inject(FormBuilder);
+
   addressForm!: FormGroup;
-  addresses: Address[] = [];
+  addresses: AddressResponse[] = [];
   isAdding = false;
-  editingAddressId: string | null = null;
+  editingAddressId: number | null = null;
   isSaving = false;
+  isLoading = false;
   saveSuccess = false;
   saveError: string | null = null;
 
   private destroy$ = new Subject<void>();
 
-  constructor(private formBuilder: FormBuilder) {
+  // Translations
+  translations = this.translationService.translations;
+
+  constructor() {
     this.addressForm = this.createForm();
   }
 
@@ -48,32 +57,32 @@ export class PersonalAddress implements OnInit, OnDestroy {
    */
   private createForm(): FormGroup {
     return this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      address: ['', [Validators.required, Validators.minLength(5)]],
+      street: ['', [Validators.required, Validators.minLength(5)]],
       city: ['', [Validators.required, Validators.minLength(2)]],
-      zipCode: ['', [Validators.required, Validators.pattern(/^\d{5,}$/)]],
+      postalCode: ['', [Validators.required, Validators.pattern(/^\d{5,}$/)]],
       country: ['', Validators.required],
+      setAsDefault: [false]
     });
   }
 
   /**
-   * Carica gli indirizzi (simulato)
+   * Carica gli indirizzi dall'API
    */
   private loadAddresses(): void {
-    // In un vero scenario, caricheresti da un servizio API
-    this.addresses = [
-      {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        address: '1234 Sound Wave Avenue, Apt 46',
-        city: 'San Francisco',
-        zipCode: '94105',
-        country: 'United States',
-        isDefault: true,
-      },
-    ];
+    this.isLoading = true;
+    this.profileApi.getAddresses()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (addresses) => {
+          console.log('✅ Addresses loaded:', addresses);
+          this.addresses = addresses;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('❌ Failed to load addresses:', error);
+          this.isLoading = false;
+        }
+      });
   }
 
   /**
@@ -82,16 +91,22 @@ export class PersonalAddress implements OnInit, OnDestroy {
   startAdding(): void {
     this.isAdding = true;
     this.editingAddressId = null;
-    this.addressForm.reset();
+    this.addressForm.reset({ setAsDefault: false });
   }
 
   /**
    * Abilita la modalità di modifica
    */
-  startEditing(address: Address): void {
+  startEditing(address: AddressResponse): void {
     this.isAdding = true;
-    this.editingAddressId = address.id || null;
-    this.addressForm.patchValue(address);
+    this.editingAddressId = address.addressId;
+    this.addressForm.patchValue({
+      street: address.street,
+      city: address.city,
+      postalCode: address.postalCode,
+      country: address.country,
+      setAsDefault: address.isDefault
+    });
   }
 
   /**
@@ -117,123 +132,138 @@ export class PersonalAddress implements OnInit, OnDestroy {
     this.saveError = null;
     this.saveSuccess = false;
 
-    // Simula una chiamata API
-    setTimeout(() => {
-      try {
-        const formValue = this.addressForm.value;
+    const formValue = this.addressForm.value;
+    const saveData: SaveAddressRequest = {
+      addressId: this.editingAddressId || undefined,
+      street: formValue.street,
+      city: formValue.city,
+      postalCode: formValue.postalCode,
+      country: formValue.country,
+      setAsDefault: formValue.setAsDefault || false
+    };
 
-        if (this.editingAddressId) {
-          // Modifica indirizzo esistente
-          const index = this.addresses.findIndex(
-            (a) => a.id === this.editingAddressId
-          );
-          if (index !== -1) {
-            this.addresses[index] = {
-              ...this.addresses[index],
-              ...formValue,
-            };
-          }
-        } else {
-          // Aggiungi nuovo indirizzo
-          const newAddress: Address = {
-            id: Date.now().toString(),
-            ...formValue,
-            isDefault: this.addresses.length === 0,
-          };
-          this.addresses.push(newAddress);
+    this.profileApi.saveAddress(saveData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (savedAddress) => {
+          console.log('✅ Address saved successfully:', savedAddress);
+          this.isSaving = false;
+          this.saveSuccess = true;
+          this.isAdding = false;
+          this.editingAddressId = null;
+          this.addressForm.reset();
+
+          // Reload addresses
+          this.loadAddresses();
+
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            this.saveSuccess = false;
+          }, 3000);
+        },
+        error: (error) => {
+          console.error('❌ Failed to save address:', error);
+          this.isSaving = false;
+          this.saveError = this.translations().profile.addressSection?.errors?.saveFailed || 'Failed to save address';
         }
-
-        this.isSaving = false;
-        this.saveSuccess = true;
-        this.isAdding = false;
-        this.editingAddressId = null;
-        this.addressForm.reset();
-
-        // Nascondi il messaggio di successo dopo 3 secondi
-        setTimeout(() => {
-          this.saveSuccess = false;
-        }, 3000);
-      } catch (error) {
-        this.isSaving = false;
-        this.saveError = 'Failed to save address. Please try again.';
-      }
-    }, 800);
+      });
   }
 
   /**
    * Elimina un indirizzo
    */
-  deleteAddress(id: string | undefined): void {
-    if (!id) return;
+  deleteAddress(addressId: number): void {
+    const confirmMessage = this.translations().profile.addressSection?.confirmDelete || 'Are you sure you want to delete this address?';
 
-    if (confirm('Are you sure you want to delete this address?')) {
-      this.addresses = this.addresses.filter((a) => a.id !== id);
-      this.saveSuccess = true;
+    if (confirm(confirmMessage)) {
+      this.profileApi.deleteAddress(addressId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            console.log('✅ Address deleted successfully');
+            this.saveSuccess = true;
+            this.loadAddresses();
 
-      setTimeout(() => {
-        this.saveSuccess = false;
-      }, 3000);
+            setTimeout(() => {
+              this.saveSuccess = false;
+            }, 3000);
+          },
+          error: (error) => {
+            console.error('❌ Failed to delete address:', error);
+            this.saveError = this.translations().profile.addressSection?.errors?.deleteFailed || 'Failed to delete address';
+          }
+        });
     }
   }
 
   /**
    * Imposta come indirizzo predefinito
    */
-  setAsDefault(id: string | undefined): void {
-    if (!id) return;
+  setAsDefault(addressId: number): void {
+    // Find the address
+    const address = this.addresses.find(a => a.addressId === addressId);
+    if (!address) return;
 
-    this.addresses.forEach((address) => {
-      address.isDefault = address.id === id;
-    });
+    // Save with setAsDefault = true
+    const saveData: SaveAddressRequest = {
+      addressId: address.addressId,
+      street: address.street,
+      city: address.city,
+      postalCode: address.postalCode,
+      country: address.country,
+      setAsDefault: true
+    };
 
-    this.saveSuccess = true;
-    setTimeout(() => {
-      this.saveSuccess = false;
-    }, 3000);
+    this.profileApi.saveAddress(saveData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          console.log('✅ Default address updated');
+          this.saveSuccess = true;
+          this.loadAddresses();
+
+          setTimeout(() => {
+            this.saveSuccess = false;
+          }, 3000);
+        },
+        error: (error) => {
+          console.error('❌ Failed to set default address:', error);
+          this.saveError = this.translations().profile.addressSection?.errors?.setDefaultFailed || 'Failed to set default address';
+        }
+      });
   }
 
   /**
    * Getters per errori
    */
-  get firstNameError(): string | null {
-    const control = this.addressForm.get('firstName');
-    if (control?.hasError('required')) return 'First name is required';
-    if (control?.hasError('minlength')) return 'Must be at least 2 characters';
-    return null;
-  }
-
-  get lastNameError(): string | null {
-    const control = this.addressForm.get('lastName');
-    if (control?.hasError('required')) return 'Last name is required';
-    if (control?.hasError('minlength')) return 'Must be at least 2 characters';
-    return null;
-  }
-
-  get addressError(): string | null {
-    const control = this.addressForm.get('address');
-    if (control?.hasError('required')) return 'Address is required';
-    if (control?.hasError('minlength')) return 'Must be at least 5 characters';
+  get streetError(): string | null {
+    const control = this.addressForm.get('street');
+    const t = this.translations().profile.addressSection?.errors;
+    if (control?.hasError('required')) return t?.streetRequired || 'Street is required';
+    if (control?.hasError('minlength')) return t?.streetMinLength || 'Must be at least 5 characters';
     return null;
   }
 
   get cityError(): string | null {
     const control = this.addressForm.get('city');
-    if (control?.hasError('required')) return 'City is required';
-    if (control?.hasError('minlength')) return 'Must be at least 2 characters';
+    const t = this.translations().profile.addressSection?.errors;
+    if (control?.hasError('required')) return t?.cityRequired || 'City is required';
+    if (control?.hasError('minlength')) return t?.cityMinLength || 'Must be at least 2 characters';
     return null;
   }
 
-  get zipCodeError(): string | null {
-    const control = this.addressForm.get('zipCode');
-    if (control?.hasError('required')) return 'ZIP code is required';
-    if (control?.hasError('pattern')) return 'ZIP code must contain at least 5 digits';
+  get postalCodeError(): string | null {
+    const control = this.addressForm.get('postalCode');
+    const t = this.translations().profile.addressSection?.errors;
+    if (control?.hasError('required')) return t?.postalCodeRequired || 'Postal code is required';
+    if (control?.hasError('pattern')) return t?.postalCodePattern || 'Postal code must contain at least 5 digits';
     return null;
   }
 
   get countryError(): string | null {
     const control = this.addressForm.get('country');
-    if (control?.hasError('required')) return 'Country is required';
+    const t = this.translations().profile.addressSection?.errors;
+    if (control?.hasError('required')) return t?.countryRequired || 'Country is required';
     return null;
   }
-
 }

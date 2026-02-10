@@ -2,24 +2,32 @@
   <!-- Header -->
   <div class="section-header">
     <div class="section-title">
-      <h2>Default Address</h2>
-      <p>Manage your shipping and billing addresses</p>
+      <h2>{{ translations().profile.addressSection?.title || 'Default Address' }}</h2>
+      <p>{{ translations().profile.addressSection?.subtitle || 'Manage your shipping and billing addresses' }}</p>
     </div>
     @if (!isAdding) {
     <button class="btn btn-add" (click)="startAdding()">
       <span class="material-symbols-outlined">add</span>
-      Add Address
+      {{ translations().profile.addressSection?.addButton || 'Add Address' }}
     </button>
     }
   </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>{{ translations().profile.addressSection?.loading || 'Loading addresses...' }}</p>
+  </div>
+  }
 
   <!-- Success Message -->
   @if (saveSuccess) {
   <div class="success-alert">
     <span class="material-symbols-outlined">check_circle</span>
     <div>
-      <strong>Success!</strong>
-      <p>Your address has been saved successfully.</p>
+      <strong>{{ translations().profile.addressSection?.success || 'Success!' }}</strong>
+      <p>{{ translations().profile.addressSection?.successMessage || 'Your address has been saved successfully.' }}</p>
     </div>
   </div>
   }
@@ -29,7 +37,7 @@
   <div class="error-alert">
     <span class="material-symbols-outlined">error</span>
     <div>
-      <strong>Error</strong>
+      <strong>{{ translations().profile.addressSection?.error || 'Error' }}</strong>
       <p>{{ saveError }}</p>
     </div>
   </div>
@@ -38,46 +46,24 @@
   <!-- Add/Edit Form -->
   @if (isAdding) {
   <form [formGroup]="addressForm" (ngSubmit)="onSave()" class="address-form">
-    <!-- Name Row -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="firstName" class="form-label">First Name</label>
-        <input id="firstName" type="text" formControlName="firstName" class="form-input" placeholder="John" />
-        @if (firstNameError && addressForm.get('firstName')?.touched) {
-        <span class="error-message">
-          {{ firstNameError }}
-        </span>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input id="lastName" type="text" formControlName="lastName" class="form-input" placeholder="Doe" />
-        @if (lastNameError && addressForm.get('lastName')?.touched) {
-        <span class="error-message">
-          {{ lastNameError }}
-        </span>
-        }
-      </div>
-    </div>
-
     <!-- Street Address -->
     <div class="form-group">
-      <label for="address" class="form-label">Street Address</label>
-      <input id="address" type="text" formControlName="address" class="form-input"
-        placeholder="1234 Sound Wave Avenue, Apt 46" />
-      @if (addressError && addressForm.get('address')?.touched) {
+      <label for="street" class="form-label">{{ translations().profile.addressSection?.streetLabel || 'Street Address' }}</label>
+      <input id="street" type="text" formControlName="street" class="form-input"
+        [placeholder]="translations().profile.addressSection?.streetPlaceholder || '1234 Sound Wave Avenue, Apt 46'" />
+      @if (streetError && addressForm.get('street')?.touched) {
       <span class="error-message">
-        {{ addressError }}
+        {{ streetError }}
       </span>
       }
     </div>
 
-    <!-- City/State/ZIP Row -->
+    <!-- City/Postal Code Row -->
     <div class="form-row">
       <div class="form-group">
-        <label for="city" class="form-label">City</label>
-        <input id="city" type="text" formControlName="city" class="form-input" placeholder="San Francisco" />
+        <label for="city" class="form-label">{{ translations().profile.addressSection?.cityLabel || 'City' }}</label>
+        <input id="city" type="text" formControlName="city" class="form-input" 
+          [placeholder]="translations().profile.addressSection?.cityPlaceholder || 'San Francisco'" />
         @if (cityError && addressForm.get('city')?.touched) {
         <span class="error-message">
           {{ cityError }}
@@ -86,11 +72,12 @@
       </div>
 
       <div class="form-group">
-        <label for="zipCode" class="form-label">ZIP Code</label>
-        <input id="zipCode" type="text" formControlName="zipCode" class="form-input" placeholder="94105" />
-        @if (zipCodeError && addressForm.get('zipCode')?.touched) {
+        <label for="postalCode" class="form-label">{{ translations().profile.addressSection?.postalCodeLabel || 'Postal Code' }}</label>
+        <input id="postalCode" type="text" formControlName="postalCode" class="form-input" 
+          [placeholder]="translations().profile.addressSection?.postalCodePlaceholder || '94105'" />
+        @if (postalCodeError && addressForm.get('postalCode')?.touched) {
         <span class="error-message">
-          {{ zipCodeError }}
+          {{ postalCodeError }}
         </span>
         }
       </div>
@@ -98,18 +85,18 @@
 
     <!-- Country -->
     <div class="form-group">
-      <label for="country" class="form-label">Country</label>
+      <label for="country" class="form-label">{{ translations().profile.addressSection?.countryLabel || 'Country' }}</label>
       <select id="country" formControlName="country" class="form-input form-select">
-        <option value="">Select a country</option>
-        <option value="United States">United States</option>
-        <option value="Canada">Canada</option>
-        <option value="United Kingdom">United Kingdom</option>
-        <option value="Australia">Australia</option>
-        <option value="Italy">Italy</option>
-        <option value="Germany">Germany</option>
-        <option value="France">France</option>
-        <option value="Spain">Spain</option>
-        <option value="Other">Other</option>
+        <option value="">{{ translations().profile.addressSection?.countryPlaceholder || 'Select a country' }}</option>
+        <option value="United States">{{ translations().profile.addressSection?.countries?.us || 'United States' }}</option>
+        <option value="Canada">{{ translations().profile.addressSection?.countries?.ca || 'Canada' }}</option>
+        <option value="United Kingdom">{{ translations().profile.addressSection?.countries?.uk || 'United Kingdom' }}</option>
+        <option value="Australia">{{ translations().profile.addressSection?.countries?.au || 'Australia' }}</option>
+        <option value="Italy">{{ translations().profile.addressSection?.countries?.it || 'Italy' }}</option>
+        <option value="Germany">{{ translations().profile.addressSection?.countries?.de || 'Germany' }}</option>
+        <option value="France">{{ translations().profile.addressSection?.countries?.fr || 'France' }}</option>
+        <option value="Spain">{{ translations().profile.addressSection?.countries?.es || 'Spain' }}</option>
+        <option value="Other">{{ translations().profile.addressSection?.countries?.other || 'Other' }}</option>
       </select>
       @if (countryError && addressForm.get('country')?.touched) {
       <span class="error-message">
@@ -122,39 +109,39 @@
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" [disabled]="addressForm.invalid || isSaving">
         @if (!isSaving) {
-        <span>Save Address</span>
+        <span>{{ translations().profile.addressSection?.saveButton || 'Save Address' }}</span>
         }
         @if (isSaving) {
         <span class="loading-spinner">
           <span class="spinner"></span>
-          Saving...
+          {{ translations().profile.addressSection?.saveLoading || 'Saving...' }}
         </span>
         }
       </button>
       <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isSaving">
-        Cancel
+        {{ translations().profile.addressSection?.cancelButton || 'Cancel' }}
       </button>
     </div>
   </form>
   }
 
   <!-- Addresses List -->
-  @if (!isAdding && addresses.length > 0) {
+  @if (!isAdding && !isLoading && addresses.length > 0) {
   <div class="addresses-list">
-    <div *ngFor="let address of addresses" class="address-card">
+    @for (address of addresses; track address.addressId) {
+    <div class="address-card">
       <!-- Default Badge -->
       @if (address.isDefault) {
       <span class="default-badge">
-        Default
+        {{ translations().profile.addressSection?.defaultBadge || 'Default' }}
       </span>
       }
 
       <!-- Address Info -->
       <div class="address-info">
-        <h3>{{ address.firstName }} {{ address.lastName }}</h3>
-        <p class="street">{{ address.address }}</p>
+        <p class="street">{{ address.street }}</p>
         <p class="city-zip">
-          {{ address.city }}, {{ address.zipCode }}
+          {{ address.city }}, {{ address.postalCode }}
         </p>
         <p class="country">{{ address.country }}</p>
       </div>
@@ -162,33 +149,37 @@
       <!-- Action Buttons -->
       <div class="address-actions">
         @if (!address.isDefault) {
-        <button class="btn btn-text" (click)="setAsDefault(address.id)" title="Set as default">
+        <button class="btn btn-text" (click)="setAsDefault(address.addressId)" 
+          [title]="translations().profile.addressSection?.setDefaultTitle || 'Set as default'">
           <span class="material-symbols-outlined">check</span>
-          Set Default
+          {{ translations().profile.addressSection?.setDefaultButton || 'Set Default' }}
         </button>
         }
-        <button class="btn btn-text" (click)="startEditing(address)" title="Edit address">
+        <button class="btn btn-text" (click)="startEditing(address)" 
+          [title]="translations().profile.addressSection?.editTitle || 'Edit address'">
           <span class="material-symbols-outlined">edit</span>
-          Edit
+          {{ translations().profile.addressSection?.editButton || 'Edit' }}
         </button>
-        <button class="btn btn-text btn-danger" (click)="deleteAddress(address.id)" title="Delete address">
+        <button class="btn btn-text btn-danger" (click)="deleteAddress(address.addressId)" 
+          [title]="translations().profile.addressSection?.deleteTitle || 'Delete address'">
           <span class="material-symbols-outlined">delete</span>
-          Delete
+          {{ translations().profile.addressSection?.deleteButton || 'Delete' }}
         </button>
       </div>
     </div>
+    }
   </div>
   }
 
   <!-- Empty State -->
-  @if (!isAdding && addresses.length === 0) {
+  @if (!isAdding && !isLoading && addresses.length === 0) {
   <div class="empty-state">
     <span class="material-symbols-outlined">location_on</span>
-    <h3>No addresses yet</h3>
-    <p>Add an address to get started with your orders</p>
+    <h3>{{ translations().profile.addressSection?.emptyTitle || 'No addresses yet' }}</h3>
+    <p>{{ translations().profile.addressSection?.emptyMessage || 'Add an address to get started with your orders' }}</p>
     <button class="btn btn-primary" (click)="startAdding()">
       <span class="material-symbols-outlined">add</span>
-      Add Your First Address
+      {{ translations().profile.addressSection?.emptyButton || 'Add Your First Address' }}
     </button>
   </div>
   }

@@ -56,7 +56,7 @@ export const TRANSLATIONS_EN: Translations = {
         filterByBrand: 'Filter by Brand', // All Brands
         // noBrands: 'No brands available',
     },
-    newsletterSignup:{
+    newsletterSignup: {
         title: 'Join the Audio Revolution',
         subtitle: 'Sign up for our newsletter to receive updates on new product releases, special offers, and audio tips.',
         submitButton: 'Subscribe',
@@ -141,7 +141,7 @@ export const TRANSLATIONS_EN: Translations = {
         orderNotFoundMessage: 'We were unable to find that order',
         thankYou: 'Thank you for your order!',
         confirmationEmailSent: 'Confirmation email sent',
-        orderPlaced:'Order',
+        orderPlaced: 'Order',
         successfully: 'Placed Successfully',
         returnToShopping: 'Return to Shopping',
         downloadInvoice: 'Download Invoice',
@@ -149,7 +149,7 @@ export const TRANSLATIONS_EN: Translations = {
         items: 'Items',
         payUponReceipt: 'Pay upon receipt',
         taxEst: 'Tax Est',
-        orderStatus:'Order Status',
+        orderStatus: 'Order Status',
     },
     auth: {
         login: 'Login',
@@ -175,6 +175,7 @@ export const TRANSLATIONS_EN: Translations = {
     profile: {
         title: 'My Profile',
         hello: 'Hello',
+        memberSince: 'Member since registration:',
         personalInfo: 'Personal Information',
         myAddresses: 'My Addresses',
         orderHistory: 'Order History',
@@ -187,6 +188,30 @@ export const TRANSLATIONS_EN: Translations = {
         phone: 'Phone',
         email: 'Email',
         saveChanges: 'Save Changes',
+        personalInfoSection: {
+            title: 'Personal Information',
+            subtitle: 'Manage your profile and contact details',
+            editButton: 'Edit',
+            errors: {
+                firstNameRequired: 'First name is required',
+                firstNameMinLength: 'Must be at least 2 characters',
+                lastNameRequired: 'Last name is required',
+                lastNameMinLength: 'Must be at least 2 characters',
+                emailRequired: 'Email is required',
+                emailInvalid: 'Enter a valid email',
+                phoneRequired: 'Phone number is required',
+                phoneInvalid: 'Enter a valid phone number'
+            },
+            savePersonalInfo: {
+                success: 'Success!',
+                successMessage: 'Your personal information has been updated.',
+                error: 'Error!',
+                errorMessage: 'Failed to update personal information. Please try again.',
+                saveButton: 'Save Changes',
+                saveLoading: 'Saving...',
+                cancelButton: 'Cancel',
+            }
+        }
     },
     productDetails: {
         addToCart: 'Add to Cart',

@@ -128,7 +128,7 @@ export interface Translations {
         orderNotFoundMessage: string;
         thankYou: string;
         confirmationEmailSent: string;
-        orderPlaced:string;
+        orderPlaced: string;
         successfully: string;
         returnToShopping: string;
         downloadInvoice: string;
@@ -136,7 +136,7 @@ export interface Translations {
         items: string;
         payUponReceipt: string;
         taxEst: string;
-        orderStatus:string;
+        orderStatus: string;
         orderNumber: string;
         orderDate: string;
         status: string;
@@ -162,17 +162,18 @@ export interface Translations {
         haveAccount: string;
         signUp: string;
         signIn: string;
-        loginSubtitle: string; 
+        loginSubtitle: string;
         registrationSubtitle: string;
         registrationImageTitle: string;
         and: string;
         Privacy: string;
-        Terms: string; 
+        Terms: string;
         TermsAndCoditionsAgree: string;
     };
     profile: {
         title: string;
         hello: string;
+        memberSince: string;
         personalInfo: string;
         myAddresses: string;
         orderHistory: string;
@@ -185,6 +186,30 @@ export interface Translations {
         phone: string;
         email: string;
         saveChanges: string;
+        personalInfoSection: {
+            title: string;
+            subtitle: string;
+            editButton: string;
+            errors: {
+                firstNameRequired: string;
+                firstNameMinLength: string;
+                lastNameRequired: string;
+                lastNameMinLength: string;
+                emailRequired: string;
+                emailInvalid: string;
+                phoneRequired: string;
+                phoneInvalid: string;
+            };
+            savePersonalInfo: {
+                success: string;
+                successMessage: string;
+                error: string;
+                errorMessage: string;
+                saveButton: string;
+                saveLoading: string;
+                cancelButton: string;
+            }
+        }
     };
     productDetails: {
         addToCart: string;

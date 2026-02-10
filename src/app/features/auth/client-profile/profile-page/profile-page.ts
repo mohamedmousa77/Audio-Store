@@ -39,26 +39,7 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit {
   activeMenu = 'personal-info';
   memberSince: string = 'Member since registration:';
 
-  menuItems: MenuItem[] = [
-    {
-      id: 'personal-info',
-      label: 'Personal Data',
-      icon: 'person',
-      section: 'personalInfoSection',
-    },
-    {
-      id: 'address',
-      label: 'My Addresses',
-      icon: 'location_on',
-      section: 'addressSection',
-    },
-    {
-      id: 'orders',
-      label: 'Order History',
-      icon: 'receipt',
-      section: 'ordersSection',
-    },
-  ];
+  
 
   private destroy$ = new Subject<void>();
 
@@ -70,7 +51,26 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit {
 
   // Translations
   translations = this.translationService.translations;
-
+menuItems: MenuItem[] = [
+    {
+      id: 'personal-info',
+      label: this.translations().profile.personalInfo,
+      icon: 'person',
+      section: 'personalInfoSection',
+    },
+    {
+      id: 'address',
+      label: this.translations().profile.myAddresses,
+      icon: 'location_on',
+      section: 'addressSection',
+    },
+    {
+      id: 'orders',
+      label: this.translations().profile.orderHistory,
+      icon: 'receipt',
+      section: 'ordersSection',
+    },
+  ];
   ngOnInit(): void {
     // Carica l'utente corrente
     this.authService.currentUser$

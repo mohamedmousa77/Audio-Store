@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OrderServices } from '../../../../../core/services/order/order-services';
 import { Order, OrderStatus } from '../../../../../core/models/order';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
 
 type DateFilter = 'all' | 'today' | 'week' | 'month';
 
@@ -29,6 +30,10 @@ type DateFilter = 'all' | 'today' | 'week' | 'month';
 export class PersonalOrders implements OnInit {
   private orderService = inject(OrderServices);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
+
+  // Translations
+  translations = this.translationService.translations;
 
   // Use Signals from OrderServices
   orders = this.orderService.orders;
@@ -110,17 +115,18 @@ export class PersonalOrders implements OnInit {
   }
 
   /**
-   * Get status text in Italian
+   * Get status text using translations
    */
   getStatusText(status: OrderStatus): string {
+    const t = this.translations().profile.ordersSection?.statuses;
     const statusMap: { [key: number]: string } = {
-      [OrderStatus.Pending]: 'In Attesa',
-      [OrderStatus.Confirmed]: 'Confermato',
-      [OrderStatus.Shipped]: 'Spedito',
-      [OrderStatus.Delivered]: 'Consegnato',
-      [OrderStatus.Canceled]: 'Annullato'
+      [OrderStatus.Pending]: t?.pending || 'Pending',
+      [OrderStatus.Confirmed]: t?.confirmed || 'Confirmed',
+      [OrderStatus.Shipped]: t?.shipped || 'Shipped',
+      [OrderStatus.Delivered]: t?.delivered || 'Delivered',
+      [OrderStatus.Canceled]: t?.canceled || 'Canceled'
     };
-    return statusMap[status] || 'Sconosciuto';
+    return statusMap[status] || t?.unknown || 'Unknown';
   }
 
   /**
@@ -131,10 +137,11 @@ export class PersonalOrders implements OnInit {
   }
 
   /**
-   * Format date
+   * Format date using current locale
    */
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('it-IT', {
+    const locale = this.translationService.currentLanguage() === 'it' ? 'it-IT' : 'en-US';
+    return new Date(date).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

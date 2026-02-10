@@ -1,15 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthServices } from '../../../../../core/services/auth/auth-services';
 import { User } from '../../../../../core/models/user';
+import { TranslationService } from '../../../../../core/services/translation/translation.service';
+import { ProfileApiService } from '../../../../../core/services/profile/profile-api.service';
+
 @Component({
   selector: 'app-personal-info',
   imports: [
@@ -23,9 +21,10 @@ import { User } from '../../../../../core/models/user';
   templateUrl: './personal-info.html',
   styleUrl: './personal-info.css',
 })
-export class PersonalInfo implements OnInit, OnDestroy{
+export class PersonalInfo implements OnInit, OnDestroy {
 
-
+  private translationService = inject(TranslationService);
+  private profileApi = inject(ProfileApiService);
   personalForm!: FormGroup;
   currentUser: User | null = null;
   isEditing = false;
@@ -41,6 +40,9 @@ export class PersonalInfo implements OnInit, OnDestroy{
   ) {
     this.personalForm = this.createForm();
   }
+
+  // Translations
+  translations = this.translationService.translations;
 
   ngOnInit(): void {
     this.authService.currentUser$
@@ -119,33 +121,34 @@ export class PersonalInfo implements OnInit, OnDestroy{
     this.saveError = null;
     this.saveSuccess = false;
 
-    // Simula una chiamata API
-    setTimeout(() => {
-      try {
-        const formValue = this.personalForm.value;
+    const formValue = this.personalForm.value;
+    const updateData = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      phoneNumber: formValue.phone || undefined
+    };
 
-        // Aggiorna il servizio (in un vero scenario faresti una chiamata API)
-        const updatedUser: User = {
-          ...this.currentUser!,
-          ...formValue,
-        };
+    this.profileApi.updateProfile(updateData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Profile updated successfully:', response);
+          this.isSaving = false;
+          this.saveSuccess = true;
+          this.isEditing = false;
 
-        // Simula salvataggio
-        console.log('Saving user data:', updatedUser);
-
-        this.isSaving = false;
-        this.saveSuccess = true;
-        this.isEditing = false;
-
-        // Nascondi il messaggio di successo dopo 3 secondi
-        setTimeout(() => {
-          this.saveSuccess = false;
-        }, 3000);
-      } catch (error) {
-        this.isSaving = false;
-        this.saveError = 'Failed to save changes. Please try again.';
-      }
-    }, 800);
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            this.saveSuccess = false;
+          }, 3000);
+        },
+        error: (error) => {
+          console.error('❌ Failed to update profile:', error);
+          this.isSaving = false;
+          this.saveError = this.translations().profile.personalInfoSection.savePersonalInfo.errorMessage;
+        }
+      });
   }
 
   /**
@@ -153,8 +156,9 @@ export class PersonalInfo implements OnInit, OnDestroy{
    */
   get firstNameError(): string | null {
     const control = this.personalForm.get('firstName');
-    if (control?.hasError('required')) return 'First name is required';
-    if (control?.hasError('minlength')) return 'Must be at least 2 characters';
+    const t = this.translations().profile.personalInfoSection.errors;
+    if (control?.hasError('required')) return t.firstNameRequired;
+    if (control?.hasError('minlength')) return t.firstNameMinLength;
     return null;
   }
 
@@ -163,8 +167,9 @@ export class PersonalInfo implements OnInit, OnDestroy{
    */
   get lastNameError(): string | null {
     const control = this.personalForm.get('lastName');
-    if (control?.hasError('required')) return 'Last name is required';
-    if (control?.hasError('minlength')) return 'Must be at least 2 characters';
+    const t = this.translations().profile.personalInfoSection.errors;
+    if (control?.hasError('required')) return t.lastNameRequired;
+    if (control?.hasError('minlength')) return t.lastNameMinLength;
     return null;
   }
 
@@ -173,8 +178,9 @@ export class PersonalInfo implements OnInit, OnDestroy{
    */
   get emailError(): string | null {
     const control = this.personalForm.get('email');
-    if (control?.hasError('required')) return 'Email is required';
-    if (control?.hasError('email')) return 'Enter a valid email';
+    const t = this.translations().profile.personalInfoSection.errors;
+    if (control?.hasError('required')) return t.emailRequired;
+    if (control?.hasError('email')) return t.emailInvalid;
     return null;
   }
 
@@ -183,8 +189,9 @@ export class PersonalInfo implements OnInit, OnDestroy{
    */
   get phoneError(): string | null {
     const control = this.personalForm.get('phone');
-    if (control?.hasError('required')) return 'Phone number is required';
-    if (control?.hasError('invalidPhone')) return 'Enter a valid phone number';
+    const t = this.translations().profile.personalInfoSection.errors;
+    if (control?.hasError('required')) return t.phoneRequired;
+    if (control?.hasError('invalidPhone')) return t.phoneInvalid;
     return null;
   }
 
