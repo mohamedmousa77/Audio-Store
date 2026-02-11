@@ -121,6 +121,17 @@ export const TRANSLATIONS_IT: Translations = {
         secure: 'Sicuro',
         insured: 'Assicurato',
         support: 'Supporto 24/7',
+        errors: {
+            firstNameRequired: 'Il nome è obbligatorio e deve contenere almeno 2 caratteri',
+            lastNameRequired: 'Il cognome è obbligatorio e deve contenere almeno 2 caratteri',
+            emailRequired: 'L\'email è obbligatoria e deve essere valida',
+            phoneRequired: 'Il numero di telefono è obbligatorio e deve essere valido',
+            addressRequired: 'L\'indirizzo è obbligatorio',
+            zipCodeRequired: 'Il CAP è obbligatorio',
+            cityRequired: 'La città è obbligatoria',
+        },
+        paymentMessage: 'Paga in modo sicuro quando il tuo ordine arriva a casa tua.',
+        defaultPaymentMethod: 'Paga alla Consegna',
     },
     orders: {
         title: 'I Miei Ordini',
@@ -211,6 +222,71 @@ export const TRANSLATIONS_IT: Translations = {
                 cancelButton: 'Annulla',
             }
 
+        },
+        addressSection: {
+            title: 'Indirizzo predefinito',
+            subtitle: 'Gestisci i tuoi indirizzi di spedizione e fatturazione',
+            addAddressButton: 'Aggiungi Indirizzo',
+            loading: 'Caricamento indirizzi...',
+            defaultBadge: 'Predefinito',
+            setDefaultTitle: 'Imposta come indirizzo predefinito',
+            setDefaultButton: 'Imposta come Predefinito',
+            editTitle: 'Modifica Indirizzo',
+            editButton: 'Modifica',
+            deleteTitle: 'Elimina Indirizzo',
+            deleteButton: 'Elimina',
+            confirmDelete: 'Sei sicuro di voler eliminare questo indirizzo?',
+            addingForm:{
+                street: 'Via',
+                city: 'Città',
+                zipCode: 'CAP',
+                country: 'Paese',
+                countryPlaceholder: 'Seleziona un paese'
+            },
+            success: 'Successo!',
+            successMessage: 'Il tuo indirizzo è stato salvato con successo.',
+            error: 'Errore!',
+            errorMessage: 'Si è verificato un errore durante il salvataggio dell\'indirizzo. Riprova più tardi.',
+            errors: {
+                countryRequired: 'Il paese è obbligatorio',
+                postalCodeRequired: 'Il CAP è obbligatorio',
+                postalCodePattern: 'Il CAP deve contenere almeno 5 caratteri',
+                streetRequired: 'La via è obbligatoria',
+                streetMinLength: 'La via deve contenere almeno 5 caratteri',
+                cityRequired: 'La città è obbligatoria',
+                cityMinLength: 'La città deve contenere almeno 2 caratteri',
+                deleteFailed: 'Si è verificato un errore durante l\'eliminazione dell\'indirizzo. Riprova più tardi.',
+                setDefaultFailed: 'Si è verificato un errore durante l\'impostazione come indirizzo predefinito. Riprova più tardi.',
+                saveFailed: 'Si è verificato un errore durante il salvataggio dell\'indirizzo. Riprova più tardi.',
+                loadFailed: 'Si è verificato un errore durante il caricamento degli indirizzi. Riprova più tardi.',
+            },
+            saveButton: 'Salva Indirizzo',
+            saveLoading: 'Salvando...',
+            cancelButton: 'Annulla',
+            emptyState: {
+                emptyTitle: 'Nessun indirizzo trovato',
+                emptyMessage: 'Aggiungi un indirizzo per gestire gli ordini e le consegne',
+                emptyButton: 'Aggiungi Indirizzo'
+            }
+        },
+        ordersSection: {
+            title: 'Cronologia Ordini',
+            subtitle: 'Controlli i tuoi ordini passati e i loro dettagli',
+            dateFilter: {
+                datefilterTitle: 'Filtra',
+                allOrders: 'Tutti gli ordini',
+                Today: 'Ordini di oggi',
+                Settimana: 'Questa settimana',
+                Mese: 'Questo mese',
+            },
+            statuses: {
+                pending: 'In Attesa',
+                confirmed: 'Confermato',
+                shipped: 'Spedito',
+                delivered: 'Consegnato',
+                cancelled: 'Annullato',
+                unknown: 'Sconosciuto',
+            }
         }
     },
     productDetails: {

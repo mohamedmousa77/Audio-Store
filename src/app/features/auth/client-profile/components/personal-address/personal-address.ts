@@ -70,17 +70,24 @@ export class PersonalAddress implements OnInit, OnDestroy {
    */
   private loadAddresses(): void {
     this.isLoading = true;
+    this.saveError = null; // Clear previous errors
+
     this.profileApi.getAddresses()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (addresses) => {
           console.log('✅ Addresses loaded:', addresses);
-          this.addresses = addresses;
+          this.addresses = addresses || []; // Handle null/undefined
           this.isLoading = false;
         },
         error: (error) => {
           console.error('❌ Failed to load addresses:', error);
           this.isLoading = false;
+          this.addresses = []; // Set empty array on error
+          // Don't show error dialog for empty results
+          if (error.status !== 404) {
+            this.saveError = this.translations().profile.addressSection.errors.loadFailed;
+          }
         }
       });
   }
@@ -164,7 +171,7 @@ export class PersonalAddress implements OnInit, OnDestroy {
         error: (error) => {
           console.error('❌ Failed to save address:', error);
           this.isSaving = false;
-          this.saveError = this.translations().profile.addressSection?.errors?.saveFailed || 'Failed to save address';
+          this.saveError = this.translations().profile.addressSection.errors.saveFailed;
         }
       });
   }
@@ -173,8 +180,7 @@ export class PersonalAddress implements OnInit, OnDestroy {
    * Elimina un indirizzo
    */
   deleteAddress(addressId: number): void {
-    const confirmMessage = this.translations().profile.addressSection?.confirmDelete || 'Are you sure you want to delete this address?';
-
+    const confirmMessage = this.translations().profile.addressSection.confirmDelete
     if (confirm(confirmMessage)) {
       this.profileApi.deleteAddress(addressId)
         .pipe(takeUntil(this.destroy$))
@@ -190,7 +196,7 @@ export class PersonalAddress implements OnInit, OnDestroy {
           },
           error: (error) => {
             console.error('❌ Failed to delete address:', error);
-            this.saveError = this.translations().profile.addressSection?.errors?.deleteFailed || 'Failed to delete address';
+            this.saveError = this.translations().profile.addressSection.errors.deleteFailed;
           }
         });
     }
@@ -228,7 +234,7 @@ export class PersonalAddress implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('❌ Failed to set default address:', error);
-          this.saveError = this.translations().profile.addressSection?.errors?.setDefaultFailed || 'Failed to set default address';
+          this.saveError = this.translations().profile.addressSection.errors.setDefaultFailed;
         }
       });
   }
@@ -238,25 +244,25 @@ export class PersonalAddress implements OnInit, OnDestroy {
    */
   get streetError(): string | null {
     const control = this.addressForm.get('street');
-    const t = this.translations().profile.addressSection?.errors;
-    if (control?.hasError('required')) return t?.streetRequired || 'Street is required';
-    if (control?.hasError('minlength')) return t?.streetMinLength || 'Must be at least 5 characters';
+    const t = this.translations().profile.addressSection.errors;
+    if (control?.hasError('required')) return t.streetRequired;
+    if (control?.hasError('minlength')) return t.streetMinLength;
     return null;
   }
 
   get cityError(): string | null {
     const control = this.addressForm.get('city');
-    const t = this.translations().profile.addressSection?.errors;
-    if (control?.hasError('required')) return t?.cityRequired || 'City is required';
-    if (control?.hasError('minlength')) return t?.cityMinLength || 'Must be at least 2 characters';
+    const t = this.translations().profile.addressSection.errors;
+    if (control?.hasError('required')) return t.cityRequired;
+    if (control?.hasError('minlength')) return t.cityMinLength;
     return null;
   }
 
   get postalCodeError(): string | null {
     const control = this.addressForm.get('postalCode');
     const t = this.translations().profile.addressSection?.errors;
-    if (control?.hasError('required')) return t?.postalCodeRequired || 'Postal code is required';
-    if (control?.hasError('pattern')) return t?.postalCodePattern || 'Postal code must contain at least 5 digits';
+    if (control?.hasError('required')) return t?.postalCodeRequired;
+    if (control?.hasError('pattern')) return t?.postalCodePattern;
     return null;
   }
 

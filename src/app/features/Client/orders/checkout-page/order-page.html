@@ -2,7 +2,10 @@
 <div class="checkout-container">
   <header class="checkout-header">
     <h1>{{ translations().checkout.title }}</h1>
-    <p class="login-prompt">{{ translations().auth.haveAccount }} <a href="auth/login">{{ translations().auth.login }}.</a></p>
+    @if (!isAuthenticated()) {
+    <p class="login-prompt">{{ translations().auth.haveAccount }} <a href="auth/login">{{ translations().auth.login
+        }}.</a></p>
+    }
   </header>
   <!-- Error Message -->
   @if (errorMessage()) {
@@ -26,17 +29,15 @@
             <label>{{ translations().checkout.firstName }}</label>
             <input type="text" formControlName="firstName" placeholder="e.g. Alex">
             @if (shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched) {
-            <span class="error">
-              The first name is required and must have at least 2 characters.
-            </span>
+            <span class="error-message">{{ translations().checkout.errors.firstNameRequired }}</span> 
             }
           </div>
           <div class="form-group">
             <label>{{ translations().checkout.lastName }}</label>
             <input type="text" formControlName="lastName" placeholder="e.g. Doe">
             @if (shippingForm.get('lastName')?.invalid && shippingForm.get('lastName')?.touched) {
-            <span class="error">
-              The last name is required and must have at least 2 characters.
+            <span class="error-message">
+              {{ translations().checkout.errors.lastNameRequired }}
             </span>
             }
           </div>
@@ -44,8 +45,8 @@
             <label>{{ translations().checkout.email }}</label>
             <input type="email" formControlName="email" placeholder="alex@example.com">
             @if (shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched) {
-            <span class="error">
-              A valid email address is required.
+            <span class="error-message">
+              {{ translations().checkout.errors.emailRequired }}
             </span>
             }
           </div>
@@ -53,8 +54,8 @@
             <label>{{ translations().checkout.phone }}</label>
             <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
             @if (shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched) {
-            <span class="error">
-              A valid phone number is required.
+            <span class="error-message">
+             {{ translations().checkout.errors.phoneRequired }}
             </span>
             }
           </div>
@@ -62,8 +63,8 @@
             <label>{{ translations().checkout.address }}</label>
             <input type="text" formControlName="address" placeholder="123 Audio Lane, Apt 4B">
             @if (shippingForm.get('address')?.invalid && shippingForm.get('address')?.touched) {
-            <span class="error">
-              The address is required and must have at least 5 characters.
+            <span class="error-message">
+              {{ translations().checkout.errors.addressRequired }}
             </span>
             }
           </div>
@@ -71,8 +72,8 @@
             <label>{{ translations().checkout.zipCode }}</label>
             <input type="text" formControlName="zipCode" placeholder="10001">
             @if (shippingForm.get('zipCode')?.invalid && shippingForm.get('zipCode')?.touched) {
-            <span class="error">
-              The postal code is required and must have 5 digits.
+            <span class="error-message">
+              {{ translations().checkout.errors.zipCodeRequired }}
             </span>
             }
           </div>
@@ -80,8 +81,8 @@
             <label>{{ translations().checkout.city }}</label>
             <input type="text" formControlName="city" placeholder="New York">
             @if (shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched) {
-            <span class="error">
-              The city is required.
+            <span class="error-message">
+             {{ translations().checkout.errors.cityRequired }}
             </span>
             }
           </div>
@@ -107,8 +108,8 @@
               <span class="material-symbols-outlined">payments</span>
             </div>
             <div class="payment-text">
-              <h3>Cash on Delivery</h3>
-              <p>Pay securely when your order arrives at your doorstep.</p>
+              <h3>{{ translations().checkout.defaultPaymentMethod }}</h3>
+              <p>{{ translations().checkout.paymentMessage }}</p>
             </div>
           </div>
           <span class="status-badge">{{ translations().checkout.selected }}</span>

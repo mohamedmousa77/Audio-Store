@@ -80,10 +80,19 @@ export class ErrorHandlingService {
 
     /**
      * Handle HTTP error
+     * Logs error to console but does NOT show error dialog to user
+     * Components should handle their own user-facing error messages
      */
-    handleHttpError(error: any): void {
+    handleHttpError(error: any, silent: boolean = true): void {
         const message = this.getUserFriendlyMessage(error);
         const status = error?.status || error?.originalError?.status;
-        this.setError(message, status, 'error');
+
+        // Log to console for debugging
+        console.error('HTTP Error:', { message, status, error });
+
+        // Only set error state if not silent (default is silent to avoid showing technical dialogs)
+        if (!silent) {
+            this.setError(message, status, 'error');
+        }
     }
 }

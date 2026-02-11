@@ -121,6 +121,18 @@ export interface Translations {
         secure: string;
         insured: string;
         support: string;
+        errors: {
+            firstNameRequired: string;
+            lastNameRequired: string;
+            emailRequired: string;
+            phoneRequired: string;
+            addressRequired: string;
+            zipCodeRequired: string;
+            cityRequired: string;            
+        }
+        defaultPaymentMethod: string;
+        paymentMessage: string;
+
     };
     orders: {
         title: string;
@@ -210,6 +222,72 @@ export interface Translations {
                 cancelButton: string;
             }
         }
+        addressSection: {
+            title: string;
+            subtitle: string; 
+            addAddressButton: string;
+            loading: string;    
+            defaultBadge: string;
+            setDefaultTitle: string;
+            setDefaultButton: string;
+            editTitle: string;
+            editButton: string;
+            deleteTitle: string;
+            deleteButton: string;
+            confirmDelete: string;
+            addingForm: {
+                street: string; 
+                city: string; 
+                zipCode: string; 
+                country: string; 
+                countryPlaceholder: string;
+            }
+            success: string;
+            successMessage: string;
+            error: string;
+            errorMessage: string;
+            errors: {
+                countryRequired: string;
+                postalCodeRequired: string;
+                postalCodePattern: string;
+                streetRequired: string;
+                streetMinLength: string;
+                cityRequired: string; 
+                cityMinLength: string;
+                setDefaultFailed: string;
+                saveFailed: string;
+                deleteFailed: string;
+                loadFailed: string;
+            }
+            saveButton: string;
+            saveLoading: string;
+            cancelButton: string;
+            emptyState: {
+                emptyTitle: string;
+                emptyMessage: string;
+                emptyButton: string;
+            }
+        }
+        ordersSection: {
+            title: string;
+            subtitle: string;
+            dateFilter:{
+                datefilterTitle: string;
+                allOrders: string;
+                Today: string;
+                Settimana: string;
+                Mese: string;
+            }
+            statuses: {
+                pending: string;
+                confirmed: string;
+                shipped: string;
+                delivered: string;
+                cancelled: string;
+                unknown: string;
+            }
+        }
+        
     };
     productDetails: {
         addToCart: string;

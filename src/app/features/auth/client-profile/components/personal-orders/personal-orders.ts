@@ -118,15 +118,15 @@ export class PersonalOrders implements OnInit {
    * Get status text using translations
    */
   getStatusText(status: OrderStatus): string {
-    const t = this.translations().profile.ordersSection?.statuses;
+    const t = this.translations().profile.ordersSection.statuses;
     const statusMap: { [key: number]: string } = {
-      [OrderStatus.Pending]: t?.pending || 'Pending',
-      [OrderStatus.Confirmed]: t?.confirmed || 'Confirmed',
-      [OrderStatus.Shipped]: t?.shipped || 'Shipped',
-      [OrderStatus.Delivered]: t?.delivered || 'Delivered',
-      [OrderStatus.Canceled]: t?.canceled || 'Canceled'
+      [OrderStatus.Pending]: t.pending,
+      [OrderStatus.Confirmed]: t.confirmed,
+      [OrderStatus.Shipped]: t.shipped,
+      [OrderStatus.Delivered]: t.delivered,
+      [OrderStatus.Canceled]: t.cancelled
     };
-    return statusMap[status] || t?.unknown || 'Unknown';
+    return statusMap[status] || t.unknown;
   }
 
   /**

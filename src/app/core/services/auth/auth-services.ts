@@ -339,7 +339,8 @@ export class AuthServices {
    * This is called automatically after successful authentication
    */
   private mergeGuestCartIfNeeded(): void {
-    const guestSessionId = localStorage.getItem('guest_session_id');
+    // Use the same key as SessionManager: 'audiostore_session_id'
+    const guestSessionId = localStorage.getItem('audiostore_session_id');
 
     if (guestSessionId) {
       console.log('🔄 Merging guest cart with session ID:', guestSessionId);
@@ -348,12 +349,12 @@ export class AuthServices {
         next: (cart) => {
           console.log('✅ Guest cart merged successfully:', cart);
           // Remove guest session ID after successful merge
-          localStorage.removeItem('guest_session_id');
+          localStorage.removeItem('audiostore_session_id');
         },
         error: (error) => {
           console.error('❌ Failed to merge guest cart:', error);
           // Remove guest session ID even on error to prevent retry loops
-          localStorage.removeItem('guest_session_id');
+          localStorage.removeItem('audiostore_session_id');
         }
       });
     } else {

@@ -1,3 +1,4 @@
+import { empty } from 'rxjs';
 import { Translations } from './translation.types';
 
 /**
@@ -122,6 +123,17 @@ export const TRANSLATIONS_EN: Translations = {
         secure: 'Secure',
         insured: 'Insured',
         support: '24/7 Help',
+        errors: {
+            firstNameRequired: 'The first name is required and must have at least 2 characters.',
+            lastNameRequired: 'The last name is required and must have at least 2 characters.',
+            emailRequired: 'The email is required.',
+            phoneRequired: 'The phone number is required.',
+            addressRequired: 'The address is required.',
+            zipCodeRequired: 'The ZIP code is required.',
+            cityRequired: 'The city is required.',
+        },
+        paymentMessage: 'Pay securely when your order arrives at your doorstep.',
+        defaultPaymentMethod: 'Cash on Delivery.',
     },
     orders: {
         title: 'My Orders',
@@ -210,6 +222,72 @@ export const TRANSLATIONS_EN: Translations = {
                 saveButton: 'Save Changes',
                 saveLoading: 'Saving...',
                 cancelButton: 'Cancel',
+            }
+        },
+        addressSection: {
+            title: 'Default Address',
+            subtitle: 'Manage your shipping and billing addresses',
+            addAddressButton: 'Add Address',
+            loading: 'Loading addresses...',
+            defaultBadge: 'Default',
+            setDefaultTitle: 'Set as default address',
+            setDefaultButton: 'Set as Default',
+            editTitle: 'Edit address',
+            editButton: 'Edit',
+            deleteTitle: 'Delete address',
+            deleteButton: 'Delete',
+            confirmDelete: 'Are you sure you want to delete this address?',
+            addingForm: {
+                street:  'Street Address',
+                city: 'City',
+                zipCode: 'Postal Code',
+                country: 'Country',
+                countryPlaceholder: 'Select a country'
+            },
+            success: 'Success!',
+            successMessage: 'Your address has been saved successfully.',
+            error: 'Error!',
+            errorMessage: 'Failed to save address. Please try again.',
+            errors: {
+                countryRequired: 'Country is required',
+                postalCodeRequired: 'Postal code is required',
+                postalCodePattern: 'Postal code must contain at least 5 digits',
+                streetRequired: 'Street address is required',
+                streetMinLength: 'Street address must be at least 5 characters long',
+                cityRequired: 'City is required',
+                cityMinLength: 'City must be at least 2 characters long',
+                deleteFailed: 'Failed to delete address. Please try again.',
+                setDefaultFailed: 'Failed to set default address. Please try again.',
+                saveFailed: 'Failed to save address. Please try again.',
+                loadFailed: 'Unable to load addresses. Please try again later.'
+            },
+            saveButton: 'Save Address',
+            saveLoading: 'Saving...',
+            cancelButton: 'Cancel',
+            emptyState: {
+                emptyTitle: 'No addresses found',
+                emptyMessage: 'Add an address to manage your orders and deliveries',
+                emptyButton: 'Add Your First Address'
+            }            
+        },
+        ordersSection: {
+            title: 'Order History',
+            subtitle: 'Review your past orders and their details',
+            dateFilter: {
+                datefilterTitle: 'Filter',
+                allOrders: 'All Orders',
+                Today: 'Today\'s orders',
+                Settimana: 'This week',
+                Mese: 'This month',
+            },
+            statuses: {
+                pending: 'Pending',
+                confirmed: 'Confirmed',
+                shipped: 'Shipped',
+                delivered: 'Delivered',
+                cancelled: 'Cancelled',
+                unknown: 'Unknown',
+
             }
         }
     },

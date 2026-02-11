@@ -2,17 +2,17 @@
   <!-- Header -->
   <div class="section-header">
     <div class="section-title">
-      <h2>Order History</h2>
-      <p>Track your past orders and their status</p>
+      <h2>{{ translations().profile.ordersSection.title }}</h2>
+      <p>{{ translations().profile.ordersSection.subtitle }}</p>
     </div>
     <div class="date-filter">
-      <label for="dateRange" class="filter-label">Last</label>
+      <label for="dateRange" class="filter-label">{{ translations().profile.ordersSection.dateFilter.datefilterTitle }}</label>
       <select id="dateRange" class="filter-select" [(ngModel)]="selectedDateFilter"
         (change)="onDateFilterChange($any($event.target).value)">
-        <option value="all">All Orders</option>
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
+        <option value="all">{{ translations().profile.ordersSection.dateFilter.allOrders }}</option>
+        <option value="today">{{ translations().profile.ordersSection.dateFilter.Today }}</option>
+        <option value="week">{{ translations().profile.ordersSection.dateFilter.Settimana }}</option>
+        <option value="month">{{ translations().profile.ordersSection.dateFilter.Mese }}</option>
       </select>
     </div>
   </div>

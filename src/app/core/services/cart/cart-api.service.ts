@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 import { HttpService } from '../http/http.service';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import {
@@ -85,9 +86,15 @@ export class CartApiService {
      */
     mergeGuestCart(sessionId: string): Observable<CartResponse> {
         // Backend expects plain string in body: [FromBody] string sessionId
+        // Send as JSON string (not double-stringified)
         return this.httpService.post<CartResponse>(
             API_ENDPOINTS.cart.merge,
-            JSON.stringify(sessionId)
+            sessionId,  // Send as plain string, HttpClient will JSON.stringify it
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            }
         );
     }
 }

@@ -8,6 +8,7 @@ import { CreateOrderRequest } from '../../../../core/models/order';
 import { ClientHeader } from "../../layout/client-header/client-header";
 import { AuthServices } from '../../../../core/services/auth/auth-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { ProfileApiService } from '../../../../core/services/profile/profile-api.service';
 
 /**
  * Checkout Page Component (OrderPage)
@@ -30,6 +31,7 @@ export class OrderPage implements OnInit {
   private cartService = inject(CartServices);
   private orderService = inject(OrderServices);
   private authService = inject(AuthServices);
+  private profileApi = inject(ProfileApiService);
   private router = inject(Router);
   private translationService = inject(TranslationService);
 
@@ -41,6 +43,9 @@ export class OrderPage implements OnInit {
 
   // Translations
   translations = this.translationService.translations;
+
+  // Auth state
+  isAuthenticated = this.authService.isAuthenticated;
 
   // Forms
   shippingForm!: FormGroup;
@@ -63,7 +68,7 @@ export class OrderPage implements OnInit {
 
     this.initializeForms();
 
-    // Pre-fill form with user data if authenticated
+    // Pre-fill form with user data and default address if authenticated
     if (this.authService.isAuthenticated()) {
       const user = this.authService.getCurrentUser();
       if (user) {
@@ -73,6 +78,9 @@ export class OrderPage implements OnInit {
           email: user.email || ''
         });
       }
+
+      // Load user's default address
+      this.loadDefaultAddress();
     }
   }
 
@@ -198,6 +206,32 @@ export class OrderPage implements OnInit {
     } finally {
       this.isProcessing.set(false);
     }
+  }
+
+  /**
+   * Load user's default address and pre-fill shipping form
+   */
+  private loadDefaultAddress(): void {
+    this.profileApi.getAddresses().subscribe({
+      next: (addresses) => {
+        const defaultAddress = addresses.find(addr => addr.isDefault);
+        if (defaultAddress) {
+          console.log('✅ Auto-filling default address:', defaultAddress);
+          this.shippingForm.patchValue({
+            address: defaultAddress.street,
+            city: defaultAddress.city,
+            zipCode: defaultAddress.postalCode,
+            country: defaultAddress.country
+          });
+        } else {
+          console.log('ℹ️ No default address found for user');
+        }
+      },
+      error: (error) => {
+        console.error('❌ Failed to load default address:', error);
+        // Don't show error to user - they can still fill manually
+      }
+    });
   }
 
   /**
