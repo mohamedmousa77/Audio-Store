@@ -3,7 +3,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  phone?: string;
+  phoneNumber?: string;  // Changed from 'phone' to match backend IdentityUser
   role: 'Customer' | 'Admin'; // Changed from 'ruole' to 'role'
   createdAt?: string; // Backend uses this instead of registrationDate
 

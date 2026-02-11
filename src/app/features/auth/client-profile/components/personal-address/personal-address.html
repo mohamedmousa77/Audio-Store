@@ -50,7 +50,7 @@
     <div class="form-group">
       <label for="street" class="form-label">{{ translations().profile.addressSection.addingForm.street }}</label>
       <input id="street" type="text" formControlName="street" class="form-input"
-        placeholder= "1234 Sound Wave Avenue, Apt 46" />
+        placeholder="1234 Sound Wave Avenue, Apt 46" />
       @if (streetError && addressForm.get('street')?.touched) {
       <span class="error-message">
         {{ streetError }}
@@ -62,8 +62,7 @@
     <div class="form-row">
       <div class="form-group">
         <label for="city" class="form-label">{{ translations().profile.addressSection.addingForm.city }}</label>
-        <input id="city" type="text" formControlName="city" class="form-input" 
-          placeholder="San Francisco" />
+        <input id="city" type="text" formControlName="city" class="form-input" placeholder="San Francisco" />
         @if (cityError && addressForm.get('city')?.touched) {
         <span class="error-message">
           {{ cityError }}
@@ -72,9 +71,9 @@
       </div>
 
       <div class="form-group">
-        <label for="postalCode" class="form-label">{{ translations().profile.addressSection.addingForm.zipCode  }}</label>
-        <input id="postalCode" type="text" formControlName="postalCode" class="form-input" 
-          placeholder="94105" />
+        <label for="postalCode" class="form-label">{{ translations().profile.addressSection.addingForm.zipCode
+          }}</label>
+        <input id="postalCode" type="text" formControlName="postalCode" class="form-input" placeholder="94105" />
         @if (postalCodeError && addressForm.get('postalCode')?.touched) {
         <span class="error-message">
           {{ postalCodeError }}
@@ -127,7 +126,7 @@
   <!-- Addresses List -->
   @if (!isAdding && !isLoading && addresses.length > 0) {
   <div class="addresses-list">
-    @for (address of addresses; track address.addressId) {
+    @for (address of addresses; track address.id) {
     <div class="address-card">
       <!-- Default Badge -->
       @if (address.isDefault) {
@@ -148,18 +147,18 @@
       <!-- Action Buttons -->
       <div class="address-actions">
         @if (!address.isDefault) {
-        <button class="btn btn-text" (click)="setAsDefault(address.addressId)" 
+        <button class="btn btn-text" (click)="setAsDefault(address.id)"
           [title]="translations().profile.addressSection.setDefaultTitle">
           <span class="material-symbols-outlined">check</span>
           {{ translations().profile.addressSection.setDefaultButton }}
         </button>
         }
-        <button class="btn btn-text" (click)="startEditing(address)" 
+        <button class="btn btn-text" (click)="startEditing(address)"
           [title]="translations().profile.addressSection.editTitle ">
           <span class="material-symbols-outlined">edit</span>
-          {{ translations().profile.addressSection.editButton  }}
+          {{ translations().profile.addressSection.editButton }}
         </button>
-        <button class="btn btn-text btn-danger" (click)="deleteAddress(address.addressId)" 
+        <button class="btn btn-text btn-danger" (click)="deleteAddress(address.id)"
           [title]="translations().profile.addressSection.deleteTitle ">
           <span class="material-symbols-outlined">delete</span>
           {{ translations().profile.addressSection.deleteButton }}
@@ -176,7 +175,7 @@
     <span class="material-symbols-outlined">location_on</span>
     <h3>{{ translations().profile.addressSection.emptyState.emptyTitle }}</h3>
     <p>{{ translations().profile.addressSection.emptyState.emptyMessage }}</p>
- 
+
   </div>
   }
 </div>

@@ -45,7 +45,7 @@ export class OrderPage implements OnInit {
   translations = this.translationService.translations;
 
   // Auth state
-  isAuthenticated = this.authService.isAuthenticated;
+  isAuthenticated = () => this.authService.isAuthenticated();
 
   // Forms
   shippingForm!: FormGroup;
@@ -75,7 +75,8 @@ export class OrderPage implements OnInit {
         this.shippingForm.patchValue({
           firstName: user.firstName || '',
           lastName: user.lastName || '',
-          email: user.email || ''
+          email: user.email || '',
+          phone: user.phoneNumber || ''
         });
       }
 
@@ -212,23 +213,37 @@ export class OrderPage implements OnInit {
    * Load user's default address and pre-fill shipping form
    */
   private loadDefaultAddress(): void {
+    console.log('🔍 loadDefaultAddress() called');
+    console.log('📋 Current form values:', this.shippingForm.value);
+
     this.profileApi.getAddresses().subscribe({
       next: (addresses) => {
-        const defaultAddress = addresses.find(addr => addr.isDefault);
+        console.log('✅ Addresses received:', addresses);
+        const defaultAddress = addresses.find(addr => addr.isDefault || addresses.length === 1);
         if (defaultAddress) {
           console.log('✅ Auto-filling default address:', defaultAddress);
+          console.log('📝 Patching form with:', {
+            address: defaultAddress.street,
+            city: defaultAddress.city,
+            zipCode: defaultAddress.postalCode,
+            country: defaultAddress.country
+          });
+
           this.shippingForm.patchValue({
             address: defaultAddress.street,
             city: defaultAddress.city,
             zipCode: defaultAddress.postalCode,
             country: defaultAddress.country
           });
+
+          console.log('📋 Form values after patch:', this.shippingForm.value);
         } else {
           console.log('ℹ️ No default address found for user');
         }
       },
       error: (error) => {
         console.error('❌ Failed to load default address:', error);
+        console.error('Error details:', error.status, error.message);
         // Don't show error to user - they can still fill manually
       }
     });

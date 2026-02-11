@@ -91,7 +91,7 @@ export class PersonalInfo implements OnInit, OnDestroy {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      phone: user.phone || '',
+      phone: user.phoneNumber || '',
     });
   }
 

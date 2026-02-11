@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProfileApiService, AddressResponse, SaveAddressRequest } from '../../../../../core/services/profile/profile-api.service';
 import { TranslationService } from '../../../../../core/services/translation/translation.service';
+import { ConfirmDialogService } from '../../../../../core/services/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-personal-address',
@@ -24,6 +25,7 @@ export class PersonalAddress implements OnInit, OnDestroy {
   private profileApi = inject(ProfileApiService);
   private translationService = inject(TranslationService);
   private formBuilder = inject(FormBuilder);
+  private confirmDialog = inject(ConfirmDialogService);
 
   addressForm!: FormGroup;
   addresses: AddressResponse[] = [];
@@ -106,7 +108,7 @@ export class PersonalAddress implements OnInit, OnDestroy {
    */
   startEditing(address: AddressResponse): void {
     this.isAdding = true;
-    this.editingAddressId = address.addressId;
+    this.editingAddressId = address.id;
     this.addressForm.patchValue({
       street: address.street,
       city: address.city,
@@ -179,9 +181,10 @@ export class PersonalAddress implements OnInit, OnDestroy {
   /**
    * Elimina un indirizzo
    */
-  deleteAddress(addressId: number): void {
-    const confirmMessage = this.translations().profile.addressSection.confirmDelete
-    if (confirm(confirmMessage)) {
+  async deleteAddress(addressId: number): Promise<void> {
+    const confirmed = await this.confirmDialog.confirmRemoveAddress();
+    // const confirmMessage = this.translations().profile.addressSection.confirmDelete
+    if (confirmed) {
       this.profileApi.deleteAddress(addressId)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -207,18 +210,20 @@ export class PersonalAddress implements OnInit, OnDestroy {
    */
   setAsDefault(addressId: number): void {
     // Find the address
-    const address = this.addresses.find(a => a.addressId === addressId);
+    const address = this.addresses.find(a => a.id === addressId);
     if (!address) return;
 
     // Save with setAsDefault = true
     const saveData: SaveAddressRequest = {
-      addressId: address.addressId,
+      addressId: address.id,
       street: address.street,
       city: address.city,
       postalCode: address.postalCode,
       country: address.country,
       setAsDefault: true
     };
+
+    console.log('🔍 Setting address as default, payload:', saveData);
 
     this.profileApi.saveAddress(saveData)
       .pipe(takeUntil(this.destroy$))

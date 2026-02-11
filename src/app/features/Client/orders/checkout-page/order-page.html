@@ -29,7 +29,7 @@
             <label>{{ translations().checkout.firstName }}</label>
             <input type="text" formControlName="firstName" placeholder="e.g. Alex">
             @if (shippingForm.get('firstName')?.invalid && shippingForm.get('firstName')?.touched) {
-            <span class="error-message">{{ translations().checkout.errors.firstNameRequired }}</span> 
+            <span class="error-message">{{ translations().checkout.errors.firstNameRequired }}</span>
             }
           </div>
           <div class="form-group">
@@ -55,7 +55,7 @@
             <input type="tel" formControlName="phone" placeholder="+1 (555) 000-0000">
             @if (shippingForm.get('phone')?.invalid && shippingForm.get('phone')?.touched) {
             <span class="error-message">
-             {{ translations().checkout.errors.phoneRequired }}
+              {{ translations().checkout.errors.phoneRequired }}
             </span>
             }
           </div>
@@ -82,7 +82,7 @@
             <input type="text" formControlName="city" placeholder="New York">
             @if (shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched) {
             <span class="error-message">
-             {{ translations().checkout.errors.cityRequired }}
+              {{ translations().checkout.errors.cityRequired }}
             </span>
             }
           </div>
@@ -174,8 +174,7 @@
           translations().checkout.secure }}</div>
         <div class="trust-item"><span class="material-symbols-outlined">package_2</span> {{
           translations().checkout.insured }}</div>
-        <div class="trust-item"><span class="material-symbols-outlined">support_agent</span> {{
-          translations().checkout.support }}</div>
+        
       </div>
     </aside>
   </div>

@@ -97,6 +97,19 @@ export interface Translations {
         unitPrice: string;
         remove: string;
         updateCart: string;
+        clearCartConfirmation: {
+            title: string;
+            message: string;
+            confirmText: string;
+            cancelText: string;
+        }
+        removeItemConfirmation: {
+            title: string;
+            message: string;
+            confirmText: string;
+            cancelText: string;
+        }
+        
     };
     checkout: {
         title: string;
@@ -266,6 +279,12 @@ export interface Translations {
                 emptyTitle: string;
                 emptyMessage: string;
                 emptyButton: string;
+            }
+            removeConfirmation:{
+                title: string;
+                message: string;
+                confirmText: string;
+                cancelText: string;
             }
         }
         ordersSection: {

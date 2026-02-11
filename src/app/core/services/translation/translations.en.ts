@@ -99,6 +99,18 @@ export const TRANSLATIONS_EN: Translations = {
         product: 'Product',
         remove: 'Remove',
         updateCart: 'Update Cart',
+        removeItemConfirmation: {
+            title: 'Remove Product',
+            message: 'Do you want to remove this product from the cart?',
+            confirmText: 'Remove',
+            cancelText: 'Cancel',
+        },
+        clearCartConfirmation: {
+            title: 'Clear Cart',
+            message: 'Do you want to completely clear the cart? This action cannot be undone.',
+            confirmText: 'Clear',
+            cancelText: 'Cancel',
+        }
     },
     checkout: {
         title: 'Checkout',
@@ -268,7 +280,13 @@ export const TRANSLATIONS_EN: Translations = {
                 emptyTitle: 'No addresses found',
                 emptyMessage: 'Add an address to manage your orders and deliveries',
                 emptyButton: 'Add Your First Address'
-            }            
+            },    
+            removeConfirmation: {
+                title: 'Remove Address',
+                message: 'Are you sure you want to remove this address?',
+                confirmText: 'Remove',
+                cancelText: 'Cancel',
+            }        
         },
         ordersSection: {
             title: 'Order History',

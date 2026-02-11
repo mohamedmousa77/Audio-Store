@@ -88,7 +88,7 @@ export interface UpdateProfileRequest {
 }
 
 export interface AddressResponse {
-    addressId: number;
+    id: number;
     street: string;
     city: string;
     postalCode: string;

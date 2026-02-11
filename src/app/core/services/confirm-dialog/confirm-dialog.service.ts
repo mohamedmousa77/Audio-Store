@@ -1,6 +1,6 @@
 import { Injectable, inject, ApplicationRef, createComponent, EnvironmentInjector } from '@angular/core';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
-
+import { TranslationService } from '../translation/translation.service';
 /**
  * Confirmation Dialog Service
  * Manages confirmation dialogs for user actions
@@ -11,7 +11,10 @@ import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/compo
 export class ConfirmDialogService {
     private appRef = inject(ApplicationRef);
     private injector = inject(EnvironmentInjector);
+    private translationService = inject(TranslationService);
+
     private currentDialog: any = null;
+    translations = this.translationService.translations;
 
     /**
      * Show confirmation dialog
@@ -68,10 +71,10 @@ export class ConfirmDialogService {
      */
     async confirmRemoveItem(): Promise<boolean> {
         return this.showConfirm({
-            title: 'Rimuovi Prodotto',
-            message: 'Vuoi rimuovere questo prodotto dal carrello?',
-            confirmText: 'Rimuovi',
-            cancelText: 'Annulla',
+            title: this.translations().cart.removeItemConfirmation.title,
+            message: this.translations().cart.removeItemConfirmation.message,
+            confirmText: this.translations().cart.removeItemConfirmation.confirmText,
+            cancelText: this.translations().cart.removeItemConfirmation.cancelText,
             isDangerous: true
         });
     }
@@ -81,10 +84,23 @@ export class ConfirmDialogService {
      */
     async confirmClearCart(): Promise<boolean> {
         return this.showConfirm({
-            title: 'Svuota Carrello',
-            message: 'Vuoi svuotare completamente il carrello? Questa azione non può essere annullata.',
-            confirmText: 'Svuota',
-            cancelText: 'Annulla',
+            title: this.translations().cart.clearCartConfirmation.title,
+            message: this.translations().cart.clearCartConfirmation.message,
+            confirmText: this.translations().cart.clearCartConfirmation.confirmText,
+            cancelText: this.translations().cart.clearCartConfirmation.cancelText,
+            isDangerous: true
+        });
+    }
+
+    /**
+     * Show remove address confirmation
+     */
+     async confirmRemoveAddress(): Promise<boolean> {
+        return this.showConfirm({
+            title: this.translations().profile.addressSection.removeConfirmation.title,
+            message:this.translations().profile.addressSection.removeConfirmation.message,
+            confirmText: this.translations().profile.addressSection.removeConfirmation.confirmText,
+            cancelText: this.translations().profile.addressSection.removeConfirmation.cancelText,
             isDangerous: true
         });
     }

@@ -97,6 +97,18 @@ export const TRANSLATIONS_IT: Translations = {
         product: 'Prodotto',
         remove: 'Rimuovi',
         updateCart: 'Aggiorna Carrello',
+        removeItemConfirmation: {
+            title: 'Rimuovi Prodotto',
+            message: 'Vuoi rimuovere questo prodotto dal carrello?',
+            confirmText: 'Rimuovi',
+            cancelText: 'Annulla',
+        },
+        clearCartConfirmation: {
+            title: 'Svuota Carrello',
+            message: 'Vuoi svuotare completamente il carrello? Questa azione non può essere annullata.',
+            confirmText: 'Svuota',
+            cancelText: 'Annulla',
+        }
     },
     checkout: {
         title: 'Checkout',
@@ -267,6 +279,12 @@ export const TRANSLATIONS_IT: Translations = {
                 emptyTitle: 'Nessun indirizzo trovato',
                 emptyMessage: 'Aggiungi un indirizzo per gestire gli ordini e le consegne',
                 emptyButton: 'Aggiungi Indirizzo'
+            },
+            removeConfirmation:{
+                title: 'Rimuovi Indirizzo',
+                message: 'Vuoi rimuovere questo indirizzo?',
+                confirmText: 'Rimuovi',
+                cancelText: 'Annulla',
             }
         },
         ordersSection: {
