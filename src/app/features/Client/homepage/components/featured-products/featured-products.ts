@@ -1,4 +1,4 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductCard } from '../../../layout/product-card/product-card';
@@ -34,11 +34,25 @@ export class FeaturedProducts {
 
   translations = this.translationService.translations;
 
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
   /**
    * Navigate to product details page
    * @param productId Product ID (number)
    */
   goToProduct(productId: number): void {
     this.router.navigate(['/client/product', productId]);
+  }
+
+  scrollLeft() {
+    if (this.scrollContainer?.nativeElement) {
+      this.scrollContainer.nativeElement.scrollBy({ left: -320, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight() {
+    if (this.scrollContainer?.nativeElement) {
+      this.scrollContainer.nativeElement.scrollBy({ left: 320, behavior: 'smooth' });
+    }
   }
 }

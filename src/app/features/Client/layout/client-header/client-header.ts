@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductServices } from '../../../../core/services/product/product-services';
@@ -7,6 +7,7 @@ import { CategoryServices } from '../../../../core/services/category/category-se
 import { FormsModule } from '@angular/forms';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { Product } from '../../../../core/models/product';
 
 @Component({
   selector: 'app-client-header',
@@ -35,6 +36,11 @@ export class ClientHeader implements OnInit {
   mobileMenuOpen = false;
   isLoggedIn = false;
 
+  // Search dropdown
+  searchResults = signal<Product[]>([]);
+  showDropdown = false;
+  isSearching = false;
+
   ngOnInit(): void {
     // Load categories
     // this.categoryService.loadCategories();
@@ -56,9 +62,45 @@ export class ClientHeader implements OnInit {
 
   onSearch(): void {
     if (this.searchTerm.trim()) {
+      this.closeDropdown();
       this.productService.setSearch(this.searchTerm);
       this.router.navigate(['/category', 'all']);
     }
+  }
+
+  onSearchInput(): void {
+    const term = this.searchTerm.trim();
+
+    if (term.length < 2) {
+      this.searchResults.set([]);
+      this.showDropdown = false;
+      return;
+    }
+
+    this.isSearching = true;
+    this.showDropdown = true;
+
+    // Filter products based on search term
+    const allProducts = this.productService.products();
+    const filtered = allProducts.filter(product =>
+      product.name.toLowerCase().includes(term.toLowerCase()) ||
+      product.description?.toLowerCase().includes(term.toLowerCase()) ||
+      product.categoryName?.toLowerCase().includes(term.toLowerCase())
+    ).slice(0, 5); // Limit to 5 results
+
+    this.searchResults.set(filtered);
+    this.isSearching = false;
+  }
+
+  navigateToProduct(productId: number): void {
+    this.closeDropdown();
+    this.searchTerm = '';
+    this.router.navigate(['/client/product', productId]);
+  }
+
+  closeDropdown(): void {
+    this.showDropdown = false;
+    this.searchResults.set([]);
   }
 
   toggleMobileMenu(): void {

@@ -27,9 +27,41 @@
     <div class="header-search">
       <form (ngSubmit)="onSearch()" class="search-form">
         <span class="material-icons search-icon">search</span>
-        <input type="text" [(ngModel)]="searchTerm" name="search"
+        <input type="text" [(ngModel)]="searchTerm" name="search" (input)="onSearchInput()" (blur)="closeDropdown()"
           [placeholder]="translations().header.searchPlaceholder" class="search-input" />
       </form>
+
+      <!-- Search Dropdown -->
+      @if (showDropdown) {
+      <div class="search-dropdown">
+        @if (isSearching) {
+        <div class="search-loading">
+          <span class="material-icons spin">refresh</span>
+          <span>Searching...</span>
+        </div>
+        }
+        @else if (searchResults().length > 0) {
+        <div class="search-results">
+          @for (product of searchResults(); track product.id) {
+          <div class="search-result-item" (mousedown)="navigateToProduct(product.id)">
+            <img [src]="product.mainImage || 'assets/placeholder.jpg'" [alt]="product.name" class="result-image" />
+            <div class="result-info">
+              <div class="result-name">{{ product.name }}</div>
+              <div class="result-category">{{ product.categoryName }}</div>
+            </div>
+            <div class="result-price">€{{ product.price.toFixed(2) }}</div>
+          </div>
+          }
+        </div>
+        }
+        @else {
+        <div class="search-empty">
+          <span class="material-icons">search_off</span>
+          <span>No products found</span>
+        </div>
+        }
+      </div>
+      }
     </div>
 
     <!-- Header Actions -->

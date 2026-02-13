@@ -19,9 +19,23 @@
 
     <!-- Products Grid -->
     @if (!loading()) {
-    <div class="products-grid">
-      @for (product of products; track product.id) {
-      <app-product-card [product]="product" [clickable]="true" (productSelected)="goToProduct($event)" />
+    <div class="products-wrapper">
+      @if (products.length > 4) {
+      <button class="scroll-btn left" (click)="scrollLeft()" aria-label="Scroll left">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      }
+
+      <div class="products-grid" #scrollContainer>
+        @for (product of products; track product.id) {
+        <app-product-card [product]="product" [clickable]="true" (productSelected)="goToProduct($event)" />
+        }
+      </div>
+
+      @if (products.length > 4) {
+      <button class="scroll-btn right" (click)="scrollRight()" aria-label="Scroll right">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
       }
     </div>
     }

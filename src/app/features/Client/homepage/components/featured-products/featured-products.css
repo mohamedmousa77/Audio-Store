@@ -104,3 +104,115 @@
     transform: rotate(360deg);
   }
 }
+
+/* ============================================
+   SCROLLING FUNCTIONALITY
+   ============================================ */
+
+.products-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.products-grid {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+  padding: 1rem 0.5rem;
+  width: 100%;
+}
+
+/* Hide scrollbar for Chrome/Safari/Webkit */
+.products-grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* Product cards in scroll mode */
+.products-grid app-product-card {
+  flex: 0 0 calc((100% - 4.5rem) / 4);
+  /* 4 cards visible */
+  min-width: 280px;
+  max-width: 350px;
+}
+
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: white;
+  border: 1px solid #e8ddce;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  color: #1c160d;
+
+  &:hover {
+    background: #f49d25;
+    color: white;
+    border-color: #f49d25;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.5rem;
+  }
+}
+
+.scroll-btn.left {
+  left: -20px;
+}
+
+.scroll-btn.right {
+  right: -20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1280px) {
+  .products-grid app-product-card {
+    flex: 0 0 calc((100% - 3rem) / 3);
+    /* 3 cards on large screens */
+  }
+}
+
+@media (max-width: 1024px) {
+  .products-grid app-product-card {
+    flex: 0 0 calc((100% - 1.5rem) / 2);
+    /* 2 cards on tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-btn {
+    display: none;
+    /* Hide scroll buttons on mobile */
+  }
+
+  .products-grid {
+    gap: 1rem;
+  }
+
+  .products-grid app-product-card {
+    flex: 0 0 280px;
+    /* Fixed width for mobile scroll */
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid app-product-card {
+    flex: 0 0 250px;
+    min-width: 250px;
+  }
+}
