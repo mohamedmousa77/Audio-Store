@@ -19,12 +19,14 @@
 /* Page Header */
 .page-header {
   margin-bottom: 2rem;
+
   .page-title {
     font-size: 2rem;
     font-weight: 700;
     color: #1c160d;
     margin: 0 0 0.5rem 0;
   }
+
   .page-subtitle {
     color: #9c7a49;
     font-size: 0.9375rem;
@@ -53,6 +55,7 @@
   flex: 1;
   min-width: 280px;
   position: relative;
+
   .material-icons {
     position: absolute;
     left: 1rem;
@@ -69,6 +72,7 @@
   border-radius: 0.75rem;
   background: #f8f7f5;
   transition: all 0.3s;
+
   &:focus {
     outline: none;
     border-color: #f49d25;
@@ -99,11 +103,15 @@
   align-items: center;
   padding-top: 1rem;
   border-top: 1px solid #e8ddce;
+
   p {
     margin: 0;
     color: #9c7a49;
     font-size: 0.875rem;
-    strong { color: #1c160d; }
+
+    strong {
+      color: #1c160d;
+    }
   }
 }
 
@@ -119,30 +127,39 @@
 .products-table {
   width: 100%;
   border-collapse: collapse;
+
   thead tr {
-    background-color: #f8f7f5; /* Sfondo beige esatto */
+    background-color: #f8f7f5;
+    /* Sfondo beige esatto */
     border-bottom: 2px solid #e8ddce;
   }
+
   th {
     padding: 1rem 1.25rem;
     text-align: left;
     font-size: 0.75rem;
     font-weight: 700;
-    color: #9c7a49; /* Marrone coordinato */
+    color: #9c7a49;
+    /* Marrone coordinato */
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
+
   td {
     padding: 1.25rem;
     border-bottom: 1px solid #f2eee9;
     vertical-align: middle;
   }
 }
+
 .active-row {
   background-color: #fffcf4 !important;
   border-left: 4px solid #f39c12 !important;
 }
-.product-row:hover { background-color: #fdfaf5;}
+
+.product-row:hover {
+  background-color: #fdfaf5;
+}
 
 /* Celle Prodotto */
 .product-info-cell {
@@ -187,8 +204,16 @@
   font-size: 0.65rem;
   font-weight: 700;
   margin-right: 0.35rem;
-  &.featured { background: #fef3c7; color: #d97706; }
-  &.new { background: #dbeafe; color: #2563eb; }
+
+  &.featured {
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  &.new {
+    background: #dbeafe;
+    color: #2563eb;
+  }
 }
 
 /* Pulsanti Azione sincronizzati */
@@ -242,7 +267,7 @@
     }
   }
 
-    &.btn-secondary {
+  &.btn-secondary {
     background: white;
     color: #1c160d;
     border: 2px solid #e8ddce;
@@ -252,5 +277,161 @@
       border-color: #f49d25;
       color: #f49d25;
     }
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet - Adjust layout */
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content-area {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Mobile - Table to cards + responsive controls */
+@media (max-width: 768px) {
+  .content-area {
+    padding: 1.5rem 1rem;
+  }
+
+  .page-header .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-header .page-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .controls-card {
+    padding: 1rem;
+  }
+
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .search-box {
+    min-width: 100%;
+  }
+
+  .filter-controls {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-select {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .results-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  /* Table to cards conversion */
+  .products-table thead {
+    display: none;
+  }
+
+  .products-table,
+  .products-table tbody,
+  .products-table tr,
+  .products-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .product-row {
+    margin-bottom: 1rem;
+    border: 1px solid #e8ddce;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: white;
+  }
+
+  .product-row td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f8f7f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .product-row td:first-child {
+    border-top: none;
+  }
+
+  .product-row td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add mobile labels */
+  .product-row td:not(:first-child)::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #9c7a49;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-right: 1rem;
+  }
+
+  .product-info-cell {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .action-buttons {
+    justify-content: flex-end;
+  }
+}
+
+/* Small mobile - Further optimizations */
+@media (max-width: 480px) {
+  .content-area {
+    padding: 1rem 0.75rem;
+  }
+
+  .page-header .page-title {
+    font-size: 1.25rem;
+  }
+
+  .controls-card {
+    padding: 0.875rem;
+  }
+
+  .product-row td {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .product-thumb {
+    width: 36px;
+    height: 36px;
+  }
+
+  .product-name {
+    font-size: 0.875rem;
+  }
+
+  .category-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
   }
 }

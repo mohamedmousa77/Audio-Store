@@ -37,7 +37,7 @@
 }
 
 .dashboard-card {
-  min-width: 0; 
+  min-width: 0;
   overflow: hidden;
   background: white;
   border-radius: 1rem;
@@ -90,13 +90,50 @@
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
+    padding-top: 70px;
   }
 
   .content-area {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
   }
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-card {
+    padding: 1.25rem;
+  }
+
+  .dashboard-card .card-header .card-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* Small mobile - Further optimizations */
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 60px;
+  }
+
+  .content-area {
+    padding: 1rem 0.75rem;
+  }
+
+  .dashboard-card {
+    padding: 1rem;
+  }
+
+  .dashboard-card .card-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .dashboard-card .card-header .card-title {
+    font-size: 1rem;
+  }
+
+  .dashboard-card .card-header .view-all-link {
+    font-size: 0.8125rem;
   }
 }

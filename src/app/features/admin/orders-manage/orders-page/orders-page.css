@@ -2,13 +2,15 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #fbfaf8; /* Sfondo leggermente panna come cx-page */
+  background: #fbfaf8;
+  /* Sfondo leggermente panna come cx-page */
 }
 
 .main-content {
   flex: 1;
-  margin-left: 240px; /* Larghezza sidebar */
-  padding-top: 60px; 
+  margin-left: 240px;
+  /* Larghezza sidebar */
+  padding-top: 60px;
 }
 
 .content-area {
@@ -34,14 +36,17 @@
   gap: 1.25rem;
   align-items: center;
   margin-bottom: 1.25rem;
-  flex-wrap: nowrap; /* Impedisce che gli elementi vadano a capo */
+  flex-wrap: nowrap;
+  /* Impedisce che gli elementi vadano a capo */
 }
 
 .filter-controls {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* Spazio tra la select e il bottone Clear */
-  flex-shrink: 0; /* Impedisce alla sezione filtri di restringersi troppo */
+  gap: 0.75rem;
+  /* Spazio tra la select e il bottone Clear */
+  flex-shrink: 0;
+  /* Impedisce alla sezione filtri di restringersi troppo */
 }
 
 .search-box {
@@ -63,7 +68,8 @@
   padding: 0.875rem 1rem 0.875rem 3rem;
   border: 2px solid #e8ddce;
   border-radius: 0.75rem;
-  background: #f8f7f5; /* Sfondo beige per l'input */
+  background: #f8f7f5;
+  /* Sfondo beige per l'input */
   font-size: 0.9375rem;
   transition: all 0.3s;
 }
@@ -86,10 +92,13 @@
 
 .filter-select:focus {
   outline: none;
-  border-color: #f49d25; /* Colore primario arancione invece di nero */
-  box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.1); /* Effetto alone opzionale */
+  border-color: #f49d25;
+  /* Colore primario arancione invece di nero */
+  box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.1);
+  /* Effetto alone opzionale */
 }
-.filter-select:hover{
+
+.filter-select:hover {
   border-color: #f49d25;
   cursor: pointer;
 }
@@ -198,7 +207,8 @@
   text-align: left;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #9c7a49; /* Testo marrone */
+  color: #9c7a49;
+  /* Testo marrone */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -222,14 +232,17 @@
 
 /* Ordine Attivo (Selezionato per Modifica) */
 .active-row {
-  background-color: #fffcf4 !important; /* Tint arancio chiaro */
-  border-left: 4px solid #f39c12 !important; /* Barra laterale focus */
+  background-color: #fffcf4 !important;
+  /* Tint arancio chiaro */
+  border-left: 4px solid #f39c12 !important;
+  /* Barra laterale focus */
 }
 
 /* Dettagli Celle */
 .order-id-label {
   font-weight: 700;
-  color: #f49d25; /* ID Ordine Arancione */
+  color: #f49d25;
+  /* ID Ordine Arancione */
 }
 
 .customer-cell {
@@ -286,10 +299,174 @@
   transition: color 0.2s;
 }
 
-.actions .view:hover { color: #0284c7; }
-.actions .edit:hover { color: #d97706; }
+.actions .view:hover {
+  color: #0284c7;
+}
+
+.actions .edit:hover {
+  color: #d97706;
+}
 
 /* Wrapper Form Dettaglio */
 #order-detail-section {
-  scroll-margin-top: 120px; 
+  scroll-margin-top: 120px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet - Adjust layout */
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content-area {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Mobile - Table to cards + responsive controls */
+@media (max-width: 768px) {
+  .content-area {
+    padding: 1.5rem 1rem;
+  }
+
+  .controls-card {
+    padding: 1rem;
+  }
+
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .filter-controls {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-select {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .results-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .summary-chips {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .summary-chip {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+  }
+
+  /* Table to cards conversion */
+  .model-table thead {
+    display: none;
+  }
+
+  .model-table,
+  .model-table tbody,
+  .model-table tr,
+  .model-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .order-row {
+    margin-bottom: 1rem;
+    border: 1px solid #e8ddce;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: white;
+  }
+
+  .order-row td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f8f7f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .order-row td:first-child {
+    border-top: none;
+  }
+
+  .order-row td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add mobile labels */
+  .order-row td:not(:first-child):not(:last-child)::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #9c7a49;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-right: 1rem;
+  }
+
+  .customer-cell {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+}
+
+/* Small mobile - Further optimizations */
+@media (max-width: 480px) {
+  .content-area {
+    padding: 1rem 0.75rem;
+  }
+
+  .controls-card {
+    padding: 0.875rem;
+  }
+
+  .order-row td {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .avatar-small {
+    width: 28px;
+    height: 28px;
+    font-size: 0.6875rem;
+  }
+
+  .cell-texts .name {
+    font-size: 0.875rem;
+  }
+
+  .cell-texts .sub {
+    font-size: 0.6875rem;
+  }
+
+  .order-price {
+    font-size: 0.875rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
 }

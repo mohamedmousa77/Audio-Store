@@ -15,6 +15,11 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  @media (max-width: 768px) {
+    height: 300px;
+    background-attachment: scroll; /* Fix for iOS performance */
+  }
 }
 
 .hero-overlay {
@@ -34,6 +39,15 @@
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: -2px;
+
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
 }
 
 .category-description {
@@ -41,6 +55,10 @@
   font-size: 1.25rem;
   max-width: 600px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 }
 
 /* Filters Drawer */

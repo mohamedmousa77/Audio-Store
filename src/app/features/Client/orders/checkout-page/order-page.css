@@ -4,7 +4,7 @@
   --bg-beige: #f8f7f5;
   --text-dark: #1c160d;
   --text-muted: #9c7a49;
-   --error: #e74c3c;
+  --error: #e74c3c;
 }
 
 .checkout-container {
@@ -18,19 +18,29 @@
 .checkout-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;        
+  align-items: baseline;
   margin-bottom: 40px;
-  border-bottom: 1.5px solid #e8ddce;  
+  border-bottom: 1.5px solid #e8ddce;
   padding-bottom: 15px;
 }
+
 .checkout-header h1 {
   font-size: 38px;
   font-weight: 800;
   color: #1c160d;
   margin: 0;
 }
-.login-prompt { font-size: 14px; color: var(--text-muted); }
-.login-prompt a { color: var(--text-muted); font-weight: 700; text-decoration: underline; }
+
+.login-prompt {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.login-prompt a {
+  color: var(--text-muted);
+  font-weight: 700;
+  text-decoration: underline;
+}
 
 /* Layout Grid */
 .checkout-content {
@@ -39,6 +49,7 @@
   gap: 50px;
   margin-top: 40px;
 }
+
 .error-message {
   font-size: 12px;
   color: var(--error);
@@ -54,10 +65,11 @@
   gap: 15px;
   margin-bottom: 25px;
 
-  &.Payment-Method{
+  &.Payment-Method {
     margin-top: 20px;
   }
 }
+
 .step-badge {
   background: var(--primary-orange);
   color: white;
@@ -70,11 +82,23 @@
   font-weight: 800;
   font-size: 14px;
 }
-.section-header h2 { font-size: 20px; font-weight: 800; margin: 0; }
+
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+}
 
 /* Forms */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.full-width { grid-column: 1 / -1; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
 
 .form-group label {
   display: block;
@@ -83,7 +107,9 @@
   margin-bottom: 8px;
   color: var(--text-dark);
 }
-.form-group input, .form-group select {
+
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #e2e2e2;
@@ -102,21 +128,52 @@
   justify-content: space-between;
   align-items: center;
 }
-.payment-card-selector.selected { border-left: 5px solid var(--primary-orange); }
-.payment-info { display: flex; gap: 15px; align-items: center; }
-.payment-text h3 { font-size: 15px; font-weight: 800; margin: 0; }
-.payment-text p { font-size: 13px; color: var(--text-muted); margin: 5px 0 0; }
-.status-badge { background: #e6f7ef; color: #27ae60; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 5px; }
+
+.payment-card-selector.selected {
+  border-left: 5px solid var(--primary-orange);
+}
+
+.payment-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.payment-text h3 {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.payment-text p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 5px 0 0;
+}
+
+.status-badge {
+  background: #e6f7ef;
+  color: #27ae60;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
 
 /* Sidebar */
 .order-summary-card {
   background: white;
   border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
   height: fit-content;
 }
-.order-summary-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 25px; }
+
+.order-summary-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 25px;
+}
 
 .summary-product-item {
   display: flex;
@@ -124,20 +181,82 @@
   gap: 12px;
   margin-bottom: 15px;
 }
-.mini-thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; background: #f0f0f0; }
-.mini-name { font-size: 13px; font-weight: 800; margin: 0; }
-.mini-meta { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
-.mini-price { font-size: 13px; font-weight: 700; margin-left: auto; }
 
-.cost-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: var(--text-muted); font-weight: 600; }
-.cost-val { color: var(--text-dark); font-weight: 700; }
-.text-green { color: #27ae60; }
+.mini-thumb {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f0f0f0;
+}
 
-.total-section { border-top: 1px solid #eee; margin-top: 20px; padding-top: 20px; }
-.total-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; }
-.total-label { font-size: 16px; font-weight: 800; }
-.total-price { display: block; font-size: 28px; font-weight: 900; color: var(--primary-orange); text-align: right; }
-.tax-note { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+.mini-name {
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.mini-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+.mini-price {
+  font-size: 13px;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.cost-val {
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+.text-green {
+  color: #27ae60;
+}
+
+.total-section {
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.total-price {
+  display: block;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--primary-orange);
+  text-align: right;
+}
+
+.tax-note {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
 
 .btn-confirm-order {
   width: 100%;
@@ -157,7 +276,7 @@
 
 .btn-confirm-order:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -170,4 +289,168 @@
   font-weight: 700;
   color: var(--text-muted);
 }
-.trust-item { display: flex; align-items: center; gap: 5px; }
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ============================================ */
+/* RESPONSIVE DESIGN */
+/* ============================================ */
+
+/* Tablet Layout */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .checkout-container {
+    padding: 30px 7%;
+  }
+
+  .checkout-content {
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+  }
+}
+
+/* Mobile Layout */
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 20px 5%;
+  }
+
+  .checkout-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .checkout-header h1 {
+    font-size: 24px;
+  }
+
+  .login-prompt {
+    font-size: 13px;
+  }
+
+  /* Stack content vertically */
+  .checkout-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  /* Single column form grid */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .full-width {
+    grid-column: 1;
+  }
+
+  /* Section headers */
+  .section-header h2 {
+    font-size: 18px;
+  }
+
+  .step-badge {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  /* Form inputs */
+  .form-group input,
+  .form-group select {
+    padding: 14px 15px;
+    font-size: 16px;
+    /* Prevent zoom on iOS */
+  }
+
+  /* Payment card */
+  .payment-card-selector {
+    padding: 15px;
+  }
+
+  .payment-text h3 {
+    font-size: 14px;
+  }
+
+  .payment-text p {
+    font-size: 12px;
+  }
+
+  /* Order summary */
+  .order-summary-card {
+    position: static;
+    padding: 25px;
+  }
+
+  .order-summary-card h3 {
+    font-size: 16px;
+  }
+
+  .total-price {
+    font-size: 24px;
+  }
+
+  .btn-confirm-order {
+    padding: 16px;
+    font-size: 15px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .checkout-container {
+    padding: 15px 3%;
+  }
+
+  .checkout-header h1 {
+    font-size: 20px;
+  }
+
+  .section-header h2 {
+    font-size: 16px;
+  }
+
+  .step-badge {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .order-summary-card {
+    padding: 20px;
+  }
+
+  .mini-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mini-name {
+    font-size: 12px;
+  }
+
+  .total-price {
+    font-size: 22px;
+  }
+
+  .trust-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}
