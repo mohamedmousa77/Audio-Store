@@ -5,6 +5,17 @@
     <app-admin-header />
 
     <div class="content-area">
+
+      <!-- Loading overlay during save -->
+      @if (saving()) {
+      <div class="saving-overlay">
+        <div class="saving-dialog">
+          <div class="spinner"></div>
+          <p>Salvataggio in corso...</p>
+        </div>
+      </div>
+      }
+
       <div class="stats-row">
         <div class="stat-box">
           <div class="stat-icon-square">
@@ -77,8 +88,8 @@
         </div>
 
         <div class="results-info">
-          <p> Showing <strong>{{ filteredCategories().length }}</strong> of <strong>{{ categories().length }}</strong>
-            categories </p>
+          <p>Showing <strong>{{ filteredCategories().length }}</strong> of <strong>{{ categories().length }}</strong>
+            categories</p>
           <button class="btn btn-primary" (click)="openAddCategory()">
             <span class="material-icons">add</span>
             Add New Category
@@ -86,12 +97,13 @@
         </div>
       </div>
 
+      <!-- TABLE VIEW -->
       @if (viewMode() === 'table') {
       <div class="categories-list-container">
         <table class="model-table">
           <thead>
             <tr>
-              <th>ICON</th>
+              <th>IMAGE</th>
               <th>NAME & DESCRIPTION</th>
               <th>PRODUCTS</th>
               <th>ACTIONS</th>
@@ -101,7 +113,13 @@
             @for (category of filteredCategories(); track category.id) {
             <tr>
               <td>
-                <div class="table-icon-box"><span class="material-icons">{{category.icon}}</span></div>
+                <div class="table-image-box">
+                  @if (category.imageUrl) {
+                  <img [src]="category.imageUrl" [alt]="category.name" />
+                  } @else {
+                  <span class="material-icons">category</span>
+                  }
+                </div>
               </td>
               <td>
                 <div class="name-desc-cell">
@@ -109,11 +127,21 @@
                   <p>{{category.description}}</p>
                 </div>
               </td>
-              <td><span class="prod-count-badge">{{getProductCount(category.id)}}</span></td>
+              <td>
+                <span class="prod-count-badge clickable" [class.flash-red]="flashCategoryId() === category.id"
+                  (click)="navigateToProducts(category.id, category.name)">
+                  {{getProductCount(category.id)}}
+                  <span class="material-icons badge-arrow">arrow_forward</span>
+                </span>
+              </td>
               <td>
                 <div class="actions">
-                  <span class="material-icons edit" (click)="editCategory(category)">edit</span>
-                  <span class="material-icons delete" (click)="deleteCategory(category)">delete</span>
+                  <button class="action-btn edit-btn" (click)="editCategory(category)" title="Modifica">
+                    <span class="material-icons">edit</span>
+                  </button>
+                  <button class="action-btn delete-btn" (click)="deleteCategory(category)" title="Elimina">
+                    <span class="material-icons">delete</span>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -123,12 +151,17 @@
       </div>
       }
 
+      <!-- GRID VIEW -->
       @if (viewMode() === 'grid') {
       <div class="categories-grid">
         @for (category of filteredCategories(); track category.id) {
         <div class="category-card">
-          <div class="card-icon">
-            <span class="material-icons">{{ category.icon }}</span>
+          <div class="card-image">
+            @if (category.imageUrl) {
+            <img [src]="category.imageUrl" [alt]="category.name" />
+            } @else {
+            <span class="material-icons">category</span>
+            }
           </div>
 
           <div class="card-content">
@@ -136,18 +169,20 @@
             <p class="category-description">{{ category.description }}</p>
 
             <div class="category-meta">
-              <div class="meta-item">
+              <div class="meta-item clickable" [class.flash-red]="flashCategoryId() === category.id"
+                (click)="navigateToProducts(category.id, category.name)">
                 <span class="material-icons">inventory_2</span>
                 <span class="meta-value">{{ getProductCount(category.id) }} products</span>
+                <span class="material-icons meta-arrow">arrow_forward</span>
               </div>
             </div>
           </div>
 
           <div class="card-actions">
-            <button class="action-btn edit-btn" (click)="editCategory(category)" title="Edit Category">
+            <button class="action-btn edit-btn" (click)="editCategory(category)" title="Modifica">
               <span class="material-icons">edit</span>
             </button>
-            <button class="action-btn delete-btn" (click)="deleteCategory(category)" title="Delete Category">
+            <button class="action-btn delete-btn" (click)="deleteCategory(category)" title="Elimina">
               <span class="material-icons">delete</span>
             </button>
           </div>
@@ -165,12 +200,13 @@
       </div>
       }
 
+      <!-- CATEGORY FORM -->
       @if (isFormOpen()) {
       <div id="category-form-section" class="form-section-card">
         <div class="form-header">
           <div class="header-info">
             <h2 class="detail-title">{{ editingCategory()?.id ? 'Edit Category: ' : 'Add New Category' }}
-              <span>{{ editingCategory()?.id ? editingCategory()?.name : '' }} </span>
+              <span>{{ editingCategory()?.id ? editingCategory()?.name : '' }}</span>
             </h2>
           </div>
           <div class="header-actions">
@@ -188,23 +224,40 @@
             </div>
             <div class="form-group">
               <label>Description</label>
-              <textarea [ngModel]="formCategory().description" (ngModelChange)="updateFormDescription($event)"
-                rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Icon Name (Material Icons)</label>
-              <input type="text" [ngModel]="formCategory().icon" (ngModelChange)="updateFormIcon($event)" />
+              <textarea [ngModel]="formCategory().description" (ngModelChange)="updateFormDescription($event)" rows="3"
+                placeholder="Describe this category..."></textarea>
             </div>
           </div>
 
           <div class="form-preview">
-            <p class="preview-label">Icon Preview</p>
-            <div class="preview-box">
-              <span class="material-icons">{{ formCategory().icon || 'category' }}</span>
+            <p class="preview-label">Category Image</p>
+
+            @if (formCategory().imageUrl) {
+            <!-- Image preview with click to change -->
+            <div class="image-preview-box" (click)="imageInput.click()">
+              <img [src]="formCategory().imageUrl" alt="Category image" />
+              <div class="image-overlay">
+                <span class="material-icons">edit</span>
+                <span>Change Image</span>
+              </div>
             </div>
+            <button class="btn-remove-image" (click)="removeImage()">
+              <span class="material-icons">delete</span> Remove Image
+            </button>
+            } @else {
+            <!-- Upload area -->
+            <div class="upload-area" (click)="imageInput.click()">
+              <span class="material-icons upload-icon">add_photo_alternate</span>
+              <p class="upload-text">Click to upload image</p>
+              <p class="upload-hint">JPG, PNG (max 5MB)</p>
+            </div>
+            }
+
+            <input type="file" #imageInput accept="image/*" (change)="onImageSelected($event)" style="display:none" />
+
             <div class="form-actions">
               <button class="btn btn-secondary" (click)="closeForm()">Clear</button>
-              <button class="btn btn-primary" (click)="saveCategory()">
+              <button class="btn btn-primary" (click)="saveCategory()" [disabled]="saving()">
                 <span class="material-icons">save</span> Save Category
               </button>
             </div>

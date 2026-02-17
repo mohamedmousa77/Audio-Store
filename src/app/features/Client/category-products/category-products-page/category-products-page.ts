@@ -103,7 +103,7 @@ export class CategoryProductsPage implements OnInit {
     if (category) {
       this.categoryName = category.name; // Normalize name
       this.categoryDescription.set(category.description || `Explore our collection of ${category.name}`);
-      this.categoryImage.set(category.icon || 'assets/images/placeholder-category.jpg');
+      this.categoryImage.set(category.imageUrl || 'assets/images/placeholder-category.jpg');
 
       // Update breadcrumbs
       this.breadcrumbs = [

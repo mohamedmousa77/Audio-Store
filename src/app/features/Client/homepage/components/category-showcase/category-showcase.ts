@@ -51,8 +51,8 @@ export class CategoryShowcase {
    */
   getCategoryImage(category: Category): string {
     // Use category image if available
-    if (category.icon) {
-      return category.icon;
+    if (category.imageUrl) {
+      return category.imageUrl;
     }
 
     // Fallback to predefined images

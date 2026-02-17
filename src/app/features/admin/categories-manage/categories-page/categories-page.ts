@@ -1,22 +1,17 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
-import { Badge } from '../../../../shared/components/badge/badge';
+import { AdminNotificationService } from '../../layout/admin-notification/admin-notification.service';
 import { CategoryServices } from '../../../../core/services/category/category-services';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { Category } from '../../../../core/models/category';
 
 /**
  * Categories Management Page (Admin)
- * Updated to use CategoryServices with Signals and full CRUD operations
- * 
- * Breaking Changes:
- * - Uses Signals instead of hardcoded data
- * - Category model updated (id is number, not string)
- * - Reactive filtering with computed()
- * - CRUD operations integrated with backend API
+ * Full CRUD with image upload, notifications, and product count navigation
  */
 @Component({
   selector: 'app-categories-page',
@@ -32,8 +27,10 @@ import { Category } from '../../../../core/models/category';
 export class CategoriesPage implements OnInit {
   private categoryService = inject(CategoryServices);
   private productService = inject(ProductServices);
+  private notification = inject(AdminNotificationService);
+  private router = inject(Router);
 
-  // Use Signals from CategoryServices
+  // Signals from CategoryServices
   categories = this.categoryService.categories;
   loading = this.categoryService.isLoading;
   error = this.categoryService.error;
@@ -46,6 +43,10 @@ export class CategoriesPage implements OnInit {
   isFormOpen = signal<boolean>(false);
   editingCategory = signal<Category | null>(null);
   formCategory = signal<Partial<Category>>({});
+  saving = signal<boolean>(false);
+
+  // Track which category's product count should flash red
+  flashCategoryId = signal<number | null>(null);
 
   // Computed filtered and sorted categories
   filteredCategories = computed(() => {
@@ -54,7 +55,6 @@ export class CategoriesPage implements OnInit {
     const sort = this.sortBy();
     const order = this.sortOrder();
 
-    // Filter
     let filtered = allCategories.filter(category => {
       if (!search) return true;
       return (
@@ -63,7 +63,6 @@ export class CategoriesPage implements OnInit {
       );
     });
 
-    // Sort
     filtered.sort((a, b) => {
       let aValue: any;
       let bValue: any;
@@ -91,9 +90,6 @@ export class CategoriesPage implements OnInit {
     await this.loadData();
   }
 
-  /**
-   * Load all data
-   */
   async loadData(): Promise<void> {
     await Promise.all([
       this.categoryService.loadCategories(),
@@ -101,19 +97,13 @@ export class CategoriesPage implements OnInit {
     ]);
   }
 
-  /**
-   * Open add category form
-   */
   openAddCategory(): void {
     this.editingCategory.set(null);
-    this.formCategory.set({ name: '', description: '', icon: 'category' });
+    this.formCategory.set({ name: '', description: '', imageUrl: '' });
     this.isFormOpen.set(true);
     this.scrollToForm();
   }
 
-  /**
-   * Edit existing category
-   */
   editCategory(category: Category): void {
     this.editingCategory.set(category);
     this.formCategory.set({ ...category });
@@ -121,9 +111,6 @@ export class CategoriesPage implements OnInit {
     this.scrollToForm();
   }
 
-  /**
-   * Close form
-   */
   closeForm(): void {
     this.isFormOpen.set(false);
     this.editingCategory.set(null);
@@ -131,91 +118,131 @@ export class CategoriesPage implements OnInit {
   }
 
   /**
-   * Save category (create or update)
+   * Save category (create or update) with AdminNotificationService
    */
   async saveCategory(): Promise<void> {
     const editing = this.editingCategory();
     const formData = this.formCategory();
 
     if (!formData.name) {
-      alert('Category name is required');
+      this.notification.showWarning('Campo Obbligatorio', 'Il nome della categoria è obbligatorio.');
       return;
     }
+
+    this.saving.set(true);
 
     const categoryData: Category = {
       id: editing?.id || 0,
       name: formData.name,
       description: formData.description || '',
-      icon: formData.icon || 'category',
+      imageUrl: formData.imageUrl || '',
       productCount: formData.productCount || 0
     };
 
-    if (editing) {
-      // Update existing category
-      const result = await this.categoryService.updateCategory(editing.id, categoryData);
-      if (result) {
-        alert('Category updated successfully!');
-        this.closeForm();
+    try {
+      if (editing) {
+        const result = await this.categoryService.updateCategory(editing.id, categoryData);
+        if (result) {
+          this.notification.showSuccess(
+            'Categoria Aggiornata',
+            `La categoria "${result.name}" è stata aggiornata con successo.`
+          );
+          this.closeForm();
+        } else {
+          this.notification.showError(
+            'Errore Aggiornamento',
+            'Impossibile aggiornare la categoria. Riprova.'
+          );
+        }
       } else {
-        alert('Failed to update category');
+        const result = await this.categoryService.createCategory(categoryData);
+        if (result) {
+          this.notification.showSuccess(
+            'Categoria Creata',
+            `La categoria "${result.name}" è stata creata con successo.`
+          );
+          this.closeForm();
+        } else {
+          this.notification.showError(
+            'Errore Creazione',
+            'Impossibile creare la categoria. Controlla i dati e riprova.'
+          );
+        }
       }
-    } else {
-      // Create new category
-      const result = await this.categoryService.createCategory(categoryData);
-      if (result) {
-        alert('Category created successfully!');
-        this.closeForm();
-      } else {
-        alert('Failed to create category');
-      }
+    } catch (err: any) {
+      const errorMsg = err?.error?.error || err?.message || 'Errore sconosciuto dal server.';
+      this.notification.showError(
+        'Errore',
+        errorMsg
+      );
+    } finally {
+      this.saving.set(false);
     }
   }
 
   /**
-   * Delete category
+   * Delete category with error dialog for categories with products
    */
   async deleteCategory(category: Category): Promise<void> {
     const productCount = this.getProductCount(category.id);
 
     if (productCount > 0) {
-      alert(`Cannot delete category "${category.name}" because it has ${productCount} products. Please reassign or delete the products first.`);
+      // Show error notification
+      this.notification.showError(
+        'Impossibile Eliminare',
+        `La categoria "${category.name}" contiene ${productCount} prodotti. Riassegna o elimina i prodotti prima di eliminare la categoria.`
+      );
+
+      // Flash the product count in red for 3 seconds
+      this.flashCategoryId.set(category.id);
+      setTimeout(() => {
+        this.flashCategoryId.set(null);
+      }, 3000);
       return;
     }
 
-    if (confirm(`Are you sure you want to delete the "${category.name}" category? This action cannot be undone.`)) {
-      const result = await this.categoryService.deleteCategory(category.id);
-      if (result) {
-        alert('Category deleted successfully!');
-      } else {
-        alert('Failed to delete category');
+    if (confirm(`Sei sicuro di voler eliminare la categoria "${category.name}"? Questa azione è irreversibile.`)) {
+      try {
+        const result = await this.categoryService.deleteCategory(category.id);
+        if (result) {
+          this.notification.showSuccess(
+            'Categoria Eliminata',
+            `La categoria "${category.name}" è stata eliminata con successo.`
+          );
+        } else {
+          this.notification.showError(
+            'Errore Eliminazione',
+            'Impossibile eliminare la categoria. Riprova.'
+          );
+        }
+      } catch (err: any) {
+        const errorMsg = err?.error?.error || err?.message || 'Errore sconosciuto dal server.';
+        this.notification.showError('Errore Eliminazione', errorMsg);
       }
     }
   }
 
   /**
-   * Toggle sort order
+   * Navigate to products page filtered by category
    */
+  navigateToProducts(categoryId: number, categoryName: string): void {
+    this.router.navigate(['/admin/products'], {
+      queryParams: { categoryId, categoryName }
+    });
+  }
+
   toggleSortOrder(): void {
     this.sortOrder.set(this.sortOrder() === 'asc' ? 'desc' : 'asc');
   }
 
-  /**
-   * Toggle view mode
-   */
   toggleViewMode(): void {
     this.viewMode.set(this.viewMode() === 'grid' ? 'table' : 'grid');
   }
 
-  /**
-   * Clear search
-   */
   clearSearch(): void {
     this.searchTerm.set('');
   }
 
-  /**
-   * Scroll to form section
-   */
   private scrollToForm(): void {
     setTimeout(() => {
       const element = document.getElementById('category-form-section');
@@ -225,23 +252,14 @@ export class CategoriesPage implements OnInit {
     }, 100);
   }
 
-  /**
-   * Get product count for category
-   */
   getProductCount(categoryId: number): number {
     return this.categoryService.getProductCountForCategory(categoryId);
   }
 
-  /**
-   * Get total products across all categories
-   */
   getTotalProducts(): number {
     return this.categories().reduce((sum, cat) => sum + this.getProductCount(cat.id), 0);
   }
 
-  /**
-   * Get average products per category
-   */
   getAverageProducts(): number {
     const cats = this.categories();
     return cats.length > 0
@@ -249,36 +267,76 @@ export class CategoriesPage implements OnInit {
       : 0;
   }
 
-  /**
-   * Get top category by product count
-   */
   getTopCategory(): Category | null {
     const cats = this.categories();
     if (cats.length === 0) return null;
-
     return cats.reduce((max, cat) =>
       this.getProductCount(cat.id) > this.getProductCount(max.id) ? cat : max
     );
   }
 
-  /**
-   * Update form category name
-   */
   updateFormName(name: string): void {
     this.formCategory.set({ ...this.formCategory(), name });
   }
 
-  /**
-   * Update form category description
-   */
   updateFormDescription(description: string): void {
     this.formCategory.set({ ...this.formCategory(), description });
   }
 
   /**
-   * Update form category icon
+   * Handle image file selection with compression
    */
-  updateFormIcon(icon: string): void {
-    this.formCategory.set({ ...this.formCategory(), icon });
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.compressImage(input.files[0], 600).then(compressed => {
+        this.formCategory.set({ ...this.formCategory(), imageUrl: compressed });
+      });
+    }
+  }
+
+  /**
+   * Remove selected image
+   */
+  removeImage(): void {
+    this.formCategory.set({ ...this.formCategory(), imageUrl: '' });
+  }
+
+  /**
+   * Compress and resize an image file using Canvas API.
+   * Outputs JPEG at 0.7 quality, resized to fit within maxSize x maxSize.
+   */
+  private compressImage(file: File, maxSize: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = Math.round((height * maxSize) / width);
+              width = maxSize;
+            } else {
+              width = Math.round((width * maxSize) / height);
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.onerror = reject;
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   }
 }
