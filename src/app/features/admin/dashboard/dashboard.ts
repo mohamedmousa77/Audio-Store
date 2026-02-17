@@ -9,6 +9,7 @@ import { CategoryStats } from '../categories-manage/category-stats/category-stat
 import { TopProductsDashboardManage } from '../../admin/products-manage/top-products-dashboard/products-manage';
 import { OrderServices } from '../../../core/services/order/order-services';
 import { DashboardServices } from '../../../core/services/dashboard/dashboard-services';
+import { TranslationService } from '../../../core/services/translation/translation.service';
 
 /**
  * Admin Dashboard Component
@@ -36,7 +37,8 @@ import { DashboardServices } from '../../../core/services/dashboard/dashboard-se
 })
 export class DashboardPageComponent implements OnInit {
   private orderService = inject(OrderServices);
-  private dashboardService = inject(DashboardServices);
+  private dashboardService = inject(DashboardServices);  
+  private translationService = inject(TranslationService);
 
   // Use Signals from services
   recentOrders = this.orderService.orders;
@@ -44,7 +46,8 @@ export class DashboardPageComponent implements OnInit {
   loading = this.dashboardService.loading;
   error = this.dashboardService.error;
   ordersLoading = this.orderService.loadingSignal;
-
+  translations = this.translationService.translations;
+  
   // Computed stats for stat cards
   stats = computed(() => {
     const data = this.dashboardStats();
@@ -119,7 +122,8 @@ export class DashboardPageComponent implements OnInit {
         percentage: Math.round((data.ordersByStatus.cancelled / total) * 100),
         color: '#ef4444'
       }
-    ].filter(item => item.count > 0); // Only show statuses with orders
+    ]
+    // .filter(item => item.count > 0); // Only show statuses with orders
   });
 
   // Computed category stats for chart
@@ -142,15 +146,18 @@ export class DashboardPageComponent implements OnInit {
     const data = this.dashboardStats();
     if (!data || !data.topProducts.length) return [];
 
+
+
     return data.topProducts.map(product => ({
-      name: product.productName,
-      category: product.categoria,
+      productId: product.productId,
+      productName: product.productName,
+      categoria: product.categoria,
       stockStatus: product.stockStatus,
-      price: `€${product.totalRevenue.toFixed(2)}`,
-      sales: product.totalQuantitySold,
+      totalRevenue: `€${product.totalRevenue}`,
+      totalQuantitySold: product.totalQuantitySold,
       brand: product.brand,
-      image: product.productImage || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-      icon: this.getCategoryIcon(product.categoria)
+      productImage: product.productImage || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+      // icon: this.getCategoryIcon(product.categoria)
     }));
   });
 

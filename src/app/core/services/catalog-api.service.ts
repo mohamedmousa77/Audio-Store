@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpService } from './http/http.service';
 import { API_ENDPOINTS } from './constants/api-endpoints';
 import { Product, ProductQueryParams, CreateProductRequest, UpdateProductRequest } from '../models/product';
@@ -22,12 +23,22 @@ export class CatalogApiService {
 
   /**
    * Get all products with optional filtering and pagination
+   * Backend returns PaginatedResult<ProductDTO>, we extract the items array
    * @param params Query parameters for filtering, sorting, pagination
    */
   getProducts(params?: ProductQueryParams): Observable<Product[]> {
-    return this.httpService.get<Product[]>(
+    return this.httpService.get<any>(
       API_ENDPOINTS.products.base,
       params as Record<string, any>
+    ).pipe(
+      map(response => {
+        // Backend returns PaginatedResult<ProductDTO> with { items, totalCount, ... }
+        // Extract the items array for the store
+        if (Array.isArray(response)) {
+          return response;
+        }
+        return response?.items ?? [];
+      })
     );
   }
 

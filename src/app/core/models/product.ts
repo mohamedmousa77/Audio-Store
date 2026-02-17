@@ -6,19 +6,17 @@ export interface Product {
     id: number;
     name: string;
     description?: string;
-    specs?: string;
+    specifications?: string;
     brand: string;
-    sku: string;
     categoryId: number;
     categoryName?: string;
     price: number;
-    stockQuantity: number;    // Changed from 'stock' to match backend DTO
-    status: 'Available' | 'Low Stock' | 'Unavailable';
+    stockQuantity: number;
     mainImage?: string;
-    gallery?: string[];
+    galleryImages?: string[];
     isFeatured?: boolean;
+    isAvailable?: boolean;
     isNew?: boolean;
-    bannerDescription?: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -29,16 +27,15 @@ export interface Product {
 export interface CreateProductRequest {
     name: string;
     description?: string;
-    specs?: string;
+    specifications?: string;
     brand: string;
-    sku: string;
     categoryId: number;
     price: number;
-    stock: number;
-    image?: string;
-    gallery?: string[];
+    stockQuantity: number;
+    mainImage?: string;
+    galleryImages?: string[];
     isFeatured?: boolean;
-    isNew?: boolean;
+    isAvailable?: boolean;
 }
 
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {

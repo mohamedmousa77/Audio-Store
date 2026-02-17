@@ -204,7 +204,7 @@ export class ProductDetails implements OnInit {
    * Check if product has features/specs
    */
   get hasFeatures(): boolean {
-    return !!(this.product?.specs && this.product.specs.trim().length > 0);
+    return !!(this.product?.specifications && this.product.specifications.trim().length > 0);
   }
 
 }

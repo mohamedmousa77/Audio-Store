@@ -19,6 +19,79 @@
   gap: 2rem;
 }
 
+.action-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1c160d;
+  transition: all 0.3s ease;
+  position: relative;
+  min-width: 40px;
+  min-height: 40px;
+
+  &:hover {
+    background: #f8f7f5;
+    color: #f49d25;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  .material-icons {
+    font-size: 1.5rem;
+
+    @media (max-width: 768px) {
+      font-size: 1.375rem;
+    }
+  }
+
+  &.account-btn {
+    display: none;
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
+  }
+
+  &.cart-btn {
+    text-decoration: none;
+  }
+
+  &.language-btn {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #1c160d;
+    background: transparent;
+    border: 1.5px solid #e8ddce;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #f49d25;
+      color: white;
+      border-color: #f49d25;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(244, 157, 37, 0.2);
+    }
+
+    &:active {
+      transform: scale(0.95) translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      font-size: 0.6875rem;
+      border-width: 1.5px;
+    }
+  }
+}
+
 .page-info {
   .page-title {
     font-size: 1.75rem;

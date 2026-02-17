@@ -4,12 +4,12 @@
       <span class="material-icons logo">graphic_eq</span>
     </div>
     <h2 class="brand-name">Audio Store</h2>
-    <p class="brand-subtitle">Admin Panel</p>
+    <p class="brand-subtitle">{{ translations().admin.headerTitle}}</p>
   </div>
 
   <nav class="sidebar-nav">
     <a
-      *ngFor="let item of navigation"
+      *ngFor="let item of navigation()"
       [routerLink]="item.path"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: false }"
@@ -22,7 +22,7 @@
   <div class="sidebar-footer">   
     <button class="logout-btn" (click)="onLogout()">
       <span class="material-icons">logout</span>
-      <span>Sign Out</span>
+      <span>{{ translations().admin.signOut }} </span>
     </button>
   </div>
 </aside>

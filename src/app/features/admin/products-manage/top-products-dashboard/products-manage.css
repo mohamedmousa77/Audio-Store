@@ -140,6 +140,6 @@
   font-weight: 700;
 }
 
-.stock-badge.in-stock { background: #e8f5e9; color: #2e7d32; }
+.stock-badge.available { background: #e8f5e9; color: #2e7d32; }
 .stock-badge.low-stock { background: #fff8e1; color: #f57f17; }
 .stock-badge.out-of-stock { background: #fee2e2; color: #dc2626; }

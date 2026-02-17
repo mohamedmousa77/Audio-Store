@@ -178,7 +178,7 @@ export class Register implements OnDestroy, OnInit {
           console.log('✓ Registration successful:', response.user.email);
           this.loading = false;
           // Auto-login after registration, navigate based on role
-          if (response.user.role === 'Admin') {
+          if (response.user.role === 'Administrator') {
             this.router.navigate(['/admin/dashboard']);
           } else {
             this.router.navigate(['/client/home']);

@@ -4,7 +4,7 @@
     <!-- Content -->
     <div class="hero-content">
       <h1 class="hero-title">{{ product.name }}</h1>
-      <p class="hero-description">{{ product.bannerDescription || product.description }}</p>
+      <p class="hero-description">{{ product.description || product.description }}</p>
 
       <div class="hero-actions">
         <button class="btn btn-primary" (click)="addToCart()">

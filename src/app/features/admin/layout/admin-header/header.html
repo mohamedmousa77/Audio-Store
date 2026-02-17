@@ -12,14 +12,15 @@
           <p class="user-name">{{ adminName }}</p>
           <p class="user-email">{{ adminEmail }}</p>
         </div>
-        <div class="user-avatar">
-        <span class="material-icons">account_circle</span>
-        </div>
+          <div class="user-avatar" (click)="NavigateToProfile()">
+            <span class="material-icons">account_circle</span>
+          </div>
+        
       </div>
 
-      <button class="icon-btn notification-btn">
-        <span class="material-icons">notifications</span>
-        <span class="notification-badge">3</span>
+      <button class="action-btn language-btn" (click)="toggleLanguage()"
+        [title]="currentLanguage() === 'it' ? 'Switch to English' : 'Passa all\'Italiano'">
+        {{ getLanguageCode() }}
       </button>
 
     </div>

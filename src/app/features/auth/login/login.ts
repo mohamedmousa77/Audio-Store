@@ -80,7 +80,7 @@ export class LoginForm implements OnInit, OnDestroy {
           console.log('✓ Login successful:', response.user.email);
           this.loading = false;
           // Navigate based on user role
-          if (response.user.role === 'Admin') {
+          if (response.user.role === 'Administrator') {
             this.router.navigate(['/admin/dashboard']);
           } else {
             this.router.navigate(['/client/home']);

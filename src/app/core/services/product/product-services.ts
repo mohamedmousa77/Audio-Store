@@ -141,11 +141,28 @@ export class ProductServices {
   async createProduct(product: CreateProductRequest): Promise<Product | undefined> {
     this.catalogStore.loadingSignal.set(true);
     try {
-      const newProduct = await firstValueFrom(this.catalogApi.createProduct(product));
+      // Build clean payload matching backend CreateProductDTO
+      const payload: any = {
+        name: product.name,
+        brand: product.brand || '',
+        description: product.description || '',
+        price: product.price,
+        stockQuantity: product.stockQuantity || 0,
+        mainImage: product.mainImage || '',
+        galleryImages: product.galleryImages || [],
+        categoryId: product.categoryId,
+        isFeatured: product.isFeatured || false,
+        isAvailable: product.isAvailable !== false,
+        specifications: product.specifications || ''
+      };
+
+      const newProduct = await firstValueFrom(this.catalogApi.createProduct(payload));
 
       // Add to store
       const currentProducts = this.catalogStore.productsSignal();
-      this.catalogStore.setProducts([...currentProducts, newProduct]);
+      if (Array.isArray(currentProducts)) {
+        this.catalogStore.setProducts([...currentProducts, newProduct]);
+      }
 
       console.log(`✅ Created product: ${newProduct.name}`);
       return newProduct;
@@ -166,14 +183,32 @@ export class ProductServices {
   async updateProduct(id: number, product: UpdateProductRequest): Promise<Product | undefined> {
     this.catalogStore.loadingSignal.set(true);
     try {
-      const updatedProduct = await firstValueFrom(this.catalogApi.updateProduct(id, product));
+      // Build clean payload matching backend UpdateProductDTO
+      const payload: any = {
+        id: id,
+        name: product.name || '',
+        brand: product.brand || '',
+        description: product.description || '',
+        price: product.price || 0,
+        stockQuantity: product.stockQuantity || 0,
+        mainImage: product.mainImage || '',
+        galleryImages: product.galleryImages || [],
+        categoryId: product.categoryId,
+        isFeatured: product.isFeatured || false,
+        isAvailable: product.isAvailable !== false,
+        specifications: product.specifications || ''
+      };
+
+      const updatedProduct = await firstValueFrom(this.catalogApi.updateProduct(id, payload));
 
       // Update in store
       const currentProducts = this.catalogStore.productsSignal();
-      const updatedProducts = currentProducts.map(p =>
-        p.id === id ? updatedProduct : p
-      );
-      this.catalogStore.setProducts(updatedProducts);
+      if (Array.isArray(currentProducts)) {
+        const updatedProducts = currentProducts.map(p =>
+          p.id === id ? updatedProduct : p
+        );
+        this.catalogStore.setProducts(updatedProducts);
+      }
 
       console.log(`✅ Updated product: ${updatedProduct.name}`);
       return updatedProduct;
@@ -224,7 +259,7 @@ export class ProductServices {
       // Update stock in store
       const currentProducts = this.catalogStore.productsSignal();
       const updatedProducts = currentProducts.map(p =>
-        p.id === id ? { ...p, stock: quantity } : p
+        p.id === id ? { ...p, stockQuantity: quantity } : p
       );
       this.catalogStore.setProducts(updatedProducts);
 
@@ -246,6 +281,14 @@ export class ProductServices {
 
   get products() {
     return this.catalogStore.filteredProducts;
+  }
+
+  /**
+   * Get ALL products without filters (for Admin pages)
+   * Unlike 'products', this ignores client-side category/search filters
+   */
+  get allProducts() {
+    return this.catalogStore.productsSignal;
   }
 
   get featured() {

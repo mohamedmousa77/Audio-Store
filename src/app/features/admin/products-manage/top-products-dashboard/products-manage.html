@@ -11,32 +11,32 @@
         <table class="model-table">
             <thead>
                 <tr>
-                <th>PRODUCT NAME</th>
-                <th>CATEGORY</th>
-                <th>STOCK STATUS</th>
-                <th>PRICE</th>
-                <th>SALES</th>
+                    <th>PRODUCT NAME</th>
+                    <th>CATEGORY</th>
+                    <th>STOCK STATUS</th>
+                    <th>PRICE</th>
+                    <th>SALES</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let product of products" class="product-row">
-                <td>
-                    <div class="product-cell">
-                    <img [src]="product.image" [alt]="product.name" class="product-image" />
-                    <div class="product-details">
-                        <span class="product-name">{{ product.name }}</span>
-                        <span class="product-brand">{{ product.brand }}</span>
-                    </div>
-                    </div>
-                </td>
-                <td class="text-secondary">{{ product.category }}</td>
-                <td>
-                    <span class="stock-badge" [ngClass]="product.stockStatus.toLowerCase().split(' ').join('-')">
-                    {{ product.stockStatus }}
-                    </span>
-                </td>
-                <td class="product-price">{{ product.price }}</td>
-                <td><strong class="sales-count">{{ product.sales }}</strong></td>
+                    <td>
+                        <div class="product-cell">
+                            <img [src]="product.productImage" [alt]="product.productName" class="product-image" />
+                            <div class="product-details">
+                                <span class="product-name">{{ product.productName }}</span>
+                                <span class="product-brand">{{ product.brand }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-secondary">{{ product.categoria }}</td>
+                    <td>
+                        <span class="stock-badge" [ngClass]="product.stockStatus.toLowerCase().split(' ').join('-')">
+                            {{ product.stockStatus }}
+                        </span>
+                    </td>
+                    <td class="product-price">{{ product.totalRevenue }}</td>
+                    <td><strong class="sales-count">{{ product.totalQuantitySold }}</strong></td>
                 </tr>
             </tbody>
         </table>

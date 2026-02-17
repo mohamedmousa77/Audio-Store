@@ -6,20 +6,29 @@
 
     <div class="content-area">
 
+      <!-- Loading overlay during save -->
+      @if (saving()) {
+      <div class="saving-overlay">
+        <div class="saving-dialog">
+          <div class="spinner"></div>
+          <p>Saving product...</p>
+        </div>
+      </div>
+      }
+
       <div class="controls-card">
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder="Search by name or SKU..." [ngModel]="searchTerm()"
+            <input type="text" placeholder="Search by name or brand..." [ngModel]="searchTerm()"
               (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
           <div class="filter-controls">
-            <select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event ? +$event : null)"
-              class="filter-select">
-              <option [value]="null">All Categories</option>
+            <select [ngModel]="selectedCategory()" (ngModelChange)="onCategoryChange($event)" class="filter-select">
+              <option [ngValue]="null">All Categories</option>
               @for (cat of categories(); track cat.id) {
-              <option [value]="cat.id">{{ cat.name }}</option>
+              <option [ngValue]="cat.id">{{ cat.name }}</option>
               }
             </select>
 
@@ -40,7 +49,7 @@
         </div>
 
         <div class="results-info">
-          <p>Showing <strong>{{ filteredProducts().length }}</strong> of <strong>{{ products().length }}</strong>
+          <p>Showing <strong>{{ filteredProducts().length }}</strong> of <strong>{{ totalProducts() }}</strong>
             products</p>
           <button class="btn btn-primary" (click)="openAddProduct()">
             <span class="material-icons">add</span>
@@ -72,7 +81,7 @@
                     <img [src]="product.mainImage" [alt]="product.name" class="product-thumb" />
                     <div class="product-texts">
                       <p class="product-name">{{ product.name }}</p>
-                      <p class="product-sku">{{ product.brand }} • SKU: {{ product.sku }}</p>
+                      <p class="product-brand">{{ product.brand }}</p>
                     </div>
                   </div>
                 </td>
@@ -91,12 +100,14 @@
                   </span>
                 </td>
                 <td>
-                  <app-badge [status]="product.status" />
+                  <span class="status-badge" [ngClass]="getStatusClass(getProductStatus(product))">
+                    {{ getProductStatus(product) }}
+                  </span>
                 </td>
                 <td>
                   <div class="flags-container">
                     @if (product.isFeatured) {
-                    <span class="flag-pill featured">FEAT</span>
+                    <span class="flag-pill featured">FEATURE</span>
                     }
                     @if (product.isNew) {
                     <span class="flag-pill new">NEW</span>
@@ -116,11 +127,38 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Pagination -->
+        <div class="pagination-bar">
+          <div class="pagination-info">
+            Page <strong>{{ currentPage() }}</strong> of <strong>{{ totalPages() }}</strong>
+            &mdash; {{ totalProducts() }} total products
+          </div>
+          <div class="pagination-controls">
+            <button class="btn btn-pagination" [disabled]="currentPage() <= 1" (click)="goToPage(currentPage() - 1)">
+              <span class="material-icons">chevron_left</span>
+              Previous
+            </button>
+
+            @for (page of getPageNumbers(); track page) {
+            <button class="btn btn-page-number" [class.active]="page === currentPage()" (click)="goToPage(page)">
+              {{ page }}
+            </button>
+            }
+
+            <button class="btn btn-pagination" [disabled]="currentPage() >= totalPages()"
+              (click)="goToPage(currentPage() + 1)">
+              Next
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div id="product-form-section">
         @if (isFormOpen()) {
-        <app-product-form [productData]="editingProduct()" [categories]="categories()" (cancel)="closeForm()">
+        <app-product-form [productData]="editingProduct()" [categories]="categories()" (save)="saveProduct($event)"
+          (cancel)="closeForm()">
         </app-product-form>
         }
       </div>

@@ -214,7 +214,7 @@ export class AuthServices {
    */
   isAdmin(): boolean {
     const user = this.getCurrentUser();
-    return user?.role === 'Admin';
+    return user?.role === 'Administrator';
   }
 
   // --- VALIDATION ---

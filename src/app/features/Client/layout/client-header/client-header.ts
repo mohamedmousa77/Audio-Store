@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { AuthServices } from '../../../../core/services/auth/auth-services';
-import { CategoryServices } from '../../../../core/services/category/category-services';
 import { FormsModule } from '@angular/forms';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
@@ -18,14 +17,11 @@ import { Product } from '../../../../core/models/product';
 export class ClientHeader implements OnInit {
   private cartService = inject(CartServices);
   private productService = inject(ProductServices);
-  // private categoryService = inject(CategoryServices);
   private authService = inject(AuthServices);
   private router = inject(Router);
   private translationService = inject(TranslationService);
 
-  // Use Signals from Services
-  // categories = this.categoryService.categories;
-  // Cart item count reacts to both guest and authenticated carts
+  
   cartItemCount = this.cartService.totalItems;
 
   // Translation signals
@@ -42,9 +38,6 @@ export class ClientHeader implements OnInit {
   isSearching = false;
 
   ngOnInit(): void {
-    // Load categories
-    // this.categoryService.loadCategories();
-
     // Initialize authentication state
     this.isLoggedIn = this.authService.isAuthenticated();
     this.authService.isAuthenticated$.subscribe(isAuth => {
@@ -86,7 +79,7 @@ export class ClientHeader implements OnInit {
       product.name.toLowerCase().includes(term.toLowerCase()) ||
       product.description?.toLowerCase().includes(term.toLowerCase()) ||
       product.categoryName?.toLowerCase().includes(term.toLowerCase())
-    ).slice(0, 5); // Limit to 5 results
+    ).slice(0, 5);
 
     this.searchResults.set(filtered);
     this.isSearching = false;

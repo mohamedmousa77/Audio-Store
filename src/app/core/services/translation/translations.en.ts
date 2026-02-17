@@ -327,11 +327,13 @@ export const TRANSLATIONS_EN: Translations = {
         youMayAlsoLike: 'You May Also Like',
     },
     admin: {
+        headerTitle: 'Admin Panel',  
         dashboard: 'Dashboard',
         products: 'Products',
         categories: 'Categories',
         orders: 'Orders',
         customers: 'Customers',
+        signOut: 'Sign Out',
         settings: 'Settings',
         addNew: 'Add New',
         edit: 'Edit',
@@ -341,7 +343,38 @@ export const TRANSLATIONS_EN: Translations = {
         search: 'Search',
         filter: 'Filter',
         export: 'Export',
-        import: 'Import',
+        import: 'Import', 
+     
+    },
+    dashboard: {
+        header: {
+            title: 'Dashboard Overview',
+            subtitle: 'Monitor your store performance and key business metrics',
+        }
+    },
+    productsManagement: {
+        header: {
+            title: 'Products Management',
+            subtitle: 'Manage your audio equipment catalog',
+        }
+    },
+    ordersManagement: {
+        header: {
+            title: 'Orders Management',
+            subtitle: 'Track and manage customer orders',
+        }
+    },
+    customersManagement: {
+        header: {
+            title: 'Customers Management',
+            subtitle: 'Manage your customer base and track their engagement',
+        }
+    },
+    categoriesManagement: {
+        header: {
+            title: 'Categories Management',
+            subtitle: 'Organize and structure your product inventory groups',
+        }
     },
     footer: {
         aboutUs: 'About Us',

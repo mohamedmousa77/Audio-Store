@@ -37,7 +37,7 @@ export interface TopProduct {
     categoria: string;
     stockStatus: string;
     totalQuantitySold: number;
-    totalRevenue: number;
+    totalRevenue: string;
 }
 
 /**

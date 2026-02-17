@@ -3,34 +3,29 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
-import { Badge } from '../../../../shared/components/badge/badge';
 import { ProductForm } from '../product-form/product-form';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { CategoryServices } from '../../../../core/services/category/category-services';
+import { AdminNotificationService } from '../../layout/admin-notification/admin-notification.service';
 import { Product, CreateProductRequest, UpdateProductRequest } from '../../../../core/models/product';
 
 /**
  * Products Management Page (Admin)
- * Updated to use ProductServices with Signals and full CRUD operations
- * 
- * Breaking Changes:
- * - Uses Signals instead of hardcoded data
- * - Product model updated (id is number, not string)
- * - Reactive filtering with computed()
- * - CRUD operations integrated with backend API
+ * With pagination, status derived from stockQuantity, and clean filters
  */
 @Component({
   selector: 'app-products-page',
-  imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, Badge, ProductForm],
+  imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, ProductForm],
   templateUrl: './products-page.html',
   styleUrl: './products-page.css',
 })
 export class ProductsPage implements OnInit {
   private productService = inject(ProductServices);
   private categoryService = inject(CategoryServices);
+  private notification = inject(AdminNotificationService);
 
-  // Use Signals from ProductServices
-  products = this.productService.products;
+  // Use ALL products (unfiltered) for admin
+  products = this.productService.allProducts;
   categories = this.categoryService.categories;
   loading = this.productService.isLoading;
   error = this.productService.error;
@@ -41,29 +36,71 @@ export class ProductsPage implements OnInit {
   selectedStatus = signal<string>('');
   isFormOpen = signal<boolean>(false);
   editingProduct = signal<Product | null>(null);
+  saving = signal<boolean>(false);
 
-  // Computed filtered products
-  filteredProducts = computed(() => {
+  // Pagination
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(5);
+
+  // Derive status from stockQuantity
+  getProductStatus(product: Product): string {
+    if (product.stockQuantity === 0) return 'Unavailable';
+    if (product.stockQuantity < 10) return 'Low Stock';
+    return 'Available';
+  }
+
+  // Total products count (from all loaded products)
+  totalProducts = computed(() => {
     const allProducts = this.products();
+    if (!Array.isArray(allProducts)) return 0;
+    return allProducts.length;
+  });
+
+  // All products filtered and sorted by creation date (before pagination)
+  allFilteredProducts = computed(() => {
+    const allProducts = this.products();
+    if (!Array.isArray(allProducts)) return [];
     const search = this.searchTerm().toLowerCase();
     const categoryId = this.selectedCategory();
     const status = this.selectedStatus();
 
-    return allProducts.filter(product => {
+    const filtered = allProducts.filter(product => {
       // Search filter
       const matchesSearch = !search ||
         product.name.toLowerCase().includes(search) ||
-        product.sku.toLowerCase().includes(search) ||
-        product.brand.toLowerCase().includes(search);
+        product.brand?.toLowerCase().includes(search);
 
       // Category filter
       const matchesCategory = !categoryId || product.categoryId === categoryId;
 
-      // Status filter
-      const matchesStatus = !status || product.status === status;
+      // Status filter (derived from stockQuantity)
+      const productStatus = this.getProductStatus(product);
+      const matchesStatus = !status || productStatus === status;
 
       return matchesSearch && matchesCategory && matchesStatus;
     });
+
+    // Sort by creation date, newest first
+    return filtered.sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
+    });
+  });
+
+  // Total pages
+  totalPages = computed(() => {
+    const filtered = this.allFilteredProducts().length;
+    return Math.max(1, Math.ceil(filtered / this.pageSize()));
+  });
+
+  // Paginated products (what's shown in the table)
+  filteredProducts = computed(() => {
+    const all = this.allFilteredProducts();
+    const page = this.currentPage();
+    const size = this.pageSize();
+    const start = (page - 1) * size;
+    return all.slice(start, start + size);
   });
 
   async ngOnInit(): Promise<void> {
@@ -93,7 +130,8 @@ export class ProductsPage implements OnInit {
    * Edit existing product
    */
   editProduct(product: Product): void {
-    this.editingProduct.set(product);
+    // Clone to avoid mutating store data directly
+    this.editingProduct.set({ ...product });
     this.isFormOpen.set(true);
     this.scrollToForm();
   }
@@ -109,31 +147,34 @@ export class ProductsPage implements OnInit {
   /**
    * Save product (create or update)
    */
-  async saveProduct(productData: CreateProductRequest | UpdateProductRequest): Promise<void> {
+  async saveProduct(productData: any): Promise<void> {
     const editing = this.editingProduct();
+    this.saving.set(true);
 
-    if (editing) {
-      // Update existing product
-      const updateData: UpdateProductRequest = {
-        ...productData,
-        id: editing.id
-      };
-      const result = await this.productService.updateProduct(editing.id, updateData);
-      if (result) {
-        alert('Product updated successfully!');
-        this.closeForm();
+    try {
+      if (editing) {
+        const result = await this.productService.updateProduct(editing.id, productData);
+        if (result) {
+          this.notification.showProductUpdated(result.name);
+          this.closeForm();
+          await this.loadData();
+          this.currentPage.set(1);
+        } else {
+          this.notification.showOperationFailed('aggiornamento prodotto');
+        }
       } else {
-        alert('Failed to update product');
+        const result = await this.productService.createProduct(productData as CreateProductRequest);
+        if (result) {
+          this.notification.showProductCreated(result.name);
+          this.closeForm();
+          await this.loadData();
+          this.currentPage.set(1);
+        } else {
+          this.notification.showOperationFailed('creazione prodotto');
+        }
       }
-    } else {
-      // Create new product
-      const result = await this.productService.createProduct(productData as CreateProductRequest);
-      if (result) {
-        alert('Product created successfully!');
-        this.closeForm();
-      } else {
-        alert('Failed to create product');
-      }
+    } finally {
+      this.saving.set(false);
     }
   }
 
@@ -144,35 +185,19 @@ export class ProductsPage implements OnInit {
     if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
       const result = await this.productService.deleteProduct(product.id);
       if (result) {
-        alert('Product deleted successfully!');
+        this.notification.showProductDeleted();
       } else {
-        alert('Failed to delete product');
+        this.notification.showOperationFailed('eliminazione prodotto');
       }
     }
   }
 
   /**
-   * Update product stock
+   * Category filter change handler
    */
-  async updateStock(product: Product, newStock: number): Promise<void> {
-    if (newStock < 0) {
-      alert('Stock cannot be negative');
-      return;
-    }
-
-    const result = await this.productService.updateStock(product.id, newStock);
-    if (result) {
-      console.log(`Stock updated for ${product.name}: ${newStock}`);
-    } else {
-      alert('Failed to update stock');
-    }
-  }
-
-  /**
-   * Apply filters (reactive via computed)
-   */
-  applyFilters(): void {
-    // Filters are automatically applied via computed signal
+  onCategoryChange(value: any): void {
+    this.selectedCategory.set(value);
+    this.currentPage.set(1); // Reset to page 1 on filter change
   }
 
   /**
@@ -182,6 +207,35 @@ export class ProductsPage implements OnInit {
     this.searchTerm.set('');
     this.selectedCategory.set(null);
     this.selectedStatus.set('');
+    this.currentPage.set(1);
+  }
+
+  /**
+   * Pagination: go to page
+   */
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+    }
+  }
+
+  /**
+   * Get page numbers for pagination buttons
+   */
+  getPageNumbers(): number[] {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const pages: number[] = [];
+
+    // Show max 5 page numbers around current
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + 4);
+    start = Math.max(1, end - 4);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   /**
@@ -205,7 +259,7 @@ export class ProductsPage implements OnInit {
   }
 
   /**
-   * Get status badge class
+   * Get status badge CSS class
    */
   getStatusClass(status: string): string {
     switch (status) {
@@ -225,26 +279,5 @@ export class ProductsPage implements OnInit {
    */
   formatPrice(price: number): string {
     return `€${price.toFixed(2)}`;
-  }
-
-  /**
-   * Get total products count
-   */
-  getTotalProducts(): number {
-    return this.products().length;
-  }
-
-  /**
-   * Get low stock count
-   */
-  getLowStockCount(): number {
-    return this.products().filter(p => p.status === 'Low Stock').length;
-  }
-
-  /**
-   * Get out of stock count
-   */
-  getOutOfStockCount(): number {
-    return this.products().filter(p => p.status === 'Unavailable').length;
   }
 }

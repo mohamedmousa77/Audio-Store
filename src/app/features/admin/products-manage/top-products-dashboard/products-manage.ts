@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TopProduct } from '../../../../core/models/dashboard';
 
 @Component({
   selector: 'top-products-dashboard-manage',
@@ -8,5 +9,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './products-manage.css',
 })
 export class TopProductsDashboardManage {
-@Input() products: any[] = [];
+@Input() products: TopProduct[] = [];
+
 }

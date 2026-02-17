@@ -326,11 +326,13 @@ export interface Translations {
         youMayAlsoLike: string;
     };
     admin: {
+        headerTitle: string;
         dashboard: string;
         products: string;
         categories: string;
         orders: string;
         customers: string;
+        signOut: string;
         settings: string;
         addNew: string;
         edit: string;
@@ -341,6 +343,37 @@ export interface Translations {
         filter: string;
         export: string;
         import: string;
+               
+    };
+    dashboard: {
+        header: {
+            title: string;
+            subtitle: string;
+        }
+    };
+    productsManagement: {
+        header: {
+            title: string;
+            subtitle: string; 
+        }
+    };
+    categoriesManagement: {
+        header: {
+            title: string;
+            subtitle: string; 
+        }
+    };
+    ordersManagement: {
+        header: {
+            title:string;
+            subtitle: string;
+        }
+    };
+    customersManagement: {
+        header: {
+            title: string; 
+            subtitle: string;
+        }
     };
     footer: {
         aboutUs: string;
