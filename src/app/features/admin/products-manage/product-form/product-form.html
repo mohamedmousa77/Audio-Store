@@ -17,7 +17,11 @@
           <h3>General Information</h3>
           <div class="form-group">
             <label>Product Name *</label>
-            <input type="text" name="productName" [(ngModel)]="productData!.name" placeholder="e.g. Sony WH-1000XM5">
+            <input type="text" name="productName" [(ngModel)]="productData!.name" placeholder="e.g. Sony WH-1000XM5"
+              [class.input-error]="validationErrors['name']">
+            @if (validationErrors['name']) {
+            <span class="field-error">{{ validationErrors['name'] }}</span>
+            }
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -46,7 +50,11 @@
           <div class="form-row">
             <div class="form-group">
               <label>Price *</label>
-              <input type="number" name="productPrice" [(ngModel)]="productData!.price" placeholder="$ 0.00">
+              <input type="number" name="productPrice" [(ngModel)]="productData!.price" placeholder="$ 0.00"
+                [class.input-error]="validationErrors['price']">
+              @if (validationErrors['price']) {
+              <span class="field-error">{{ validationErrors['price'] }}</span>
+              }
             </div>
             <div class="form-group">
               <label>Stock Quantity *</label>
@@ -62,10 +70,14 @@
         <h3>Organization</h3>
         <div class="form-group">
           <label>Category *</label>
-          <select name="productCategory" [(ngModel)]="productData!.categoryId">
+          <select name="productCategory" [(ngModel)]="productData!.categoryId"
+            [class.input-error]="validationErrors['categoryId']">
             <option [ngValue]="null">Select category</option>
             <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
           </select>
+          @if (validationErrors['categoryId']) {
+          <span class="field-error">{{ validationErrors['categoryId'] }}</span>
+          }
         </div>
       </div>
 

@@ -16,6 +16,8 @@ export class ProductForm implements OnInit {
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
+  validationErrors: { [key: string]: string } = {};
+
   ngOnInit(): void {
     if (!this.productData) {
       this.productData = {
@@ -35,7 +37,25 @@ export class ProductForm implements OnInit {
     }
   }
 
-  onSave() { this.save.emit(this.productData); }
+  onSave() {
+    this.validationErrors = {};
+
+    if (!this.productData.name?.trim()) {
+      this.validationErrors['name'] = 'Product name is required';
+    }
+    if (!this.productData.categoryId) {
+      this.validationErrors['categoryId'] = 'Category is required';
+    }
+    if (!this.productData.price || this.productData.price <= 0) {
+      this.validationErrors['price'] = 'Price must be greater than 0';
+    }
+
+    if (Object.keys(this.validationErrors).length > 0) {
+      return; // Don't submit
+    }
+
+    this.save.emit(this.productData);
+  }
   onCancel() { this.cancel.emit(); }
 
   onMainImageSelected(event: Event): void {

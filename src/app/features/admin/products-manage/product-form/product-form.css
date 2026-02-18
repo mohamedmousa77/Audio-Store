@@ -369,3 +369,17 @@ input:checked+.slider:before {
 .mt-1 {
   margin-top: 1rem;
 }
+
+/* Validation errors */
+.input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+}
+
+.field-error {
+  display: block;
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}

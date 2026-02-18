@@ -5,6 +5,7 @@ import { HttpService } from './http/http.service';
 import { API_ENDPOINTS } from './constants/api-endpoints';
 import { Product, ProductQueryParams, CreateProductRequest, UpdateProductRequest } from '../models/product';
 import { Category } from '../models/category';
+import { resolveImageUrl } from '../utils/image-url';
 
 /**
  * HomePage / Catalog API Service
@@ -32,12 +33,8 @@ export class CatalogApiService {
       params as Record<string, any>
     ).pipe(
       map(response => {
-        // Backend returns PaginatedResult<ProductDTO> with { items, totalCount, ... }
-        // Extract the items array for the store
-        if (Array.isArray(response)) {
-          return response;
-        }
-        return response?.items ?? [];
+        const items = Array.isArray(response) ? response : (response?.items ?? []);
+        return items.map((p: Product) => this.resolveProductImages(p));
       })
     );
   }
@@ -49,6 +46,8 @@ export class CatalogApiService {
   getProductById(id: number): Observable<Product> {
     return this.httpService.get<Product>(
       API_ENDPOINTS.products.byId(id)
+    ).pipe(
+      map(p => this.resolveProductImages(p))
     );
   }
 
@@ -58,6 +57,8 @@ export class CatalogApiService {
   getFeaturedProducts(): Observable<Product[]> {
     return this.httpService.get<Product[]>(
       API_ENDPOINTS.products.featured
+    ).pipe(
+      map(products => products.map(p => this.resolveProductImages(p)))
     );
   }
 
@@ -73,9 +74,10 @@ export class CatalogApiService {
    * @param categoryId Category ID
    */
   getProductsByCategory(categoryId: number): Observable<Product[]> {
-    // return this.getProducts({ categoryId });
     return this.httpService.get<Product[]>(
       API_ENDPOINTS.products.byCategory(categoryId)
+    ).pipe(
+      map(products => products.map(p => this.resolveProductImages(p)))
     );
   }
 
@@ -109,6 +111,8 @@ export class CatalogApiService {
     return this.httpService.post<Product>(
       API_ENDPOINTS.products.base,
       product
+    ).pipe(
+      map(p => this.resolveProductImages(p))
     );
   }
 
@@ -122,6 +126,8 @@ export class CatalogApiService {
     return this.httpService.put<Product>(
       API_ENDPOINTS.products.byId(id),
       product
+    ).pipe(
+      map(p => this.resolveProductImages(p))
     );
   }
 
@@ -159,6 +165,8 @@ export class CatalogApiService {
   getCategories(): Observable<Category[]> {
     return this.httpService.get<Category[]>(
       API_ENDPOINTS.categories.base
+    ).pipe(
+      map(categories => categories.map(c => this.resolveCategoryImages(c)))
     );
   }
 
@@ -169,6 +177,8 @@ export class CatalogApiService {
   getCategoryById(id: number): Observable<Category> {
     return this.httpService.get<Category>(
       API_ENDPOINTS.categories.byId(id)
+    ).pipe(
+      map(c => this.resolveCategoryImages(c))
     );
   }
 
@@ -220,5 +230,24 @@ export class CatalogApiService {
     return this.httpService.delete<void>(
       API_ENDPOINTS.categories.byId(id)
     );
+  }
+
+  // ============================================
+  // IMAGE URL RESOLUTION HELPERS
+  // ============================================
+
+  private resolveProductImages(product: Product): Product {
+    return {
+      ...product,
+      mainImage: resolveImageUrl(product.mainImage),
+      galleryImages: product.galleryImages?.map(img => resolveImageUrl(img))
+    };
+  }
+
+  private resolveCategoryImages(category: Category): Category {
+    return {
+      ...category,
+      imageUrl: resolveImageUrl(category.imageUrl)
+    };
   }
 }
