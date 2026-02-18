@@ -114,10 +114,10 @@ export class CustomersPage implements OnInit {
     ]);
 
     // Select first customer if available
-    const firstCustomer = this.filteredCustomers()[0];
-    if (firstCustomer) {
-      await this.selectCustomer(firstCustomer);
-    }
+    // const firstCustomer = this.filteredCustomers()[0];
+    // if (firstCustomer) {
+    //   await this.selectCustomer(firstCustomer);
+    // }
   }
 
   /**

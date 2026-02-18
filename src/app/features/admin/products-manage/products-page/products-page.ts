@@ -7,7 +7,8 @@ import { ProductForm } from '../product-form/product-form';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { CategoryServices } from '../../../../core/services/category/category-services';
 import { AdminNotificationService } from '../../layout/admin-notification/admin-notification.service';
-import { Product, CreateProductRequest, UpdateProductRequest } from '../../../../core/models/product';
+import { Product, CreateProductRequest } from '../../../../core/models/product';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 
 /**
  * Products Management Page (Admin)
@@ -23,7 +24,9 @@ export class ProductsPage implements OnInit {
   private productService = inject(ProductServices);
   private categoryService = inject(CategoryServices);
   private notification = inject(AdminNotificationService);
+  private translationService = inject(TranslationService);
 
+  translations = this.translationService.translations;
   // Use ALL products (unfiltered) for admin
   products = this.productService.allProducts;
   categories = this.categoryService.categories;

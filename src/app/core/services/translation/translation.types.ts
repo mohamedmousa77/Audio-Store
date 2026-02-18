@@ -350,12 +350,53 @@ export interface Translations {
             title: string;
             subtitle: string;
         }
+        stats: {
+            totalSales: string;
+            totalOrders: string;
+            totalCustomers: string;
+        },
+        orderByStatus: {
+            title: string;            
+            status: {
+                pending: string;
+                processing: string;
+                delivered: string;
+                cancelled: string;
+                shipped: string;
+            }
+        }
+        viewReport: string;
+        topProducts:{
+            title: string;            
+        }
+        salesByCategory: string;
+
     };
     productsManagement: {
         header: {
             title: string;
             subtitle: string; 
+        },
+        savingProduct: string;        
+        searchPlaceholder: string;
+        categoriesSearchPlaceholder: string;
+        filterByStatus: {
+            pleaseholder: string;
+            available: string;
+            lowStock: string;
+            unavailable: string;
         }
+        
+        product: string;
+        category: string;        
+        stock: string;
+        stockStatus: string;
+        status: string;
+        price: string;
+        sales: string;        
+        flag: string; 
+        actions: string;
+
     };
     categoriesManagement: {
         header: {

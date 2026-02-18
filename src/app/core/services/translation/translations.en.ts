@@ -350,19 +350,59 @@ export const TRANSLATIONS_EN: Translations = {
         header: {
             title: 'Dashboard Overview',
             subtitle: 'Monitor your store performance and key business metrics',
-        }
+        },
+        stats: {
+            totalSales: 'Total Sales',
+            totalOrders: 'Total Orders',
+            totalCustomers: 'Total Customers',
+        },
+        
+        orderByStatus: {
+            title: 'Orders by Status',            
+            status: {
+                pending: 'Pending',
+                processing: 'Processing',
+                delivered: 'Delivered',
+                cancelled: 'Cancelled',
+                shipped: 'Shipped',
+            }
+        },
+        topProducts: {
+            title: 'Top Products',
+        },
+        viewReport: 'View Report',
+        salesByCategory: 'Sales by Category',
     },
     productsManagement: {
         header: {
             title: 'Products Management',
             subtitle: 'Manage your audio equipment catalog',
-        }
+        },
+        savingProduct: 'Saving product...',
+        searchPlaceholder: 'Search by name or brand...',
+        categoriesSearchPlaceholder: 'All Categories',
+        filterByStatus: {
+            pleaseholder: 'All Statuses',
+            available: 'Available',
+            lowStock: 'Low Stock',
+            unavailable: 'Unavailable',
+        },
+        product: 'Product',
+        category: 'Category',
+        price: 'Price',
+        stock: 'Stock',
+        status: 'Status',
+        stockStatus: 'Stock Status',
+        flag: 'Flags',
+        actions: 'Actions',
+        sales: 'Sales',
     },
     ordersManagement: {
         header: {
             title: 'Orders Management',
             subtitle: 'Track and manage customer orders',
-        }
+        },
+
     },
     customersManagement: {
         header: {

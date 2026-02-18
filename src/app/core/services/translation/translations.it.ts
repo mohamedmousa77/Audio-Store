@@ -347,13 +347,46 @@ export const TRANSLATIONS_IT: Translations = {
         header: {
             title: 'Panoramica dashboard',
             subtitle: 'Monitora le prestazioni del negozio e le principali metriche di business',
-        }
+        },
+        stats: {
+            totalSales: 'Vendite Totali',
+            totalOrders: 'Ordini Totali',
+            totalCustomers: 'Clienti Totali',
+        },
+        orderByStatus: {
+            title: 'Ordini per Stato',
+            
+            status: {
+                pending: 'In Attesa',
+                processing: 'In Elaborazione',
+                shipped: 'Spedito',
+                delivered: 'Consegnato',
+                cancelled: 'Annullato',
+            }
+        },
+        topProducts: {
+            title: 'Prodotti più venduti',
+        },
+        viewReport: 'Vedi Report',
+        salesByCategory: 'Vendite per Categoria',
     },
     productsManagement: {
         header: {
             title: 'Gestione prodotti',
             subtitle: 'Gestisci il catalogo delle apparecchiature audio',
-        }
+        },
+        savingProduct: 'Salvataggio prodotto in corso...',
+        searchPlaceholder: 'Cerca per nome o marca...',
+        categoriesSearchPlaceholder: 'Tutte categorie',
+        product: 'Prodotto',
+        category: 'Categoria',
+        price: 'Prezzo',
+        stock: 'Stock',
+        status: 'Stato',
+        stockStatus: 'Stato Stock',
+        flag: 'Flag',
+        actions: 'Azioni',
+        sales: 'Vendite',
     },
     ordersManagement: {
         header: {

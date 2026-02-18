@@ -11,7 +11,7 @@
       <div class="saving-overlay">
         <div class="saving-dialog">
           <div class="spinner"></div>
-          <p>Saving product...</p>
+          <p>{{ translations().productsManagement.savingProduct }}</p>
         </div>
       </div>
       }
@@ -20,23 +20,23 @@
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder="Search by name or brand..." [ngModel]="searchTerm()"
+            <input type="text" placeholder={{ translations().productsManagement.searchPlaceholder }} [ngModel]="searchTerm()"
               (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
           <div class="filter-controls">
             <select [ngModel]="selectedCategory()" (ngModelChange)="onCategoryChange($event)" class="filter-select">
-              <option [ngValue]="null">All Categories</option>
+              <option [ngValue]="null">{{ translations().productsManagement.categoriesSearchPlaceholder }}</option>
               @for (cat of categories(); track cat.id) {
               <option [ngValue]="cat.id">{{ cat.name }}</option>
               }
             </select>
 
             <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" class="filter-select">
-              <option value="">All Status</option>
-              <option value="Available">Available</option>
-              <option value="Low Stock">Low Stock</option>
-              <option value="Unavailable">Unavailable</option>
+              <option value="">{{ translations().productsManagement.filterByStatus.pleaseholder }}</option>
+              <option value="Available">{{ translations().productsManagement.filterByStatus.available }}</option>
+              <option value="Low Stock">{{ translations().productsManagement.filterByStatus.lowStock }}</option>
+              <option value="Unavailable">{{ translations().productsManagement.filterByStatus.unavailable }}</option>
             </select>
 
             @if (searchTerm() || selectedCategory() || selectedStatus()) {

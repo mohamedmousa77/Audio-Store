@@ -98,7 +98,7 @@
       </div>
 
       <div id="order-detail-section">
-        @if (showDetail()) {
+        @if (showDetail) {
         <app-order-form [order]="selectedOrder()!" (statusUpdate)="updateStatus($event)" (cancel)="handleCancel()">
         </app-order-form>
         }

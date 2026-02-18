@@ -17,9 +17,9 @@
         <!-- Orders by Status Section -->
         <div class="dashboard-card status-card-wrapper">
           <div class="card-header">
-            <h2 class="card-title">Orders by Status</h2>
-            <a href="#" class="view-all-link">
-              View Report
+            <h2 class="card-title">{{translations().dashboard.orderByStatus.title}}</h2>
+            <a routerLink="/admin/orders" class="view-all-link">
+              {{translations().dashboard.viewReport}}
               <span class="material-icons">arrow_forward</span>
             </a>
           </div>
@@ -29,7 +29,7 @@
         <!-- Sales by Category Section -->
         <div class="dashboard-card stats-card">
           <div class="card-header">
-            <h2 class="card-title">Sales by Category</h2>
+            <h2 class="card-title">{{translations().dashboard.salesByCategory}}</h2>
           </div>
           <app-category-stats [categories]="categoryStats()" />
         </div>

@@ -1,8 +1,8 @@
 <div class="dashboard-card top-selling-card">
     <div class="table-header">
-        <h3>Top Selling Products</h3>
-        <a href="#" class="view-all-link">
-            View Report
+        <h3>{{translations().dashboard.topProducts.title}}</h3>
+        <a routerLink="/admin/products" class="view-all-link">
+            {{translations().dashboard.viewReport}}
             <span class="material-icons">arrow_forward</span>
         </a>
         <!-- <span class="results-count">{{ products.length }} products</span> -->
@@ -11,11 +11,11 @@
         <table class="model-table">
             <thead>
                 <tr>
-                    <th>PRODUCT NAME</th>
-                    <th>CATEGORY</th>
-                    <th>STOCK STATUS</th>
-                    <th>PRICE</th>
-                    <th>SALES</th>
+                    <th>{{translations().productsManagement.product}}</th>
+                    <th>{{translations().productsManagement.category}}</th>
+                    <th>{{translations().productsManagement.stockStatus}}</th>
+                    <th>{{translations().productsManagement.price}}</th>
+                    <th>{{translations().productsManagement.sales}}</th>
                 </tr>
             </thead>
             <tbody>

@@ -2,7 +2,6 @@ import { Component, OnInit, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminSidebar } from '../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../layout/admin-header/header';
-import { DashboardStats as DashboardStatsModel } from '../../../core/models/DashboardStats';
 import { StatCard } from '../components/stat-card/stat-card';
 import { RecentOrders } from '../orders-manage/recent-orders/recent-orders';
 import { CategoryStats } from '../categories-manage/category-stats/category-stats';
@@ -10,6 +9,7 @@ import { TopProductsDashboardManage } from '../../admin/products-manage/top-prod
 import { OrderServices } from '../../../core/services/order/order-services';
 import { DashboardServices } from '../../../core/services/dashboard/dashboard-services';
 import { TranslationService } from '../../../core/services/translation/translation.service';
+import { RouterModule } from '@angular/router';
 
 /**
  * Admin Dashboard Component
@@ -30,14 +30,15 @@ import { TranslationService } from '../../../core/services/translation/translati
     StatCard,
     RecentOrders,
     CategoryStats,
-    TopProductsDashboardManage
+    TopProductsDashboardManage,
+    RouterModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class DashboardPageComponent implements OnInit {
   private orderService = inject(OrderServices);
-  private dashboardService = inject(DashboardServices);  
+  private dashboardService = inject(DashboardServices);
   private translationService = inject(TranslationService);
 
   // Use Signals from services
@@ -47,7 +48,7 @@ export class DashboardPageComponent implements OnInit {
   error = this.dashboardService.error;
   ordersLoading = this.orderService.loadingSignal;
   translations = this.translationService.translations;
-  
+
   // Computed stats for stat cards
   stats = computed(() => {
     const data = this.dashboardStats();
@@ -55,21 +56,21 @@ export class DashboardPageComponent implements OnInit {
 
     return [
       {
-        label: 'Total Sales',
+        label: 'totalSales',
         value: `€${data.totalSales.toFixed(2)}`,
         trend: '', // Backend doesn't provide trend
         icon: 'payments',
         color: 'green'
       },
       {
-        label: 'Total Orders',
+        label: 'totalOrders',
         value: data.totalOrders.toString(),
         trend: '',
         icon: 'shopping_bag',
         color: 'blue'
       },
       {
-        label: 'Active Customers',
+        label: 'totalCustomers',
         value: data.totalCustomers.toString(),
         trend: '',
         icon: 'group',
@@ -93,31 +94,31 @@ export class DashboardPageComponent implements OnInit {
 
     return [
       {
-        label: 'Delivered',
+        label: this.translations().dashboard.orderByStatus.status.delivered,
         count: data.ordersByStatus.delivered,
         percentage: Math.round((data.ordersByStatus.delivered / total) * 100),
         color: '#10b981'
       },
       {
-        label: 'Shipped',
+        label: this.translations().dashboard.orderByStatus.status.shipped,
         count: data.ordersByStatus.shipped,
         percentage: Math.round((data.ordersByStatus.shipped / total) * 100),
         color: '#3b82f6'
       },
       {
-        label: 'Pending',
+        label:this.translations().dashboard.orderByStatus.status.pending,
         count: data.ordersByStatus.pending,
         percentage: Math.round((data.ordersByStatus.pending / total) * 100),
         color: '#f49d25'
       },
       {
-        label: 'Processing',
+        label: this.translations().dashboard.orderByStatus.status.processing,
         count: data.ordersByStatus.processing,
         percentage: Math.round((data.ordersByStatus.processing / total) * 100),
         color: '#8b5cf6'
       },
       {
-        label: 'Cancelled',
+        label: this.translations().dashboard.orderByStatus.status.cancelled,
         count: data.ordersByStatus.cancelled,
         percentage: Math.round((data.ordersByStatus.cancelled / total) * 100),
         color: '#ef4444'

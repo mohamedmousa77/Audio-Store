@@ -41,7 +41,7 @@ export class OrdersPage implements OnInit {
   error = this.orderService.errorSignal;
 
   // Local state
-  showDetail = signal<boolean>(false);
+  showDetail = false;
   selectedOrder = signal<Order | null>(null);
   searchTerm = signal<string>('');
   selectedStatus = signal<string>('');
@@ -58,7 +58,9 @@ export class OrdersPage implements OnInit {
         `${order.customerFirstName} ${order.customerLastName}`.toLowerCase().includes(search) ||
         order.customerEmail.toLowerCase().includes(search);
 
-      const matchesStatus = statusStr === '' || order.orderStatus === parseInt(statusStr);
+      const matchesStatus = statusStr === '' ||
+        order.orderStatus == parseInt(statusStr) || // loose equality for string/number match
+        order.orderStatus.toString() === statusStr; // handle direct string match
 
       return matchesSearch && matchesStatus;
     });
@@ -71,10 +73,10 @@ export class OrdersPage implements OnInit {
     await this.loadOrders();
 
     // Select first order if available
-    const firstOrder = this.filteredOrders()[0];
-    if (firstOrder) {
-      this.selectOrder(firstOrder);
-    }
+    // const firstOrder = this.filteredOrders()[0];
+    // if (firstOrder) {
+    //   this.selectOrder(firstOrder);
+    // }
   }
 
   /**
@@ -82,14 +84,16 @@ export class OrdersPage implements OnInit {
    */
   async loadOrders(): Promise<void> {
     await this.orderService.loadAllOrders();
+    console.log('Orders loaded:', this.orders());
   }
 
   /**
    * Select order to view details
    */
   selectOrder(order: Order): void {
+    console.log('Selecting order:', order);
     this.selectedOrder.set(order);
-    this.showDetail.set(true);
+    this.showDetail = true;
     this.scrollToDetail();
   }
 
@@ -110,25 +114,38 @@ export class OrdersPage implements OnInit {
    */
   async updateStatus(newStatus: OrderStatus): Promise<void> {
     const order = this.selectedOrder();
+    console.log('Updating order status:', { order, newStatus });
     if (!order) return;
 
     try {
       await this.orderService.updateOrderStatus({ orderId: order.id, newStatus });
 
-      // Reload orders to reflect updated status in the table
-      await this.loadOrders();
-
-      // Update selected order with fresh data
-      const refreshed = this.orders().find(o => o.id === order.id);
-      if (refreshed) {
-        this.selectedOrder.set(refreshed);
-      }
-
-      // Show success dialog
+      // Show success dialog FIRST
       await this.dialogService.showSuccessAlert(
         'Stato aggiornato',
         `Lo stato dell\'ordine ${order.orderNumber} è stato aggiornato a "${this.getStatusText(newStatus)}".`
       );
+
+      // AFTER user clicks OK:
+      // 1. Reload orders to reflect updated status in the table
+      await this.loadOrders();
+
+      // 2. Close detail view and clear selected order
+      this.showDetail = false;
+      this.selectedOrder.set(null);
+
+      // 3. Scroll to the updated order row
+      setTimeout(() => {
+        const rows = document.querySelectorAll('.order-row');
+        rows.forEach(row => {
+          if (row.textContent?.includes(order.orderNumber)) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.classList.add('highlight-row');
+            setTimeout(() => row.classList.remove('highlight-row'), 2000);
+          }
+        });
+      }, 200);
+
     } catch (error: any) {
       console.error('Error updating order status:', error);
 
@@ -137,20 +154,6 @@ export class OrdersPage implements OnInit {
         'Errore aggiornamento',
         error?.message || 'Si è verificato un errore durante l\'aggiornamento dello stato dell\'ordine.'
       );
-    }
-  }
-
-  /**
-   * Handle status change from dropdown
-   */
-  async onStatusChange(order: Order, event: any): Promise<void> {
-    const newStatus = parseInt(event.target.value) as OrderStatus;
-
-    try {
-      await this.orderService.updateOrderStatus({ orderId: order.id, newStatus });
-    } catch (error) {
-      console.error('Error updating order status:', error);
-      alert('Errore durante l\'aggiornamento dello stato');
     }
   }
 
@@ -173,14 +176,6 @@ export class OrdersPage implements OnInit {
    */
   getCustomerInitial(order: Order): string {
     return order.customerFirstName.charAt(0).toUpperCase();
-  }
-
-  /**
-   * Apply filters
-   */
-  applyFilters(): void {
-    // Filters are automatically applied via computed signal
-    // This method kept for compatibility with template
   }
 
   /**
@@ -215,7 +210,7 @@ export class OrdersPage implements OnInit {
    */
   handleCancel(): void {
     this.selectedOrder.set(null);
-    this.showDetail.set(false);
+    this.showDetail = false;
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
@@ -225,7 +220,26 @@ export class OrdersPage implements OnInit {
   /**
    * Get status text in Italian
    */
-  getStatusText(status: OrderStatus): string {
+  getStatusText(status: OrderStatus | string | number): string {
+    // Handle string/number input
+    let statusId: number;
+
+    if (typeof status === 'string') {
+      if (!isNaN(Number(status))) {
+        statusId = Number(status);
+      } else {
+        // Try to map string name to enum value
+        const key = Object.keys(OrderStatus).find(k => k.toLowerCase() === status.toLowerCase());
+        if (key) {
+          statusId = (OrderStatus as any)[key];
+        } else {
+          return 'Sconosciuto';
+        }
+      }
+    } else {
+      statusId = status;
+    }
+
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: 'In Attesa',
       [OrderStatus.Processing]: 'In Elaborazione',
@@ -233,13 +247,33 @@ export class OrdersPage implements OnInit {
       [OrderStatus.Delivered]: 'Consegnato',
       [OrderStatus.Cancelled]: 'Annullato'
     };
-    return statusMap[status] || 'Sconosciuto';
+    return statusMap[statusId] || 'Sconosciuto';
   }
 
   /**
    * Get status for Badge component (lowercase)
    */
-  getStatusBadge(status: OrderStatus): 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' {
+  getStatusBadge(status: OrderStatus | string | number): 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' {
+    // Handle string/number input robustly
+    let statusId: number;
+
+    if (typeof status === 'string') {
+      console.log('Parsing status string:', status);
+      if (!isNaN(Number(status))) {
+        statusId = Number(status);
+      } else {
+        // Handle "Processing", "Cancelled", etc.
+        const s = status.toLowerCase();
+        if (s === 'processing' || s === 'confirmed') return 'processing';
+        if (s === 'cancelled' || s === 'canceled') return 'cancelled';
+        if (s === 'shipped') return 'shipped';
+        if (s === 'delivered') return 'delivered';
+        return 'pending';
+      }
+    } else {
+      statusId = status;
+    }
+
     const statusMap: { [key: number]: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' } = {
       [OrderStatus.Pending]: 'pending',
       [OrderStatus.Processing]: 'processing',
@@ -247,21 +281,15 @@ export class OrdersPage implements OnInit {
       [OrderStatus.Delivered]: 'delivered',
       [OrderStatus.Cancelled]: 'cancelled'
     };
-    return statusMap[status] || 'pending';
+    return statusMap[statusId] || 'pending';
   }
 
   /**
    * Get status CSS class
    */
-  getStatusClass(status: OrderStatus): string {
-    const statusMap: { [key: number]: string } = {
-      [OrderStatus.Pending]: 'status-pending',
-      [OrderStatus.Processing]: 'status-processing',
-      [OrderStatus.Shipped]: 'status-shipped',
-      [OrderStatus.Delivered]: 'status-delivered',
-      [OrderStatus.Cancelled]: 'status-cancelled'
-    };
-    return statusMap[status] || 'status-pending';
+  getStatusClass(status: OrderStatus | string | number): string {
+    const badge = this.getStatusBadge(status);
+    return `status-${badge}`;
   }
 
   /**

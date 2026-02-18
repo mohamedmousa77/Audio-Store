@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 /**
  * Order Status Data interface for progress bars
  */
@@ -25,4 +25,7 @@ export interface OrderStatusData {
 })
 export class RecentOrders {
   @Input() orders: OrderStatusData[] = [];
+    private translationService = inject(TranslationService);
+
+    translations = this.translationService.translations;
 }
