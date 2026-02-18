@@ -74,7 +74,7 @@ export class Homepage implements OnInit {
           // Don't set global error, just log it so other parts can show
         });
 
-      const loadFeatured = this.productService.loadFeaturedProducts(4)
+      const loadFeatured = this.productService.loadFeaturedProducts(8)
         .then(data => {
           this.featuredProducts.set(data);
           console.log(`✅ Featured products loaded (${data.length})`);

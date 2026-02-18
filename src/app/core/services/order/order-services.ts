@@ -222,7 +222,7 @@ export class OrderServices {
    * Update order status (Admin only)
    * @param request Order ID and new status
    */
-  async updateOrderStatus(request: UpdateOrderStatusRequest): Promise<Order | undefined> {
+  async updateOrderStatus(request: UpdateOrderStatusRequest): Promise<Order> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -233,10 +233,11 @@ export class OrderServices {
 
       console.log(`✅ Order ${request.orderId} status updated to ${request.newStatus}`);
       return updatedOrder;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to update order status:', error);
-      this.errorSignal.set('Failed to update order status');
-      return undefined;
+      const errorMsg = error?.error?.error || error?.message || 'Errore aggiornamento stato ordine';
+      this.errorSignal.set(errorMsg);
+      throw new Error(errorMsg);
     } finally {
       this.loadingSignal.set(false);
     }

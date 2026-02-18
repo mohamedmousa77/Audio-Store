@@ -45,6 +45,7 @@ export class ProductDetails implements OnInit {
   notificationMessage: string = '';
   showNotification: boolean = false;
   addedToCart: boolean = false;
+  activeTab: string = 'description';
 
   productImages: string[] = [];
 
@@ -88,10 +89,14 @@ export class ProductDetails implements OnInit {
         this.product = product;
         console.log('Found product:', this.product);
 
-        // Setup product images - only use actual product image
-        this.productImages = this.product.mainImage
-          ? [this.product.mainImage]
-          : [];
+        // Setup product images - mainImage first, then gallery images
+        this.productImages = [];
+        if (this.product.mainImage) {
+          this.productImages.push(this.product.mainImage);
+        }
+        if (this.product.galleryImages?.length) {
+          this.productImages.push(...this.product.galleryImages);
+        }
 
         // Get category name
         const categoryName = this.product.categoryName || this.getCategoryName(this.product.categoryId);
@@ -205,6 +210,33 @@ export class ProductDetails implements OnInit {
    */
   get hasFeatures(): boolean {
     return !!(this.product?.specifications && this.product.specifications.trim().length > 0);
+  }
+
+  /**
+   * Parse specifications string into structured lines
+   * Handles formats like "Key: Value" separated by newlines or periods
+   */
+  get specLines(): { label: string; value: string }[] {
+    if (!this.product?.specifications) return [];
+    return this.product.specifications
+      .split(/[\n]/) // split by newlines
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .map(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > 0) {
+          return {
+            label: line.substring(0, colonIndex).trim(),
+            value: line.substring(colonIndex + 1).trim()
+          };
+        }
+        return { label: '', value: line };
+      });
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    this.scrollToSection(tab);
   }
 
 }

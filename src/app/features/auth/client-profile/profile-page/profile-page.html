@@ -10,10 +10,23 @@
       <!-- <button class="logout-btn" (click)="logout()" title="Logout">
         <span class="material-symbols-outlined">logout</span>
       </button> -->
+      @if (isAdmin) {
+      <div class="header-actions-admin">
+        <button class="btn-continue-top" (click)="continueShopping()">
+          <span class="material-symbols-outlined">home</span>
+          Homepage
+        </button>
+        <button class="btn-admin-dashboard" (click)="goToAdminDashboard()">
+          <span class="material-symbols-outlined">dashboard</span>
+          Admin Dashboard
+        </button>
+      </div>
+      } @else {
       <button class="btn-continue-top" (click)="continueShopping()">
         <span class="material-symbols-outlined">keyboard_backspace</span>
         {{ translations().common.continueShopping }}
       </button>
+      }
     </div>
   </header>
 

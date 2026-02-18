@@ -14,16 +14,15 @@
           </div>
 
           <div class="filter-controls">
-            <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event ? +$event : null)"
-              class="filter-select">
-              <option [value]="null">All Status</option>
+            <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" class="filter-select">
+              <option value="">All Status</option>
               <option [value]="OrderStatus.Pending">Pending</option>
-              <option [value]="OrderStatus.Confirmed">Confirmed</option>
+              <option [value]="OrderStatus.Processing">Processing</option>
               <option [value]="OrderStatus.Shipped">Shipped</option>
               <option [value]="OrderStatus.Delivered">Delivered</option>
-              <option [value]="OrderStatus.Canceled">Canceled</option>
+              <option [value]="OrderStatus.Cancelled">Cancelled</option>
             </select>
-            @if (searchTerm() || selectedStatus() !== null) {
+            @if (searchTerm() || selectedStatus() !== '') {
             <button class="btn btn-secondary" (click)="clearFilters()">
               <span class="material-icons">clear</span> Clear
             </button>
@@ -74,6 +73,21 @@
                     <span class="material-icons view"
                       (click)="$event.stopPropagation(); selectOrder(order)">visibility</span>
                     <span class="material-icons edit" (click)="$event.stopPropagation()">edit</span>
+                  </div>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="6">
+                  <div class="empty-state">
+                    <span class="material-icons empty-icon">inbox</span>
+                    @if (selectedStatus() !== '') {
+                    <p class="empty-title">Nessun ordine con stato "{{ getSelectedStatusText() }}"</p>
+                    <p class="empty-subtitle">Non ci sono ordini con questo stato. Prova un altro filtro.</p>
+                    } @else {
+                    <p class="empty-title">Nessun ordine trovato</p>
+                    <p class="empty-subtitle">Non sono presenti ordini corrispondenti alla ricerca.</p>
+                    }
                   </div>
                 </td>
               </tr>

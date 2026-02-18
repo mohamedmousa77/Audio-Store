@@ -106,10 +106,10 @@ export class PersonalOrders implements OnInit {
   getStatusColor(status: OrderStatus): string {
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: 'status-processing',
-      [OrderStatus.Confirmed]: 'status-processing',
+      [OrderStatus.Processing]: 'status-processing',
       [OrderStatus.Shipped]: 'status-shipped',
       [OrderStatus.Delivered]: 'status-delivered',
-      [OrderStatus.Canceled]: 'status-canceled'
+      [OrderStatus.Cancelled]: 'status-canceled'
     };
     return statusMap[status] || 'status-processing';
   }
@@ -121,10 +121,10 @@ export class PersonalOrders implements OnInit {
     const t = this.translations().profile.ordersSection.statuses;
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: t.pending,
-      [OrderStatus.Confirmed]: t.confirmed,
+      [OrderStatus.Processing]: t.confirmed,
       [OrderStatus.Shipped]: t.shipped,
       [OrderStatus.Delivered]: t.delivered,
-      [OrderStatus.Canceled]: t.cancelled
+      [OrderStatus.Cancelled]: t.cancelled
     };
     return statusMap[status] || t.unknown;
   }

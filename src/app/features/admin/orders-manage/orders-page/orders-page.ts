@@ -7,6 +7,7 @@ import { OrderForm } from '../order-form/order-form';
 import { Badge } from '../../../../shared/components/badge/badge';
 import { Order, OrderStatus } from '../../../../core/models/order';
 import { OrderServices } from '../../../../core/services/order/order-services';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog/confirm-dialog.service';
 
 /**
  * Admin Orders Page Component
@@ -32,6 +33,7 @@ import { OrderServices } from '../../../../core/services/order/order-services';
 })
 export class OrdersPage implements OnInit {
   private orderService = inject(OrderServices);
+  private dialogService = inject(ConfirmDialogService);
 
   // Use Signals from OrderServices
   orders = this.orderService.orders;
@@ -42,13 +44,13 @@ export class OrdersPage implements OnInit {
   showDetail = signal<boolean>(false);
   selectedOrder = signal<Order | null>(null);
   searchTerm = signal<string>('');
-  selectedStatus = signal<OrderStatus | null>(null);
+  selectedStatus = signal<string>('');
 
   // Computed filtered orders
   filteredOrders = computed(() => {
     const allOrders = this.orders();
     const search = this.searchTerm().toLowerCase();
-    const status = this.selectedStatus();
+    const statusStr = this.selectedStatus();
 
     return allOrders.filter(order => {
       const matchesSearch = !search ||
@@ -56,7 +58,7 @@ export class OrdersPage implements OnInit {
         `${order.customerFirstName} ${order.customerLastName}`.toLowerCase().includes(search) ||
         order.customerEmail.toLowerCase().includes(search);
 
-      const matchesStatus = status === null || order.orderStatus === status;
+      const matchesStatus = statusStr === '' || order.orderStatus === parseInt(statusStr);
 
       return matchesSearch && matchesStatus;
     });
@@ -113,15 +115,28 @@ export class OrdersPage implements OnInit {
     try {
       await this.orderService.updateOrderStatus({ orderId: order.id, newStatus });
 
-      // Update selected order
-      const updatedOrders = this.orders();
-      const updated = updatedOrders.find(o => o.id === order.id);
-      if (updated) {
-        this.selectedOrder.set(updated);
+      // Reload orders to reflect updated status in the table
+      await this.loadOrders();
+
+      // Update selected order with fresh data
+      const refreshed = this.orders().find(o => o.id === order.id);
+      if (refreshed) {
+        this.selectedOrder.set(refreshed);
       }
-    } catch (error) {
+
+      // Show success dialog
+      await this.dialogService.showSuccessAlert(
+        'Stato aggiornato',
+        `Lo stato dell\'ordine ${order.orderNumber} è stato aggiornato a "${this.getStatusText(newStatus)}".`
+      );
+    } catch (error: any) {
       console.error('Error updating order status:', error);
-      alert('Errore durante l\'aggiornamento dello stato dell\'ordine');
+
+      // Show error dialog
+      await this.dialogService.showErrorAlert(
+        'Errore aggiornamento',
+        error?.message || 'Si è verificato un errore durante l\'aggiornamento dello stato dell\'ordine.'
+      );
     }
   }
 
@@ -173,7 +188,16 @@ export class OrdersPage implements OnInit {
    */
   clearFilters(): void {
     this.searchTerm.set('');
-    this.selectedStatus.set(null);
+    this.selectedStatus.set('');
+  }
+
+  /**
+   * Get the text of the currently selected status filter
+   */
+  getSelectedStatusText(): string {
+    const s = this.selectedStatus();
+    if (s === '') return '';
+    return this.getStatusText(parseInt(s) as OrderStatus);
   }
 
   /**
@@ -204,10 +228,10 @@ export class OrdersPage implements OnInit {
   getStatusText(status: OrderStatus): string {
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: 'In Attesa',
-      [OrderStatus.Confirmed]: 'Confermato',
+      [OrderStatus.Processing]: 'In Elaborazione',
       [OrderStatus.Shipped]: 'Spedito',
       [OrderStatus.Delivered]: 'Consegnato',
-      [OrderStatus.Canceled]: 'Annullato'
+      [OrderStatus.Cancelled]: 'Annullato'
     };
     return statusMap[status] || 'Sconosciuto';
   }
@@ -215,13 +239,13 @@ export class OrdersPage implements OnInit {
   /**
    * Get status for Badge component (lowercase)
    */
-  getStatusBadge(status: OrderStatus): 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled' {
-    const statusMap: { [key: number]: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled' } = {
+  getStatusBadge(status: OrderStatus): 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' {
+    const statusMap: { [key: number]: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' } = {
       [OrderStatus.Pending]: 'pending',
-      [OrderStatus.Confirmed]: 'confirmed',
+      [OrderStatus.Processing]: 'processing',
       [OrderStatus.Shipped]: 'shipped',
       [OrderStatus.Delivered]: 'delivered',
-      [OrderStatus.Canceled]: 'canceled'
+      [OrderStatus.Cancelled]: 'cancelled'
     };
     return statusMap[status] || 'pending';
   }
@@ -232,10 +256,10 @@ export class OrdersPage implements OnInit {
   getStatusClass(status: OrderStatus): string {
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: 'status-pending',
-      [OrderStatus.Confirmed]: 'status-confirmed',
+      [OrderStatus.Processing]: 'status-processing',
       [OrderStatus.Shipped]: 'status-shipped',
       [OrderStatus.Delivered]: 'status-delivered',
-      [OrderStatus.Canceled]: 'status-canceled'
+      [OrderStatus.Cancelled]: 'status-cancelled'
     };
     return statusMap[status] || 'status-pending';
   }

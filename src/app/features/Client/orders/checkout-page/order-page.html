@@ -123,7 +123,7 @@
       <div class="summary-product-list">
         @for (item of items(); track item.id) {
         <div class="summary-product-item">
-          <img [src]="item.productImage" [alt]="item.productImage" class="mini-thumb">
+          <img [src]="item.productImage || '/product-placeholder.png'" [alt]="item.productName" class="mini-thumb">
           <div class="mini-details">
             <p class="mini-name">{{ item.productName }}</p>
             <p class="mini-meta">{{ translations().cart.quantity }}: {{ item.quantity }}</p>
@@ -174,7 +174,7 @@
           translations().checkout.secure }}</div>
         <div class="trust-item"><span class="material-symbols-outlined">package_2</span> {{
           translations().checkout.insured }}</div>
-        
+
       </div>
     </aside>
   </div>

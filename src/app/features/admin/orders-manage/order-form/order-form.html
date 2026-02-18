@@ -1,7 +1,7 @@
 <div class="order-detail-container">
   <div class="detail-page-header">
     <div class="header-left">
-      <h2 class="detail-title">Order Details: <span>{{ order?.id }}</span></h2>
+      <h2 class="detail-title">Order Details: <span>{{ order?.orderNumber }}</span></h2>
       <p class="detail-subtitle">Placed on {{ order?.orderDate | date:'longDate' }}</p>
     </div>
     <div class="header-actions">
@@ -21,18 +21,20 @@
           <div class="card-icon"><span class="material-icons">person</span></div>
           <div class="card-content">
             <h4>CUSTOMER INFO</h4>
-            <p class="primary-text">{{ order?.customerFirstName + ' ' + order?.customerLastName }}</p>
+            <p class="primary-text">{{ order?.customerFirstName }} {{ order?.customerLastName }}</p>
             <p class="secondary-text">{{ order?.customerEmail }}</p>
-            <p class="secondary-text">+1 (555) 123-4567</p>
+            @if (order?.customerPhone) {
+            <p class="secondary-text">{{ order?.customerPhone }}</p>
+            }
           </div>
         </div>
         <div class="info-card">
           <div class="card-icon"><span class="material-icons">local_shipping</span></div>
           <div class="card-content">
             <h4>SHIPPING ADDRESS</h4>
-            <p class="secondary-text">123 Audio Lane, Suite 4B</p>
-            <p class="secondary-text">Music City, TN 37203</p>
-            <p class="secondary-text">United States</p>
+            <p class="secondary-text">{{ order?.shippingStreet }}</p>
+            <p class="secondary-text">{{ order?.shippingCity }}, {{ order?.shippingPostalCode }}</p>
+            <p class="secondary-text">{{ order?.shippingCountry }}</p>
           </div>
         </div>
       </div>
@@ -48,40 +50,66 @@
             </tr>
           </thead>
           <tbody>
+            @for (item of order?.items; track item.id) {
             <tr>
               <td>
                 <div class="prod-cell">
-                  <div class="prod-img-placeholder"></div>
-                  <span>Sony WH-1000XM5</span>
+                  <img [src]="item.productImage || '/product-placeholder.png'" [alt]="item.productName"
+                    class="prod-img-mini">
+                  <span>{{ item.productName }}</span>
                 </div>
               </td>
-              <td>1</td>
-              <td>$349.00</td>
-              <td><strong>$349.00</strong></td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ formatPrice(item.unitPrice) }}</td>
+              <td><strong>{{ formatPrice(item.subtotal) }}</strong></td>
             </tr>
+            }
           </tbody>
         </table>
+
+        <!-- Order Totals -->
+        <div class="order-totals">
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span>{{ formatPrice(order?.subtotal || 0) }}</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping</span>
+            <span>{{ formatPrice(order?.shippingCost || 0) }}</span>
+          </div>
+          <div class="total-row">
+            <span>Tax</span>
+            <span>{{ formatPrice(order?.tax || 0) }}</span>
+          </div>
+          <div class="total-row total-final">
+            <span><strong>Total</strong></span>
+            <span><strong>{{ formatPrice(order?.totalAmount || 0) }}</strong></span>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="detail-side-actions">
       <div class="action-card">
         <h4>UPDATE STATUS</h4>
-        <select class="status-dropdown" #statusSelect [value]="order?.orderStatus">
-          <option [value]="0">Pending</option>
-          <option [value]="1">Confirmed</option>
-          <option [value]="2">Shipped</option>
-          <option [value]="3">Delivered</option>
-          <option [value]="4">Canceled</option>
+        <p class="current-status-label">Current: <strong>{{ getStatusText(order?.orderStatus!) }}</strong></p>
+        <select class="status-dropdown" [(ngModel)]="selectedStatus">
+          <option [ngValue]="OrderStatus.Pending">Pending</option>
+          <option [ngValue]="OrderStatus.Processing">Processing</option>
+          <option [ngValue]="OrderStatus.Shipped">Shipped</option>
+          <option [ngValue]="OrderStatus.Delivered">Delivered</option>
+          <option [ngValue]="OrderStatus.Cancelled">Cancelled</option>
         </select>
-        <button class="btn btn-primary" (click)="onUpdateStatus(+statusSelect.value)">
+        <button class="btn btn-primary" (click)="onUpdateStatus()" [disabled]="selectedStatus === order?.orderStatus">
           Update Status
         </button>
-
-        <div class="status-success-alert" *ngIf="showSuccess">
-          <span class="material-icons">check_circle</span>
-          <p>Status updated successfully. <span>Notification email sent to customer.</span></p>
-        </div>
+        @if(showSuccess){
+          <div class="status-success-alert" >
+            <span class="material-icons">check_circle</span>
+            <p>Status updated successfully.</p>
+          </div>
+        }
+        
       </div>
     </div>
   </div>

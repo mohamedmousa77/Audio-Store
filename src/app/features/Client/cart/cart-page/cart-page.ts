@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { ClientHeader } from '../../layout/client-header/client-header';
 import { ClientFooter } from '../../layout/client-footer/client-footer';
@@ -10,7 +10,7 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog/c
 
 @Component({
   selector: 'app-cart-page',
-  imports: [CommonModule, FormsModule, ClientHeader, ClientFooter],
+  imports: [CommonModule, FormsModule, RouterModule, ClientHeader, ClientFooter],
   templateUrl: './cart-page.html',
   styleUrl: './cart-page.css',
 })

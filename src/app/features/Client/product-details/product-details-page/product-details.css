@@ -7,7 +7,8 @@
   background: #f8f7f5;
   border-bottom: 1px solid #e8ddce;
   padding: 1rem 0;
-.breadcrumbs-container {
+
+  .breadcrumbs-container {
     max-width: 1440px;
     margin: 0 auto;
     padding: 0 1.5rem;
@@ -74,8 +75,10 @@
 .main-image-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 1;  /* Keeps square aspect ratio */
-  max-height: 500px;  /* Limit maximum height */
+  aspect-ratio: 1;
+  /* Keeps square aspect ratio */
+  max-height: 500px;
+  /* Limit maximum height */
   background: #f8f7f5;
   border-radius: 1rem;
   overflow: hidden;
@@ -158,7 +161,8 @@
 .product-info {
   display: flex;
   flex-direction: column;
-  gap: 1rem;  /* Reduced from 1.5rem to tighten spacing */
+  gap: 1rem;
+  /* Reduced from 1.5rem to tighten spacing */
 }
 
 .product-brand {
@@ -174,7 +178,8 @@
   font-size: 2.25rem;
   font-weight: 700;
   color: #1c160d;
-  margin: 0 0 0.5rem 0;  /* Added small bottom margin to reduce space to price */
+  margin: 0 0 0.5rem 0;
+  /* Added small bottom margin to reduce space to price */
   line-height: 1.2;
 
   @media (max-width: 768px) {
@@ -537,6 +542,76 @@
       }
     }
   }
+
+  .specifications-tab {
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1c160d;
+      margin: 0 0 1.25rem 0;
+    }
+  }
+}
+
+.spec-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e8ddce;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.spec-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  border-bottom: 1px solid #e8ddce;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:nth-child(odd) {
+    background: #f8f7f5;
+  }
+
+  dt {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #1c160d;
+    padding: 0.875rem 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  dd {
+    font-size: 0.9375rem;
+    color: #666;
+    padding: 0.875rem 1.25rem;
+    margin: 0;
+  }
+}
+
+.spec-item-plain {
+  grid-template-columns: 1fr;
+
+  dd {
+    padding-left: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .spec-item {
+    grid-template-columns: 1fr;
+
+    dt {
+      padding-bottom: 0.25rem;
+    }
+
+    dd {
+      padding-top: 0;
+    }
+  }
 }
 
 /* Related Products */
@@ -590,7 +665,7 @@
 }
 
 @media (max-width: 480px) {
- .product-title {
+  .product-title {
     font-size: 1.5rem;
   }
 

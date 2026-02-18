@@ -95,12 +95,49 @@ export class ConfirmDialogService {
     /**
      * Show remove address confirmation
      */
-     async confirmRemoveAddress(): Promise<boolean> {
+    async confirmRemoveAddress(): Promise<boolean> {
         return this.showConfirm({
             title: this.translations().profile.addressSection.removeConfirmation.title,
-            message:this.translations().profile.addressSection.removeConfirmation.message,
+            message: this.translations().profile.addressSection.removeConfirmation.message,
             confirmText: this.translations().profile.addressSection.removeConfirmation.confirmText,
             cancelText: this.translations().profile.addressSection.removeConfirmation.cancelText,
+            isDangerous: true
+        });
+    }
+
+    /**
+     * Show alert dialog (single OK button, no cancel)
+     */
+    async showAlert(data: Omit<ConfirmDialogData, 'cancelText'>): Promise<void> {
+        await this.showConfirm({
+            ...data,
+            cancelText: '',   // hide cancel
+            confirmText: data.confirmText || 'OK'
+        });
+    }
+
+    /**
+     * Show success alert
+     */
+    async showSuccessAlert(title: string, message: string): Promise<void> {
+        await this.showConfirm({
+            title,
+            message,
+            confirmText: 'OK',
+            cancelText: '',
+            isDangerous: false
+        });
+    }
+
+    /**
+     * Show error alert
+     */
+    async showErrorAlert(title: string, message: string): Promise<void> {
+        await this.showConfirm({
+            title,
+            message,
+            confirmText: 'OK',
+            cancelText: '',
             isDangerous: true
         });
     }

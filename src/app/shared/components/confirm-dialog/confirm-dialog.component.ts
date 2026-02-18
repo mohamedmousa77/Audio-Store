@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
  * Confirmation Dialog Data
  */
 export interface ConfirmDialogData {
-    title: string;
-    message: string;
-    confirmText?: string;
-    cancelText?: string;
-    isDangerous?: boolean; // Red confirm button for destructive actions
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  isDangerous?: boolean; // Red confirm button for destructive actions
 }
 
 /**
@@ -17,10 +17,10 @@ export interface ConfirmDialogData {
  * Custom dialog for user confirmations (replace browser confirm())
  */
 @Component({
-    selector: 'app-confirm-dialog',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-confirm-dialog',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="dialog-overlay" (click)="onCancel()">
       <div class="dialog-container" (click)="$event.stopPropagation()">
         <div class="dialog-header">
@@ -35,7 +35,7 @@ export interface ConfirmDialogData {
         </div>
 
         <div class="dialog-actions">
-          <button class="btn-cancel" (click)="onCancel()">
+          <button class="btn-cancel" *ngIf="data.cancelText" (click)="onCancel()">
             {{ data.cancelText || 'Annulla' }}
           </button>
           <button 
@@ -48,7 +48,7 @@ export interface ConfirmDialogData {
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .dialog-overlay {
       position: fixed;
       top: 0;
@@ -177,15 +177,15 @@ export interface ConfirmDialogData {
   `]
 })
 export class ConfirmDialogComponent {
-    @Input() data!: ConfirmDialogData;
-    @Output() confirm = new EventEmitter<void>();
-    @Output() cancel = new EventEmitter<void>();
+  @Input() data!: ConfirmDialogData;
+  @Output() confirm = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
-    onConfirm(): void {
-        this.confirm.emit();
-    }
+  onConfirm(): void {
+    this.confirm.emit();
+  }
 
-    onCancel(): void {
-        this.cancel.emit();
-    }
+  onCancel(): void {
+    this.cancel.emit();
+  }
 }

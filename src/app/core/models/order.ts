@@ -9,10 +9,10 @@
  */
 export enum OrderStatus {
   Pending = 0,
-  Confirmed = 1,
+  Processing = 1,
   Shipped = 2,
   Delivered = 3,
-  Canceled = 4
+  Cancelled = 4
 }
 
 /**
@@ -22,8 +22,8 @@ export enum OrderStatus {
 export interface Order {
   id: number;
   orderNumber: string;
-  orderDate: string;              // ISO date string
-  userId?: number | null;         // Null for guest orders
+  orderDate: string;
+  userId?: number | null;
   orderStatus: OrderStatus;
 
   // Customer Info

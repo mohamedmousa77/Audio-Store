@@ -106,7 +106,7 @@ export class OrderApiService {
     updateOrderStatus(request: UpdateOrderStatusRequest): Observable<Order> {
         return this.httpService.patch<Order>(
             API_ENDPOINTS.orders.admin.updateStatus(request.orderId),
-            request
+            { OrderId: request.orderId, NewStatus: request.newStatus }
         );
     }
 }

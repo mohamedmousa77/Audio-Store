@@ -65,10 +65,10 @@ export class OrderHistory implements OnInit {
   getStatusLabel(status: OrderStatus): string {
     const labels = {
       [OrderStatus.Pending]: 'In Attesa',
-      [OrderStatus.Confirmed]: 'Confermato',
+      [OrderStatus.Processing]: 'In Elaborazione',
       [OrderStatus.Shipped]: 'Spedito',
       [OrderStatus.Delivered]: 'Consegnato',
-      [OrderStatus.Canceled]: 'Annullato'
+      [OrderStatus.Cancelled]: 'Annullato'
     };
     return labels[status] || 'Sconosciuto';
   }
@@ -80,10 +80,10 @@ export class OrderHistory implements OnInit {
   getStatusClass(status: OrderStatus): string {
     const classes = {
       [OrderStatus.Pending]: 'status-pending',
-      [OrderStatus.Confirmed]: 'status-confirmed',
+      [OrderStatus.Processing]: 'status-processing',
       [OrderStatus.Shipped]: 'status-shipped',
       [OrderStatus.Delivered]: 'status-delivered',
-      [OrderStatus.Canceled]: 'status-canceled'
+      [OrderStatus.Cancelled]: 'status-cancelled'
     };
     return classes[status] || 'status-unknown';
   }

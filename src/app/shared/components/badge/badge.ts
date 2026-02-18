@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './badge.css',
 })
 export class Badge {
-@Input() status: 'Available' | 'Low Stock' | 'Unavailable' |  'pending' | 'confirmed' | 'shipped' | 'delivered' | 'canceled'| 'Processing' | 'Shipped' | 'Delivered' | 'Canceled' = 'Available';
+  @Input() status: 'Available' | 'Low Stock' | 'Unavailable' | 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'confirmed' | 'canceled' | 'Processing' | 'Shipped' | 'Delivered' | 'Canceled' | 'Cancelled' = 'Available';
   @Input() text?: string;
 
   get badgeClass(): string {
@@ -16,10 +16,18 @@ export class Badge {
       'Available': 'badge-success',
       'Low Stock': 'badge-warning',
       'Unavailable': 'badge-danger',
+      'pending': 'badge-warning',
+      'processing': 'badge-info',
+      'confirmed': 'badge-info',
       'Processing': 'badge-info',
+      'shipped': 'badge-primary',
       'Shipped': 'badge-primary',
+      'delivered': 'badge-success',
       'Delivered': 'badge-success',
-      'Canceled': 'badge-danger'
+      'cancelled': 'badge-danger',
+      'canceled': 'badge-danger',
+      'Canceled': 'badge-danger',
+      'Cancelled': 'badge-danger'
     };
     return statusMap[this.status] || 'badge-secondary';
   }

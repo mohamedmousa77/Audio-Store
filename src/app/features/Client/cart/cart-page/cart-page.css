@@ -221,6 +221,17 @@
   font-weight: 600;
 }
 
+.product-link,
+.item-name-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.item-name-link:hover .item-name {
+  text-decoration: underline;
+  color: var(--primary, #f49d25);
+}
+
 .price-cell,
 .total-cell {
   font-weight: 800;

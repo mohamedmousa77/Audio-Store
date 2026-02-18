@@ -39,7 +39,7 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit {
   activeMenu = 'personal-info';
   memberSince: string = 'Member since registration:';
 
-  
+
 
   private destroy$ = new Subject<void>();
 
@@ -51,7 +51,7 @@ export class ProfilePage implements OnInit, OnDestroy, AfterViewInit {
 
   // Translations
   translations = this.translationService.translations;
-menuItems: MenuItem[] = [
+  menuItems: MenuItem[] = [
     {
       id: 'personal-info',
       label: this.translations().profile.personalInfo,
@@ -202,6 +202,14 @@ menuItems: MenuItem[] = [
 
   continueShopping(): void {
     this.router.navigate(['/client/home']);
+  }
+
+  goToAdminDashboard(): void {
+    this.router.navigate(['/admin/dashboard']);
+  }
+
+  get isAdmin(): boolean {
+    return this.currentUser?.role === 'Administrator';
   }
 
 }

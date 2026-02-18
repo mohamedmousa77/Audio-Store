@@ -5,7 +5,8 @@
     <header class="cart-title-row">
       <div class="title-group">
         <h1 class="page-title">{{ translations().cart.title }}</h1>
-        <span class="items-info">{{ translations().cart.subtitle }} {{ totalItems() }} {{ translations().cart.subtitleCartItems }}</span>
+        <span class="items-info">{{ translations().cart.subtitle }} {{ totalItems() }} {{
+          translations().cart.subtitleCartItems }}</span>
       </div>
       <button class="btn-continue-top" (click)="continueShopping()">
         <span class="material-symbols-outlined">keyboard_backspace</span>
@@ -49,10 +50,14 @@
             <tr class="cart-row">
               <td class="product-cell">
                 <div class="product-info-wrapper">
-                  <img [src]="item.productImage || '/assets/product-placeholder.png'" [alt]="item.productName"
-                    class="item-img">
+                  <a [routerLink]="['/client/product', item.productId]" class="product-link">
+                    <img [src]="item.productImage || '/product-placeholder.png'" [alt]="item.productName"
+                      class="item-img">
+                  </a>
                   <div class="item-text">
-                    <h3 class="item-name">{{ item.productName }}</h3>
+                    <a [routerLink]="['/client/product', item.productId]" class="item-name-link">
+                      <h3 class="item-name">{{ item.productName }}</h3>
+                    </a>
                     <p class="item-cat">{{ translations().cart.unitPrice }} € {{ item.unitPrice.toFixed(2) }}</p>
                   </div>
                 </div>

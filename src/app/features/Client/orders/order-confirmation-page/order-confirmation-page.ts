@@ -131,10 +131,10 @@ export class OrderConfirmationPage implements OnInit {
   getStatusClass(status: OrderStatus): string {
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: 'status-pending',
-      [OrderStatus.Confirmed]: 'status-confirmed',
+      [OrderStatus.Processing]: 'status-processing',
       [OrderStatus.Shipped]: 'status-shipped',
       [OrderStatus.Delivered]: 'status-delivered',
-      [OrderStatus.Canceled]: 'status-canceled'
+      [OrderStatus.Cancelled]: 'status-cancelled'
     };
     return statusMap[status] || 'status-pending';
   }
@@ -145,10 +145,10 @@ export class OrderConfirmationPage implements OnInit {
   getStatusText(status: OrderStatus): string {
     const statusMap: { [key: number]: string } = {
       [OrderStatus.Pending]: 'In Sospeso',
-      [OrderStatus.Confirmed]: 'Confermato',
+      [OrderStatus.Processing]: 'In Elaborazione',
       [OrderStatus.Shipped]: 'Spedito',
       [OrderStatus.Delivered]: 'Consegnato',
-      [OrderStatus.Canceled]: 'Annullato'
+      [OrderStatus.Cancelled]: 'Annullato'
     };
     return statusMap[status] || 'Sconosciuto';
   }

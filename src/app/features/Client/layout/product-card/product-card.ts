@@ -34,7 +34,7 @@ export class ProductCard {
   // }
 
   get productImageUrl(): string {
-    return this.product.mainImage || '/assets/images/product-placeholder.png';
+    return this.product.mainImage || '/product-placeholder.png';
   }
 
   addToCart(): void {
@@ -68,10 +68,8 @@ export class ProductCard {
 
   getProductCardImage(): string {
     if (!this.product.mainImage) {
-      console.warn('PRODUCT CARD: Product main image not loaded, using placeholder');
-      return '/assets/product-placeholder.png';
+      return '/product-placeholder.png';
     }
-    console.log('PRODUCT CARD: Product main image:', this.product.mainImage);
     return this.product.mainImage;
   }
 }

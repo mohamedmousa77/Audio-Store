@@ -142,26 +142,44 @@
     <!-- Details Tabs -->
     <div class="details-section">
       <div class="details-tabs">
-        <button class="tab-btn active" (click)="scrollToSection('description')">{{
+        <button class="tab-btn" [class.active]="activeTab === 'description'" (click)="setActiveTab('description')">{{
           translations().productDetails.description }}</button>
         @if (hasFeatures) {
-        <button class="tab-btn" (click)="scrollToSection('specifications')">{{
+        <button class="tab-btn" [class.active]="activeTab === 'specifications'"
+          (click)="setActiveTab('specifications')">{{
           translations().productDetails.specifications }}</button>
         }
       </div>
 
       <div class="tab-content">
+        <!-- Description Tab -->
+        @if (activeTab === 'description') {
         <div id="description" class="description-tab">
           <h3>{{ translations().productDetails.productDescription }}</h3>
-          <p>{{ product.description }}
-          </p>
-          @if (hasFeatures) {
-          <div id="specifications">
-            <h4>{{ translations().productDetails.keyFeatures }}:</h4>
-            <p>{{ product.specifications }}</p>
-          </div>
-          }
+          <p>{{ product.description }}</p>
         </div>
+        }
+
+        <!-- Specifications Tab -->
+        @if (activeTab === 'specifications' && hasFeatures) {
+        <div id="specifications" class="specifications-tab">
+          <h3>{{ translations().productDetails.keyFeatures }}</h3>
+          <dl class="spec-list">
+            @for (spec of specLines; track $index) {
+            @if (spec.label) {
+            <div class="spec-item">
+              <dt>{{ spec.label }}</dt>
+              <dd>{{ spec.value }}</dd>
+            </div>
+            } @else {
+            <div class="spec-item spec-item-plain">
+              <dd>{{ spec.value }}</dd>
+            </div>
+            }
+            }
+          </dl>
+        </div>
+        }
       </div>
     </div>
 
