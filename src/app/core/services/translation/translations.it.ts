@@ -248,7 +248,7 @@ export const TRANSLATIONS_IT: Translations = {
             deleteTitle: 'Elimina Indirizzo',
             deleteButton: 'Elimina',
             confirmDelete: 'Sei sicuro di voler eliminare questo indirizzo?',
-            addingForm:{
+            addingForm: {
                 street: 'Via',
                 city: 'Città',
                 zipCode: 'CAP',
@@ -280,7 +280,7 @@ export const TRANSLATIONS_IT: Translations = {
                 emptyMessage: 'Aggiungi un indirizzo per gestire gli ordini e le consegne',
                 emptyButton: 'Aggiungi Indirizzo'
             },
-            removeConfirmation:{
+            removeConfirmation: {
                 title: 'Rimuovi Indirizzo',
                 message: 'Vuoi rimuovere questo indirizzo?',
                 confirmText: 'Rimuovi',
@@ -355,7 +355,7 @@ export const TRANSLATIONS_IT: Translations = {
         },
         orderByStatus: {
             title: 'Ordini per Stato',
-            
+
             status: {
                 pending: 'In Attesa',
                 processing: 'In Elaborazione',
@@ -378,6 +378,17 @@ export const TRANSLATIONS_IT: Translations = {
         savingProduct: 'Salvataggio prodotto in corso...',
         searchPlaceholder: 'Cerca per nome o marca...',
         categoriesSearchPlaceholder: 'Tutte categorie',
+        clearFilters: 'Cancella',
+        filterByStatus: {
+            pleaseholder: 'Tutti stati',
+            available: 'Disponibile',
+            lowStock: 'Stock basso',
+            unavailable: 'Non disponibile',
+        },
+        showingResult: 'Visualizzazione di',
+        showingResultOf: 'su',
+        products: 'prodotti',
+        addNewProduct: 'Aggiungi nuovo prodotto',
         product: 'Prodotto',
         category: 'Categoria',
         price: 'Prezzo',
@@ -387,24 +398,261 @@ export const TRANSLATIONS_IT: Translations = {
         flag: 'Flag',
         actions: 'Azioni',
         sales: 'Vendite',
+        feature: 'Evidenziato',
+        new: 'Nuovo',
+        pagination: {
+            page: 'Pagina',
+            of: 'di',
+            items: 'prodotti totali',
+            previous: 'Precedente',
+            next: 'Successivo',
+        },
+        productForm: {
+            editeTitle: 'Modifica prodotto',
+            addTitle: 'Aggiungi nuovo prodotto',
+            addSubtitle: 'Aggiungi un nuovo prodotto al tuo catalogo. Compila i dettagli qui sotto.',
+            cancelButton: 'Annulla',
+            saveButton: 'Salva Prodotto',
+            generalInfo: {
+                title: 'Informazioni generali',
+                productName: 'Nome prodotto',
+                brand: 'Marca',
+                description: 'Descrizione',
+                descriptionPlaceholder: 'Descrivi il prodotto...',
+                specifications: 'Specifiche Tecniche',
+                specificationsTitle: 'Specifiche',
+                specificationsPlaceholder: 'Batteria: 30 ore...',
+                priceAndInventory: {
+                    title: 'Prezzo e inventario',
+                    price: 'Prezzo',
+                    stockQuantity: 'Quantità in stock',
+                },
+                organization: {
+                    title: 'Organizzazione',
+                    category: 'Categoria',
+                    selectCategory: 'Seleziona categoria',
+                    productMedia: 'Media prodotto',
+                    MainImage: 'Immagine principale',
+                    editeImage: 'Clicca per modificare',
+                    addImageButton: 'Clicca per caricare l\'immagine principale',
+                    galleryImages: 'Immagini della galleria',
+                    addGalleryImage: 'Aggiungi immagine alla galleria',
+                },
+                visibility: {
+                    title: 'Visibilità',
+                    available: 'Disponibile',
+                    availableSubtitle: 'Il prodotto può essere acquistato',
+                    newArrival: 'Nuovo',
+                    newArrivalSubtitle: 'Segna come "Nuovo"',
+                    featured: 'Evidenziato',
+                    featuredSubtitle: 'Mostra sulla homepage',
+                }
+            }
+        }
     },
     ordersManagement: {
         header: {
-            title: 'Gestione ordini',
+            title: 'Gestione Ordini',
             subtitle: 'Monitora e gestisci gli ordini dei clienti',
+        },
+        actions: {
+            createNew: 'Crea Ordine',
+            export: 'Esporta Ordini',
+            searchPlaceholder: 'Cerca per ID ordine o cliente...',
+            filterStatus: 'Filtra per stato',
+            allStatus: 'Tutti gli stati',
+            clearFilters: 'Pulisci Filtri'
+        },
+        stats: {
+            totalOrders: 'Ordini Totali',
+            inTransit: 'In Transito',
+            showing: 'Mostrando',
+            orders: 'ordini'
+        },
+        table: {
+            orderId: 'ID ORDINE',
+            date: 'DATA',
+            customer: 'CLIENTE',
+            total: 'TOTALE',
+            status: 'STATO',
+            actions: 'AZIONI'
+        },
+        status: {
+            pending: 'In Attesa',
+            processing: 'In Elaborazione',
+            shipped: 'Spedito',
+            delivered: 'Consegnato',
+            cancelled: 'Annullato'
+        },
+        emptyState: {
+            title: 'Nessun ordine trovato',
+            subtitle: 'Non sono presenti ordini corrispondenti alla ricerca.',
+            titleFiltered: 'Nessun ordine con stato',
+            subtitleFiltered: 'Non ci sono ordini con questo stato. Prova un altro filtro.'
+        },
+        details: {
+            title: 'Dettagli Ordine',
+            cancel: 'Chiudi'
+        },
+        orderForm: {
+            header: {
+                title: 'Dettagli Ordine:',
+                placedOn: 'Effettuato il',
+                cancel: 'Chiudi',
+                print: 'Stampa Fattura',
+            },
+            customerInfo: {
+                title: 'INFO CLIENTE',
+            },
+            shippingAddress: {
+                title: 'INDIRIZZO SPEDIZIONE',
+            },
+            productsTable: {
+                product: 'Prodotto',
+                qty: 'Qtà',
+                unitPrice: 'Prezzo Unit.',
+                total: 'Totale',
+            },
+            totals: {
+                subtotal: 'Subtotale',
+                shipping: 'Spedizione',
+                tax: 'Tasse',
+                total: 'Totale',
+            },
+            updateStatus: {
+                title: 'AGGIORNA STATO',
+                current: 'Attuale:',
+                button: 'Aggiorna Stato',
+                success: 'Stato aggiornato con successo.',
+            }
         }
     },
     customersManagement: {
         header: {
-            title: 'Gestione clienti',
-            subtitle: 'Gestisci la base clienti e monitora il loro coinvolgimento',
-        }
+            title: 'Gestione Clienti',
+            subtitle: 'Visualizza e gestisci la base clienti'
+        },
+        stats: {
+            totalCustomers: 'TOTALE CLIENTI',
+            activeThisMonth: 'ATTIVI NEL MESE',
+            totalRevenue: 'RICAVI TOTALI',
+            avgOrderValue: 'ORDINE MEDIO',
+        },
+        filters: {
+            searchPlaceholder: 'Cerca per nome, email o telefono...',
+            sort: {
+                label: 'Ordina per',
+                newest: 'Registrazione: Recenti',
+                oldest: 'Registrazione: Meno recenti',
+            },
+            ordersRange: {
+                label: 'Totale Ordini',
+                all: 'Totale Ordini: Tutti',
+                high: 'Alto Spendente (>10)',
+                regular: 'Regolare (1-10)',
+                none: 'Nessun Ordine (0)',
+            },
+            status: {
+                label: 'Stato',
+                all: 'Stato: Tutti',
+                active: 'Attivo',
+                inactive: 'Inattivo',
+            },
+        },
+        table: {
+            customer: 'CLIENTE',
+            email: 'EMAIL',
+            registration: 'REGISTRAZIONE',
+            orders: 'ORDINI',
+            totalSpent: 'TOTALE SPESO',
+            actions: 'AZIONI',
+            footer: {
+                showing: 'Mostrando',
+                of: 'di',
+                results: 'risultati',
+            },
+        },
+        details: {
+            title: 'Dettagli Cliente:',
+            personalData: 'DATI PERSONALI',
+            id: 'ID:',
+            phone: 'Telefono:',
+            stats: {
+                totalSpent: 'TOTALE SPESO',
+                totalOrders: 'ORDINI TOTALI',
+                registration: 'REGISTRAZIONE',
+            },
+            history: {
+                title: 'Cronologia Ordini Recenti',
+                table: {
+                    orderId: 'ID Ordine',
+                    date: 'Data',
+                    items: 'Articoli',
+                    status: 'Stato',
+                    total: 'Totale',
+                },
+                noOrders: 'Nessun ordine trovato per questo cliente.',
+            },
+        },
     },
     categoriesManagement: {
         header: {
-            title: 'Gestione categorie',
+            title: 'Gestione Categorie',
             subtitle: 'Organizza e struttura i gruppi di inventario dei prodotti',
-        }
+        },
+        stats: {
+            categories: 'Categorie',
+            products: 'Prodotti',
+            topCategory: 'Categoria Top',
+        },
+        controls: {
+            searchPlaceholder: 'Cerca categorie per nome o descrizione...',
+            sort: {
+                name: 'Ordina per Nome',
+                products: 'Ordina per Prodotti',
+                asc: 'Crescente',
+                desc: 'Decrescente',
+            },
+            clearSearch: 'Pulisci',
+            resultsInfo: {
+                showing: 'Mostrando',
+                of: 'di',
+                categories: 'categorie',
+            },
+            addNew: 'Aggiungi Nuova Categoria',
+        },
+        table: {
+            image: 'IMMAGINE',
+            nameDesc: 'NOME E DESCRIZIONE',
+            products: 'PRODOTTI',
+            actions: 'AZIONI',
+        },
+        grid: {
+            products: 'prodotti',
+            empty: {
+                title: 'Nessuna Categoria Trovata',
+                subtitle: 'Prova a modificare la ricerca o i filtri',
+            },
+        },
+        form: {
+            editTitle: 'Modifica Categoria:',
+            addTitle: 'Aggiungi Nuova Categoria',
+            cancel: 'Annulla',
+            name: 'Nome Categoria',
+            namePlaceholder: 'es. Cuffie',
+            description: 'Descrizione',
+            descriptionPlaceholder: 'Descrivi questa categoria...',
+            image: {
+                label: 'Immagine Categoria',
+                change: 'Cambia Immagine',
+                remove: 'Rimuovi Immagine',
+                uploadTitle: 'Clicca per caricare immagine',
+                uploadHint: 'JPG, PNG (max 5MB)',
+            },
+            clear: 'Pulisci',
+            save: 'Salva Categoria',
+            saving: 'Salvataggio in corso...',
+        },
     },
     footer: {
         aboutUs: 'Chi Siamo',
@@ -413,6 +661,7 @@ export const TRANSLATIONS_IT: Translations = {
         termsOfService: 'Termini di Servizio',
         followUs: 'Seguici',
         copyright: '© 2026 Audio Store. Tutti i diritti riservati.',
+        description: 'La tua destinazione d\'eccellenza per apparecchiature audio ad alta fedeltà. Portiamo l\'esperienza dello studio direttamente a casa tua con una selezione di prodotti premium.'
     },
     errors: {
         generic: 'Si è verificato un errore. Riprova più tardi.',

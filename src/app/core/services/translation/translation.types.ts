@@ -109,7 +109,7 @@ export interface Translations {
             confirmText: string;
             cancelText: string;
         }
-        
+
     };
     checkout: {
         title: string;
@@ -141,7 +141,7 @@ export interface Translations {
             phoneRequired: string;
             addressRequired: string;
             zipCodeRequired: string;
-            cityRequired: string;            
+            cityRequired: string;
         }
         defaultPaymentMethod: string;
         paymentMessage: string;
@@ -237,9 +237,9 @@ export interface Translations {
         }
         addressSection: {
             title: string;
-            subtitle: string; 
+            subtitle: string;
             addAddressButton: string;
-            loading: string;    
+            loading: string;
             defaultBadge: string;
             setDefaultTitle: string;
             setDefaultButton: string;
@@ -249,10 +249,10 @@ export interface Translations {
             deleteButton: string;
             confirmDelete: string;
             addingForm: {
-                street: string; 
-                city: string; 
-                zipCode: string; 
-                country: string; 
+                street: string;
+                city: string;
+                zipCode: string;
+                country: string;
                 countryPlaceholder: string;
             }
             success: string;
@@ -265,7 +265,7 @@ export interface Translations {
                 postalCodePattern: string;
                 streetRequired: string;
                 streetMinLength: string;
-                cityRequired: string; 
+                cityRequired: string;
                 cityMinLength: string;
                 setDefaultFailed: string;
                 saveFailed: string;
@@ -280,7 +280,7 @@ export interface Translations {
                 emptyMessage: string;
                 emptyButton: string;
             }
-            removeConfirmation:{
+            removeConfirmation: {
                 title: string;
                 message: string;
                 confirmText: string;
@@ -290,7 +290,7 @@ export interface Translations {
         ordersSection: {
             title: string;
             subtitle: string;
-            dateFilter:{
+            dateFilter: {
                 datefilterTitle: string;
                 allOrders: string;
                 Today: string;
@@ -306,7 +306,7 @@ export interface Translations {
                 unknown: string;
             }
         }
-        
+
     };
     productDetails: {
         addToCart: string;
@@ -343,7 +343,7 @@ export interface Translations {
         filter: string;
         export: string;
         import: string;
-               
+
     };
     dashboard: {
         header: {
@@ -356,7 +356,7 @@ export interface Translations {
             totalCustomers: string;
         },
         orderByStatus: {
-            title: string;            
+            title: string;
             status: {
                 pending: string;
                 processing: string;
@@ -366,8 +366,8 @@ export interface Translations {
             }
         }
         viewReport: string;
-        topProducts:{
-            title: string;            
+        topProducts: {
+            title: string;
         }
         salesByCategory: string;
 
@@ -375,46 +375,287 @@ export interface Translations {
     productsManagement: {
         header: {
             title: string;
-            subtitle: string; 
+            subtitle: string;
         },
-        savingProduct: string;        
+        savingProduct: string;
         searchPlaceholder: string;
         categoriesSearchPlaceholder: string;
+        clearFilters: string;
         filterByStatus: {
             pleaseholder: string;
             available: string;
             lowStock: string;
             unavailable: string;
         }
-        
+        showingResult: string;
+        showingResultOf: string;
+        products: string;
+        addNewProduct: string;
         product: string;
-        category: string;        
+        category: string;
         stock: string;
         stockStatus: string;
         status: string;
         price: string;
-        sales: string;        
-        flag: string; 
+        sales: string;
+        flag: string;
         actions: string;
+        feature: string;
+        new: string;
+        pagination: {
+            page: string;
+            of: string;
+            items: string;
+            previous: string;
+            next: string;
+        },
+        productForm: {
+            editeTitle: string;
+            addTitle: string;
+            addSubtitle: string;
+            cancelButton: string;
+            saveButton: string;
+            generalInfo: {
+                title: string;
+                productName: string;
+                brand: string;
+                description: string;
+                descriptionPlaceholder: string;
+                specifications: string;
+                specificationsTitle: string;
+                specificationsPlaceholder: string;
+                priceAndInventory: {
+                    title: string;
+                    price: string;
+                    stockQuantity: string;
+                },
+                organization: {
+                    title: string;
+                    category: string;
+                    selectCategory: string;
+                    productMedia: string;
+                    MainImage: string;
+                    editeImage: string;
+                    addImageButton: string;
+                    galleryImages: string;
+                    addGalleryImage: string;
+                },
+                visibility: {
+                    title: string;
+                    available: string;
+                    availableSubtitle: string;
+                    newArrival: string;
+                    newArrivalSubtitle: string;
+                    featured: string;
+                    featuredSubtitle: string;
+                }
+            }
+        }
 
     };
     categoriesManagement: {
         header: {
             title: string;
-            subtitle: string; 
-        }
+            subtitle: string;
+        };
+        stats: {
+            categories: string;
+            products: string;
+            topCategory: string;
+        };
+        controls: {
+            searchPlaceholder: string;
+            sort: {
+                name: string;
+                products: string;
+                asc: string;
+                desc: string;
+            };
+            clearSearch: string;
+            resultsInfo: {
+                showing: string;
+                of: string;
+                categories: string;
+            };
+            addNew: string;
+        };
+        table: {
+            image: string;
+            nameDesc: string;
+            products: string;
+            actions: string;
+        };
+        grid: {
+            products: string;
+            empty: {
+                title: string;
+                subtitle: string;
+            };
+        };
+        form: {
+            editTitle: string;
+            addTitle: string;
+            cancel: string;
+            name: string;
+            namePlaceholder: string;
+            description: string;
+            descriptionPlaceholder: string;
+            image: {
+                label: string;
+                change: string;
+                remove: string;
+                uploadTitle: string;
+                uploadHint: string;
+            };
+            clear: string;
+            save: string;
+            saving: string;
+        };
     };
     ordersManagement: {
         header: {
-            title:string;
+            title: string;
             subtitle: string;
-        }
+        };
+        actions: {
+            createNew: string;
+            export: string;
+            searchPlaceholder: string;
+            filterStatus: string;
+            allStatus: string;
+            clearFilters: string;
+        };
+        stats: {
+            totalOrders: string;
+            inTransit: string;
+            showing: string;
+            orders: string;
+        };
+        table: {
+            orderId: string;
+            date: string;
+            customer: string;
+            total: string;
+            status: string;
+            actions: string;
+        };
+        status: {
+            pending: string;
+            processing: string;
+            shipped: string;
+            delivered: string;
+            cancelled: string;
+        };
+        emptyState: {
+            title: string;
+            subtitle: string;
+            titleFiltered: string;
+            subtitleFiltered: string;
+        };
+        details: {
+            title: string;
+            cancel: string;
+        };
+        orderForm: {
+            header: {
+                title: string;
+                placedOn: string;
+                cancel: string;
+                print: string;
+            };
+            customerInfo: {
+                title: string;
+            };
+            shippingAddress: {
+                title: string;
+            };
+            productsTable: {
+                product: string;
+                qty: string;
+                unitPrice: string;
+                total: string;
+            };
+            totals: {
+                subtotal: string;
+                shipping: string;
+                tax: string;
+                total: string;
+            };
+            updateStatus: {
+                title: string;
+                current: string;
+                button: string;
+                success: string;
+            };
+        };
     };
     customersManagement: {
         header: {
-            title: string; 
+            title: string;
             subtitle: string;
-        }
+        };
+        stats: {
+            totalCustomers: string;
+            activeThisMonth: string;
+            totalRevenue: string;
+            avgOrderValue: string;
+        };
+        filters: {
+            searchPlaceholder: string;
+            sort: {
+                label: string;
+                newest: string;
+                oldest: string;
+            };
+            ordersRange: {
+                label: string;
+                all: string;
+                high: string;
+                regular: string;
+                none: string;
+            };
+            status: {
+                label: string;
+                all: string;
+                active: string;
+                inactive: string;
+            };
+        };
+        table: {
+            customer: string;
+            email: string;
+            registration: string;
+            orders: string;
+            totalSpent: string;
+            actions: string;
+            footer: {
+                showing: string;
+                of: string;
+                results: string;
+            };
+        };
+        details: {
+            title: string;
+            personalData: string;
+            id: string;
+            phone: string;
+            stats: {
+                totalSpent: string;
+                totalOrders: string;
+                registration: string;
+            };
+            history: {
+                title: string;
+                table: {
+                    orderId: string;
+                    date: string;
+                    items: string;
+                    status: string;
+                    total: string;
+                };
+                noOrders: string;
+            };
+        };
     };
     footer: {
         aboutUs: string;
@@ -423,6 +664,7 @@ export interface Translations {
         termsOfService: string;
         followUs: string;
         copyright: string;
+        description: string;
     };
     errors: {
         generic: string;

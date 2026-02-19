@@ -9,22 +9,22 @@
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder="Search by Order ID or Customer..." [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event)" class="search-input" />
+            <input type="text" [placeholder]="translations().ordersManagement.actions.searchPlaceholder"
+              [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
           <div class="filter-controls">
             <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" class="filter-select">
-              <option value="">All Status</option>
-              <option [value]="OrderStatus.Pending">Pending</option>
-              <option [value]="OrderStatus.Processing">Processing</option>
-              <option [value]="OrderStatus.Shipped">Shipped</option>
-              <option [value]="OrderStatus.Delivered">Delivered</option>
-              <option [value]="OrderStatus.Cancelled">Cancelled</option>
+              <option value="">{{ translations().ordersManagement.actions.allStatus }}</option>
+              <option [value]="OrderStatus.Pending">{{ translations().ordersManagement.status.pending }}</option>
+              <option [value]="OrderStatus.Processing">{{ translations().ordersManagement.status.processing }}</option>
+              <option [value]="OrderStatus.Shipped">{{ translations().ordersManagement.status.shipped }}</option>
+              <option [value]="OrderStatus.Delivered">{{ translations().ordersManagement.status.delivered }}</option>
+              <option [value]="OrderStatus.Cancelled">{{ translations().ordersManagement.status.cancelled }}</option>
             </select>
             @if (searchTerm() || selectedStatus() !== '') {
             <button class="btn btn-secondary" (click)="clearFilters()">
-              <span class="material-icons">clear</span> Clear
+              <span class="material-icons">clear</span> {{ translations().ordersManagement.actions.clearFilters }}
             </button>
             }
           </div>
@@ -32,10 +32,13 @@
 
         <div class="results-info">
           <div class="summary-chips">
-            <span class="summary-chip">Total Orders: <strong>{{ getTotalOrders() }}</strong></span>
-            <span class="summary-chip">In Transit: <strong>{{ getShippedCount() }}</strong></span>
+            <span class="summary-chip">{{ translations().ordersManagement.stats.totalOrders }}: <strong>{{
+                getTotalOrders() }}</strong></span>
+            <!-- <span class="summary-chip">{{ translations().ordersManagement.stats.inTransit }}: <strong>{{
+                getShippedCount() }}</strong></span> -->
           </div>
-          <p class="results-count">Showing <strong>{{ filteredOrders().length }}</strong> orders</p>
+          <p class="results-count">{{ translations().ordersManagement.stats.showing }} <strong>{{
+              filteredOrders().length }}</strong> {{ translations().ordersManagement.stats.orders }}</p>
         </div>
       </div>
 
@@ -44,12 +47,12 @@
           <table class="model-table">
             <thead>
               <tr>
-                <th>ORDER ID</th>
-                <th>DATE</th>
-                <th>CUSTOMER</th>
-                <th>TOTAL</th>
-                <th>STATUS</th>
-                <th>ACTIONS</th>
+                <th>{{ translations().ordersManagement.table.orderId }}</th>
+                <th>{{ translations().ordersManagement.table.date }}</th>
+                <th>{{ translations().ordersManagement.table.customer }}</th>
+                <th>{{ translations().ordersManagement.table.total }}</th>
+                <th>{{ translations().ordersManagement.table.status }}</th>
+                <th>{{ translations().ordersManagement.table.actions }}</th>
               </tr>
             </thead>
             <tbody>
@@ -82,11 +85,12 @@
                   <div class="empty-state">
                     <span class="material-icons empty-icon">inbox</span>
                     @if (selectedStatus() !== '') {
-                    <p class="empty-title">Nessun ordine con stato "{{ getSelectedStatusText() }}"</p>
-                    <p class="empty-subtitle">Non ci sono ordini con questo stato. Prova un altro filtro.</p>
+                    <p class="empty-title">{{ translations().ordersManagement.emptyState.titleFiltered }} "{{
+                      getSelectedStatusText() }}"</p>
+                    <p class="empty-subtitle">{{ translations().ordersManagement.emptyState.subtitleFiltered }}</p>
                     } @else {
-                    <p class="empty-title">Nessun ordine trovato</p>
-                    <p class="empty-subtitle">Non sono presenti ordini corrispondenti alla ricerca.</p>
+                    <p class="empty-title">{{ translations().ordersManagement.emptyState.title }}</p>
+                    <p class="empty-subtitle">{{ translations().ordersManagement.emptyState.subtitle }}</p>
                     }
                   </div>
                 </td>

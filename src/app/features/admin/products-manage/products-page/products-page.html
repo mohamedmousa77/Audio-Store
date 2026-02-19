@@ -20,7 +20,7 @@
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder={{ translations().productsManagement.searchPlaceholder }} [ngModel]="searchTerm()"
+            <input type="text" placeholder="{{translations().productsManagement.searchPlaceholder}}" [ngModel]="searchTerm()"
               (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
@@ -42,18 +42,22 @@
             @if (searchTerm() || selectedCategory() || selectedStatus()) {
             <button class="btn btn-secondary" (click)="clearFilters()">
               <span class="material-icons">clear</span>
-              Clear
+              {{translations().productsManagement.clearFilters}}
             </button>
             }
           </div>
         </div>
 
         <div class="results-info">
-          <p>Showing <strong>{{ filteredProducts().length }}</strong> of <strong>{{ totalProducts() }}</strong>
-            products</p>
-          <button class="btn btn-primary" (click)="openAddProduct()">
+          <p>{{translations().productsManagement.showingResult}} 
+            <strong>{{ filteredProducts().length }}</strong> 
+            {{translations().productsManagement.showingResultOf}} 
+            <strong>{{ totalProducts() }}</strong>
+            {{translations().productsManagement.products}}</p>
+          
+            <button class="btn btn-primary" (click)="openAddProduct()">
             <span class="material-icons">add</span>
-            Add New Product
+            {{translations().productsManagement.addNewProduct}}
           </button>
         </div>
       </div>
@@ -63,13 +67,13 @@
           <table class="products-table">
             <thead>
               <tr>
-                <th>PRODUCT</th>
-                <th>CATEGORY</th>
-                <th>PRICE</th>
-                <th>STOCK</th>
-                <th>STATUS</th>
-                <th>FLAGS</th>
-                <th>ACTIONS</th>
+                <th>{{translations().productsManagement.product}}</th>
+                <th>{{translations().productsManagement.category}}</th>
+                <th>{{translations().productsManagement.price}}</th>
+                <th>{{translations().productsManagement.stock}}</th>
+                <th>{{translations().productsManagement.status}}</th>
+                <th>{{translations().productsManagement.flag}}</th>
+                <th>{{translations().productsManagement.actions}}</th>
               </tr>
             </thead>
             <tbody>
@@ -106,11 +110,15 @@
                 </td>
                 <td>
                   <div class="flags-container">
+                    @if(product.isNew && product.isFeatured) {
+                      <span class="flag-pill featured">{{ translations().productsManagement.feature }}</span>
+                      <span class="flag-pill new">{{ translations().productsManagement.new }}</span>
+                    }
                     @if (product.isFeatured) {
-                    <span class="flag-pill featured">FEATURE</span>
+                    <span class="flag-pill featured">{{ translations().productsManagement.feature }}</span>
                     }
                     @if (product.isNew) {
-                    <span class="flag-pill new">NEW</span>
+                    <span class="flag-pill new">{{ translations().productsManagement.new }}</span>
                     }
                   </div>
                 </td>
@@ -131,13 +139,13 @@
         <!-- Pagination -->
         <div class="pagination-bar">
           <div class="pagination-info">
-            Page <strong>{{ currentPage() }}</strong> of <strong>{{ totalPages() }}</strong>
-            &mdash; {{ totalProducts() }} total products
+            {{translations().productsManagement.pagination.page}} <strong>{{ currentPage() }}</strong> {{translations().productsManagement.pagination.of}} <strong>{{ totalPages() }}</strong>
+            &mdash; {{ totalProducts() }} {{translations().productsManagement.pagination.items}}
           </div>
           <div class="pagination-controls">
             <button class="btn btn-pagination" [disabled]="currentPage() <= 1" (click)="goToPage(currentPage() - 1)">
               <span class="material-icons">chevron_left</span>
-              Previous
+              {{translations().productsManagement.pagination.previous}}
             </button>
 
             @for (page of getPageNumbers(); track page) {
@@ -148,7 +156,7 @@
 
             <button class="btn btn-pagination" [disabled]="currentPage() >= totalPages()"
               (click)="goToPage(currentPage() + 1)">
-              Next
+              {{translations().productsManagement.pagination.next}}
               <span class="material-icons">chevron_right</span>
             </button>
           </div>

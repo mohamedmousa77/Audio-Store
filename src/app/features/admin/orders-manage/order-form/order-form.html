@@ -1,16 +1,18 @@
 <div class="order-detail-container">
   <div class="detail-page-header">
     <div class="header-left">
-      <h2 class="detail-title">Order Details: <span>{{ order?.orderNumber }}</span></h2>
-      <p class="detail-subtitle">Placed on {{ order?.orderDate | date:'longDate' }}</p>
+      <h2 class="detail-title">{{ translations().ordersManagement.orderForm.header.title }} <span>{{ order?.orderNumber
+          }}</span></h2>
+      <p class="detail-subtitle">{{ translations().ordersManagement.orderForm.header.placedOn }} {{ order?.orderDate |
+        date:'longDate' }}</p>
     </div>
     <div class="header-actions">
       <button class="btn btn-secondary" (click)="onCancel()">
-        <span class="material-icons">close</span> Cancel
+        <span class="material-icons">close</span> {{ translations().ordersManagement.orderForm.header.cancel }}
       </button>
-      <button class="btn btn-print">
-        <span class="material-icons">print</span> Print Invoice
-      </button>
+      <!-- <button class="btn btn-print">
+        <span class="material-icons">print</span> {{ translations().ordersManagement.orderForm.header.print }}
+      </button> -->
     </div>
   </div>
 
@@ -20,7 +22,7 @@
         <div class="info-card">
           <div class="card-icon"><span class="material-icons">person</span></div>
           <div class="card-content">
-            <h4>CUSTOMER INFO</h4>
+            <h4>{{ translations().ordersManagement.orderForm.customerInfo.title }}</h4>
             <p class="primary-text">{{ order?.customerFirstName }} {{ order?.customerLastName }}</p>
             <p class="secondary-text">{{ order?.customerEmail }}</p>
             @if (order?.customerPhone) {
@@ -31,7 +33,7 @@
         <div class="info-card">
           <div class="card-icon"><span class="material-icons">local_shipping</span></div>
           <div class="card-content">
-            <h4>SHIPPING ADDRESS</h4>
+            <h4>{{ translations().ordersManagement.orderForm.shippingAddress.title }}</h4>
             <p class="secondary-text">{{ order?.shippingStreet }}</p>
             <p class="secondary-text">{{ order?.shippingCity }}, {{ order?.shippingPostalCode }}</p>
             <p class="secondary-text">{{ order?.shippingCountry }}</p>
@@ -43,10 +45,10 @@
         <table class="product-mini-table">
           <thead>
             <tr>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>Unit Price</th>
-              <th>Total</th>
+              <th>{{ translations().ordersManagement.orderForm.productsTable.product }}</th>
+              <th>{{ translations().ordersManagement.orderForm.productsTable.qty }}</th>
+              <th>{{ translations().ordersManagement.orderForm.productsTable.unitPrice }}</th>
+              <th>{{ translations().ordersManagement.orderForm.productsTable.total }}</th>
             </tr>
           </thead>
           <tbody>
@@ -70,19 +72,19 @@
         <!-- Order Totals -->
         <div class="order-totals">
           <div class="total-row">
-            <span>Subtotal</span>
+            <span>{{ translations().ordersManagement.orderForm.totals.subtotal }}</span>
             <span>{{ formatPrice(order?.subtotal || 0) }}</span>
           </div>
           <div class="total-row">
-            <span>Shipping</span>
+            <span>{{ translations().ordersManagement.orderForm.totals.shipping }}</span>
             <span>{{ formatPrice(order?.shippingCost || 0) }}</span>
           </div>
           <div class="total-row">
-            <span>Tax</span>
+            <span>{{ translations().ordersManagement.orderForm.totals.tax }}</span>
             <span>{{ formatPrice(order?.tax || 0) }}</span>
           </div>
           <div class="total-row total-final">
-            <span><strong>Total</strong></span>
+            <span><strong>{{ translations().ordersManagement.orderForm.totals.total }}</strong></span>
             <span><strong>{{ formatPrice(order?.totalAmount || 0) }}</strong></span>
           </div>
         </div>
@@ -91,25 +93,26 @@
 
     <div class="detail-side-actions">
       <div class="action-card">
-        <h4>UPDATE STATUS</h4>
-        <p class="current-status-label">Current: <strong>{{ getStatusText(order?.orderStatus!) }}</strong></p>
+        <h4>{{ translations().ordersManagement.orderForm.updateStatus.title }}</h4>
+        <p class="current-status-label">{{ translations().ordersManagement.orderForm.updateStatus.current }} <strong>{{
+            getStatusText(order?.orderStatus!) }}</strong></p>
         <select class="status-dropdown" [(ngModel)]="selectedStatus">
-          <option [ngValue]="OrderStatus.Pending">Pending</option>
-          <option [ngValue]="OrderStatus.Processing">Processing</option>
-          <option [ngValue]="OrderStatus.Shipped">Shipped</option>
-          <option [ngValue]="OrderStatus.Delivered">Delivered</option>
-          <option [ngValue]="OrderStatus.Cancelled">Cancelled</option>
+          <option [ngValue]="OrderStatus.Pending">{{ translations().ordersManagement.status.pending }}</option>
+          <option [ngValue]="OrderStatus.Processing">{{ translations().ordersManagement.status.processing }}</option>
+          <option [ngValue]="OrderStatus.Shipped">{{ translations().ordersManagement.status.shipped }}</option>
+          <option [ngValue]="OrderStatus.Delivered">{{ translations().ordersManagement.status.delivered }}</option>
+          <option [ngValue]="OrderStatus.Cancelled">{{ translations().ordersManagement.status.cancelled }}</option>
         </select>
         <button class="btn btn-primary" (click)="onUpdateStatus()" [disabled]="selectedStatus === order?.orderStatus">
-          Update Status
+          {{ translations().ordersManagement.orderForm.updateStatus.button }}
         </button>
         @if(showSuccess){
-          <div class="status-success-alert" >
-            <span class="material-icons">check_circle</span>
-            <p>Status updated successfully.</p>
-          </div>
+        <div class="status-success-alert">
+          <span class="material-icons">check_circle</span>
+          <p>{{ translations().ordersManagement.orderForm.updateStatus.success }}</p>
+        </div>
         }
-        
+
       </div>
     </div>
   </div>

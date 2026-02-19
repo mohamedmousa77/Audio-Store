@@ -11,7 +11,7 @@
       <div class="saving-overlay">
         <div class="saving-dialog">
           <div class="spinner"></div>
-          <p>Salvataggio in corso...</p>
+          <p>{{ translations().categoriesManagement.form.saving }}</p>
         </div>
       </div>
       }
@@ -22,7 +22,7 @@
             <span class="material-icons">category</span>
           </div>
           <div class="stat-info">
-            <p class="stat-label">Categories</p>
+            <p class="stat-label">{{ translations().categoriesManagement.stats.categories }}</p>
             <h3 class="stat-value">{{ categories().length }}</h3>
           </div>
         </div>
@@ -32,7 +32,7 @@
             <span class="material-icons">inventory_2</span>
           </div>
           <div class="stat-info">
-            <p class="stat-label">Products</p>
+            <p class="stat-label">{{ translations().categoriesManagement.stats.products }}</p>
             <h3 class="stat-value">{{ getTotalProducts() }}</h3>
           </div>
         </div>
@@ -43,7 +43,7 @@
             <span class="material-icons">star</span>
           </div>
           <div class="stat-info">
-            <p class="stat-label">Top Category</p>
+            <p class="stat-label">{{ translations().categoriesManagement.stats.topCategory }}</p>
             <h3 class="stat-value top-cat-name">{{ getTopCategory()?.name }}</h3>
           </div>
         </div>
@@ -55,18 +55,18 @@
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder="Search categories by name or description..." [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event)" class="search-input" />
+            <input type="text" [placeholder]="translations().categoriesManagement.controls.searchPlaceholder"
+              [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
           <div class="sort-controls">
             <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)" class="sort-select">
-              <option value="name">Sort by Name</option>
-              <option value="products">Sort by Products</option>
+              <option value="name">{{ translations().categoriesManagement.controls.sort.name }}</option>
+              <option value="products">{{ translations().categoriesManagement.controls.sort.products }}</option>
             </select>
 
             <button class="sort-toggle-btn" (click)="toggleSortOrder()"
-              [title]="'Sort ' + (sortOrder() === 'asc' ? 'Descending' : 'Ascending')">
+              [title]="'Sort ' + (sortOrder() === 'asc' ? translations().categoriesManagement.controls.sort.asc : translations().categoriesManagement.controls.sort.desc)">
               <span class="material-icons">
                 {{ sortOrder() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
               </span>
@@ -81,18 +81,20 @@
             @if (searchTerm()) {
             <button class="btn btn-secondary" (click)="clearSearch()">
               <span class="material-icons">clear</span>
-              Clear
+              {{ translations().categoriesManagement.controls.clearSearch }}
             </button>
             }
           </div>
         </div>
 
         <div class="results-info">
-          <p>Showing <strong>{{ filteredCategories().length }}</strong> of <strong>{{ categories().length }}</strong>
-            categories</p>
+          <p>{{ translations().categoriesManagement.controls.resultsInfo.showing }} <strong>{{
+              filteredCategories().length }}</strong> {{ translations().categoriesManagement.controls.resultsInfo.of }}
+            <strong>{{ categories().length }}</strong>
+            {{ translations().categoriesManagement.controls.resultsInfo.categories }}</p>
           <button class="btn btn-primary" (click)="openAddCategory()">
             <span class="material-icons">add</span>
-            Add New Category
+            {{ translations().categoriesManagement.controls.addNew }}
           </button>
         </div>
       </div>
@@ -103,10 +105,10 @@
         <table class="model-table">
           <thead>
             <tr>
-              <th>IMAGE</th>
-              <th>NAME & DESCRIPTION</th>
-              <th>PRODUCTS</th>
-              <th>ACTIONS</th>
+              <th>{{ translations().categoriesManagement.table.image }}</th>
+              <th>{{ translations().categoriesManagement.table.nameDesc }}</th>
+              <th>{{ translations().categoriesManagement.table.products }}</th>
+              <th>{{ translations().categoriesManagement.table.actions }}</th>
             </tr>
           </thead>
           <tbody>
@@ -136,10 +138,12 @@
               </td>
               <td>
                 <div class="actions">
-                  <button class="action-btn edit-btn" (click)="editCategory(category)" title="Modifica">
+                  <button class="action-btn edit-btn" (click)="editCategory(category)"
+                    [title]="translations().admin.edit">
                     <span class="material-icons">edit</span>
                   </button>
-                  <button class="action-btn delete-btn" (click)="deleteCategory(category)" title="Elimina">
+                  <button class="action-btn delete-btn" (click)="deleteCategory(category)"
+                    [title]="translations().admin.delete">
                     <span class="material-icons">delete</span>
                   </button>
                 </div>
@@ -172,17 +176,19 @@
               <div class="meta-item clickable" [class.flash-red]="flashCategoryId() === category.id"
                 (click)="navigateToProducts(category.id, category.name)">
                 <span class="material-icons">inventory_2</span>
-                <span class="meta-value">{{ getProductCount(category.id) }} products</span>
+                <span class="meta-value">{{ getProductCount(category.id) }} {{
+                  translations().categoriesManagement.grid.products }}</span>
                 <span class="material-icons meta-arrow">arrow_forward</span>
               </div>
             </div>
           </div>
 
           <div class="card-actions">
-            <button class="action-btn edit-btn" (click)="editCategory(category)" title="Modifica">
+            <button class="action-btn edit-btn" (click)="editCategory(category)" [title]="translations().admin.edit">
               <span class="material-icons">edit</span>
             </button>
-            <button class="action-btn delete-btn" (click)="deleteCategory(category)" title="Elimina">
+            <button class="action-btn delete-btn" (click)="deleteCategory(category)"
+              [title]="translations().admin.delete">
               <span class="material-icons">delete</span>
             </button>
           </div>
@@ -193,8 +199,8 @@
         @if (filteredCategories().length === 0) {
         <div class="empty-state">
           <span class="empty-icon material-icons">category</span>
-          <h3>No Categories Found</h3>
-          <p>Try adjusting your search or filters</p>
+          <h3>{{ translations().categoriesManagement.grid.empty.title }}</h3>
+          <p>{{ translations().categoriesManagement.grid.empty.subtitle }}</p>
         </div>
         }
       </div>
@@ -205,32 +211,33 @@
       <div id="category-form-section" class="form-section-card">
         <div class="form-header">
           <div class="header-info">
-            <h2 class="detail-title">{{ editingCategory()?.id ? 'Edit Category: ' : 'Add New Category' }}
+            <h2 class="detail-title">{{ editingCategory()?.id ? translations().categoriesManagement.form.editTitle :
+              translations().categoriesManagement.form.addTitle }}
               <span>{{ editingCategory()?.id ? editingCategory()?.name : '' }}</span>
             </h2>
           </div>
           <div class="header-actions">
             <button class="btn btn-secondary" (click)="closeForm()">
-              <span class="material-icons">close</span>Cancel</button>
+              <span class="material-icons">close</span>{{ translations().categoriesManagement.form.cancel }}</button>
           </div>
         </div>
 
         <div class="form-grid">
           <div class="form-inputs">
             <div class="form-group">
-              <label>Category Name</label>
+              <label>{{ translations().categoriesManagement.form.name }}</label>
               <input type="text" [ngModel]="formCategory().name" (ngModelChange)="updateFormName($event)"
-                placeholder="e.g. Headphones" />
+                [placeholder]="translations().categoriesManagement.form.namePlaceholder" />
             </div>
             <div class="form-group">
-              <label>Description</label>
+              <label>{{ translations().categoriesManagement.form.description }}</label>
               <textarea [ngModel]="formCategory().description" (ngModelChange)="updateFormDescription($event)" rows="3"
-                placeholder="Describe this category..."></textarea>
+                [placeholder]="translations().categoriesManagement.form.descriptionPlaceholder"></textarea>
             </div>
           </div>
 
           <div class="form-preview">
-            <p class="preview-label">Category Image</p>
+            <p class="preview-label">{{ translations().categoriesManagement.form.image.label }}</p>
 
             @if (formCategory().imageUrl) {
             <!-- Image preview with click to change -->
@@ -238,27 +245,28 @@
               <img [src]="formCategory().imageUrl" alt="Category image" />
               <div class="image-overlay">
                 <span class="material-icons">edit</span>
-                <span>Change Image</span>
+                <span>{{ translations().categoriesManagement.form.image.change }}</span>
               </div>
             </div>
             <button class="btn-remove-image" (click)="removeImage()">
-              <span class="material-icons">delete</span> Remove Image
+              <span class="material-icons">delete</span> {{ translations().categoriesManagement.form.image.remove }}
             </button>
             } @else {
             <!-- Upload area -->
             <div class="upload-area" (click)="imageInput.click()">
               <span class="material-icons upload-icon">add_photo_alternate</span>
-              <p class="upload-text">Click to upload image</p>
-              <p class="upload-hint">JPG, PNG (max 5MB)</p>
+              <p class="upload-text">{{ translations().categoriesManagement.form.image.uploadTitle }}</p>
+              <p class="upload-hint">{{ translations().categoriesManagement.form.image.uploadHint }}</p>
             </div>
             }
 
             <input type="file" #imageInput accept="image/*" (change)="onImageSelected($event)" style="display:none" />
 
             <div class="form-actions">
-              <button class="btn btn-secondary" (click)="closeForm()">Clear</button>
+              <button class="btn btn-secondary" (click)="closeForm()">{{ translations().categoriesManagement.form.clear
+                }}</button>
               <button class="btn btn-primary" (click)="saveCategory()" [disabled]="saving()">
-                <span class="material-icons">save</span> Save Category
+                <span class="material-icons">save</span> {{ translations().categoriesManagement.form.save }}
               </button>
             </div>
           </div>

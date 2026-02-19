@@ -250,7 +250,7 @@ export const TRANSLATIONS_EN: Translations = {
             deleteButton: 'Delete',
             confirmDelete: 'Are you sure you want to delete this address?',
             addingForm: {
-                street:  'Street Address',
+                street: 'Street Address',
                 city: 'City',
                 zipCode: 'Postal Code',
                 country: 'Country',
@@ -280,13 +280,13 @@ export const TRANSLATIONS_EN: Translations = {
                 emptyTitle: 'No addresses found',
                 emptyMessage: 'Add an address to manage your orders and deliveries',
                 emptyButton: 'Add Your First Address'
-            },    
+            },
             removeConfirmation: {
                 title: 'Remove Address',
                 message: 'Are you sure you want to remove this address?',
                 confirmText: 'Remove',
                 cancelText: 'Cancel',
-            }        
+            }
         },
         ordersSection: {
             title: 'Order History',
@@ -327,7 +327,7 @@ export const TRANSLATIONS_EN: Translations = {
         youMayAlsoLike: 'You May Also Like',
     },
     admin: {
-        headerTitle: 'Admin Panel',  
+        headerTitle: 'Admin Panel',
         dashboard: 'Dashboard',
         products: 'Products',
         categories: 'Categories',
@@ -343,8 +343,8 @@ export const TRANSLATIONS_EN: Translations = {
         search: 'Search',
         filter: 'Filter',
         export: 'Export',
-        import: 'Import', 
-     
+        import: 'Import',
+
     },
     dashboard: {
         header: {
@@ -356,9 +356,9 @@ export const TRANSLATIONS_EN: Translations = {
             totalOrders: 'Total Orders',
             totalCustomers: 'Total Customers',
         },
-        
+
         orderByStatus: {
-            title: 'Orders by Status',            
+            title: 'Orders by Status',
             status: {
                 pending: 'Pending',
                 processing: 'Processing',
@@ -381,12 +381,17 @@ export const TRANSLATIONS_EN: Translations = {
         savingProduct: 'Saving product...',
         searchPlaceholder: 'Search by name or brand...',
         categoriesSearchPlaceholder: 'All Categories',
+        clearFilters: 'Clear',
         filterByStatus: {
             pleaseholder: 'All Statuses',
             available: 'Available',
             lowStock: 'Low Stock',
             unavailable: 'Unavailable',
         },
+        showingResult: 'Showing',
+        showingResultOf: 'of',
+        products: 'products',
+        addNewProduct: 'Add New Product',
         product: 'Product',
         category: 'Category',
         price: 'Price',
@@ -396,25 +401,261 @@ export const TRANSLATIONS_EN: Translations = {
         flag: 'Flags',
         actions: 'Actions',
         sales: 'Sales',
+        feature: 'Feature',
+        new: 'New',
+        pagination: {
+            page: 'Page',
+            of: 'of',
+            items: 'total products',
+            previous: 'Previous',
+            next: 'Next',
+        },
+        productForm: {
+            editeTitle: 'Edit Product',
+            addTitle: 'Add NewProduct',
+            addSubtitle: 'Add a new item to your catalog. Fill in the details below.',
+            cancelButton: 'Cancel',
+            saveButton: 'Save Product',
+            generalInfo: {
+                title: 'General Information',
+                productName: 'Product Name',
+                brand: 'Brand',
+                description: 'Description',
+                descriptionPlaceholder: 'Describe the product...',
+                specifications: 'Technical Specifications',
+                specificationsTitle: 'Specifications',
+                specificationsPlaceholder: 'Battery Life: 30 hours...',
+                priceAndInventory: {
+                    title: 'Price and Inventory',
+                    price: 'Price',
+                    stockQuantity: 'Stock Quantity',
+                },
+                organization: {
+                    title: 'Organization',
+                    category: 'Category',
+                    selectCategory: 'Select category',
+                    productMedia: 'Product Media',
+                    MainImage: 'Main Image',
+                    editeImage: 'Click to change',
+                    addImageButton: 'Click to upload main image',
+                    galleryImages: 'Gallery Images',
+                    addGalleryImage: 'Add gallery image'
+                },
+                visibility: {
+                    title: 'Visibility',
+                    available: 'Available',
+                    availableSubtitle: 'Product is available for purchase',
+                    featured: 'Featured',
+                    featuredSubtitle: 'Highlight this product on the homepage',
+                    newArrival: 'New',
+                    newArrivalSubtitle: 'Mark this product as a new arrival',
+                }
+            }
+        }
     },
     ordersManagement: {
         header: {
             title: 'Orders Management',
             subtitle: 'Track and manage customer orders',
         },
-
+        actions: {
+            createNew: 'Create Order',
+            export: 'Export Orders',
+            searchPlaceholder: 'Search by Order ID or Customer...',
+            filterStatus: 'Filter by Status',
+            allStatus: 'All Status',
+            clearFilters: 'Clear Filters'
+        },
+        stats: {
+            totalOrders: 'Total Orders',
+            inTransit: 'In Transit',
+            showing: 'Showing',
+            orders: 'orders'
+        },
+        table: {
+            orderId: 'ORDER ID',
+            date: 'DATE',
+            customer: 'CUSTOMER',
+            total: 'TOTAL',
+            status: 'STATUS',
+            actions: 'ACTIONS'
+        },
+        status: {
+            pending: 'Pending',
+            processing: 'Processing',
+            shipped: 'Shipped',
+            delivered: 'Delivered',
+            cancelled: 'Cancelled'
+        },
+        emptyState: {
+            title: 'No orders found',
+            subtitle: 'No orders match your search criteria.',
+            titleFiltered: 'No orders with status',
+            subtitleFiltered: 'There are no orders with this status. Try another filter.'
+        },
+        details: {
+            title: 'Order Details',
+            cancel: 'Close'
+        },
+        orderForm: {
+            header: {
+                title: 'Order Details:',
+                placedOn: 'Placed on',
+                cancel: 'Cancel',
+                print: 'Print Invoice',
+            },
+            customerInfo: {
+                title: 'CUSTOMER INFO',
+            },
+            shippingAddress: {
+                title: 'SHIPPING ADDRESS',
+            },
+            productsTable: {
+                product: 'Product',
+                qty: 'Qty',
+                unitPrice: 'Unit Price',
+                total: 'Total',
+            },
+            totals: {
+                subtotal: 'Subtotal',
+                shipping: 'Shipping',
+                tax: 'Tax',
+                total: 'Total',
+            },
+            updateStatus: {
+                title: 'UPDATE STATUS',
+                current: 'Current:',
+                button: 'Update Status',
+                success: 'Status updated successfully.',
+            }
+        }
     },
     customersManagement: {
         header: {
             title: 'Customers Management',
-            subtitle: 'Manage your customer base and track their engagement',
-        }
+            subtitle: 'View and manage your customer base'
+        },
+        stats: {
+            totalCustomers: 'TOTAL CUSTOMERS',
+            activeThisMonth: 'ACTIVE THIS MONTH',
+            totalRevenue: 'TOTAL REVENUE',
+            avgOrderValue: 'AVG ORDER VALUE',
+        },
+        filters: {
+            searchPlaceholder: 'Search by name, email or phone...',
+            sort: {
+                label: 'Sort by',
+                newest: 'Registration: Newest',
+                oldest: 'Registration: Oldest',
+            },
+            ordersRange: {
+                label: 'Total Orders',
+                all: 'Total Orders: All',
+                high: 'High Spenders (>10)',
+                regular: 'Regular (1-10)',
+                none: 'No Orders (0)',
+            },
+            status: {
+                label: 'Status',
+                all: 'Status: All',
+                active: 'Active',
+                inactive: 'Inactive',
+            },
+        },
+        table: {
+            customer: 'CUSTOMER',
+            email: 'EMAIL',
+            registration: 'REGISTRATION',
+            orders: 'ORDERS',
+            totalSpent: 'TOTAL SPENT',
+            actions: 'ACTIONS',
+            footer: {
+                showing: 'Showing',
+                of: 'of',
+                results: 'results',
+            },
+        },
+        details: {
+            title: 'Customer Detail:',
+            personalData: 'PERSONAL DATA',
+            id: 'ID:',
+            phone: 'Phone:',
+            stats: {
+                totalSpent: 'TOTAL SPENT',
+                totalOrders: 'TOTAL ORDERS',
+                registration: 'REGISTRATION',
+            },
+            history: {
+                title: 'Recent Order History',
+                table: {
+                    orderId: 'Order ID',
+                    date: 'Date',
+                    items: 'Items',
+                    status: 'Status',
+                    total: 'Total',
+                },
+                noOrders: 'No orders found for this customer.',
+            },
+        },
     },
     categoriesManagement: {
         header: {
             title: 'Categories Management',
             subtitle: 'Organize and structure your product inventory groups',
-        }
+        },
+        stats: {
+            categories: 'Categories',
+            products: 'Products',
+            topCategory: 'Top Category',
+        },
+        controls: {
+            searchPlaceholder: 'Search categories by name or description...',
+            sort: {
+                name: 'Sort by Name',
+                products: 'Sort by Products',
+                asc: 'Ascending',
+                desc: 'Descending',
+            },
+            clearSearch: 'Clear',
+            resultsInfo: {
+                showing: 'Showing',
+                of: 'of',
+                categories: 'categories',
+            },
+            addNew: 'Add New Category',
+        },
+        table: {
+            image: 'IMAGE',
+            nameDesc: 'NAME & DESCRIPTION',
+            products: 'PRODUCTS',
+            actions: 'ACTIONS',
+        },
+        grid: {
+            products: 'products',
+            empty: {
+                title: 'No Categories Found',
+                subtitle: 'Try adjusting your search or filters',
+            },
+        },
+        form: {
+            editTitle: 'Edit Category:',
+            addTitle: 'Add New Category',
+            cancel: 'Cancel',
+            name: 'Category Name',
+            namePlaceholder: 'e.g. Headphones',
+            description: 'Description',
+            descriptionPlaceholder: 'Describe this category...',
+            image: {
+                label: 'Category Image',
+                change: 'Change Image',
+                remove: 'Remove Image',
+                uploadTitle: 'Click to upload image',
+                uploadHint: 'JPG, PNG (max 5MB)',
+            },
+            clear: 'Clear',
+            save: 'Save Category',
+            saving: 'Saving...',
+        },
     },
     footer: {
         aboutUs: 'About Us',
@@ -423,6 +664,7 @@ export const TRANSLATIONS_EN: Translations = {
         termsOfService: 'Terms of Service',
         followUs: 'Follow Us',
         copyright: '© 2026 Audio Store. All rights reserved.',
+        description: 'Your premier destination for high-fidelity audio equipment. We bring the studio experience to your home with curated premium products.'
     },
     errors: {
         generic: 'An error occurred. Please try again later.',

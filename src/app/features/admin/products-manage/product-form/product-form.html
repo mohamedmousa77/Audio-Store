@@ -1,12 +1,15 @@
 <div class="product-edit-container">
   <div class="form-page-header">
     <div class="header-left">
-      <h2 class="form-title">{{ productData.id ? 'Edit Product' : 'Create Product' }}</h2>
-      <p class="form-subtitle">Add a new item to your catalog. Fill in the details below.</p>
+      <h2 class="form-title">{{ productData.id ? translations().productsManagement.productForm.editeTitle : translations().productsManagement.productForm.addTitle }}</h2>
+      @if(!productData.id){ 
+      <p class="form-subtitle">{{ translations().productsManagement.productForm.addSubtitle }}</p>
+      }
+      
     </div>
     <div class="header-actions">
-      <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-      <button class="btn btn-primary" (click)="onSave()">Save Product</button>
+      <button class="btn btn-secondary" (click)="onCancel()">{{ translations().productsManagement.productForm.cancelButton }}</button>
+      <button class="btn btn-primary" (click)="onSave()">{{ translations().productsManagement.productForm.saveButton }}</button>
     </div>
   </div>
 
@@ -14,9 +17,9 @@
     <div class="form-column-main">
       <div class="form-column-main">
         <div class="form-card">
-          <h3>General Information</h3>
+          <h3>{{translations().productsManagement.productForm.generalInfo.title}}</h3>
           <div class="form-group">
-            <label>Product Name *</label>
+            <label>{{translations().productsManagement.productForm.generalInfo.productName}}</label>
             <input type="text" name="productName" [(ngModel)]="productData!.name" placeholder="e.g. Sony WH-1000XM5"
               [class.input-error]="validationErrors['name']">
             @if (validationErrors['name']) {
@@ -25,31 +28,31 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Brand</label>
+              <label>{{translations().productsManagement.productForm.generalInfo.brand}}</label>
               <input type="text" name="productBrand" [(ngModel)]="productData!.brand" placeholder="e.g. Sony">
             </div>
           </div>
           <div class="form-group">
-            <label>Description</label>
+            <label>{{translations().productsManagement.productForm.generalInfo.description}}</label>
             <textarea rows="6" name="productDescription" [(ngModel)]="productData!.description"
-              placeholder="Describe the product features..."></textarea>
+              placeholder={{translations().productsManagement.productForm.generalInfo.descriptionPlaceholder}}></textarea>
           </div>
         </div>
 
         <div class="form-card">
-          <h3>Technical Specifications</h3>
+          <h3>{{translations().productsManagement.productForm.generalInfo.specifications}}</h3>
           <div class="form-group">
-            <label>Specifications</label>
+            <label>{{translations().productsManagement.productForm.generalInfo.specificationsTitle}}</label>
             <textarea rows="4" name="productSpecifications" [(ngModel)]="productData!.specifications"
-              placeholder="Battery Life: 30 hours..."></textarea>
+              placeholder={{translations().productsManagement.productForm.generalInfo.specificationsPlaceholder}}></textarea>
           </div>
         </div>
 
         <div class="form-card">
-          <h3>Pricing & Inventory</h3>
+          <h3>{{translations().productsManagement.productForm.generalInfo.priceAndInventory.title}}</h3>
           <div class="form-row">
             <div class="form-group">
-              <label>Price *</label>
+              <label>{{translations().productsManagement.productForm.generalInfo.priceAndInventory.price}}</label>
               <input type="number" name="productPrice" [(ngModel)]="productData!.price" placeholder="$ 0.00"
                 [class.input-error]="validationErrors['price']">
               @if (validationErrors['price']) {
@@ -57,7 +60,7 @@
               }
             </div>
             <div class="form-group">
-              <label>Stock Quantity *</label>
+              <label>{{translations().productsManagement.productForm.generalInfo.priceAndInventory.stockQuantity}}</label>
               <input type="number" name="productStock" [(ngModel)]="productData!.stockQuantity">
             </div>
           </div>
@@ -67,13 +70,16 @@
 
     <div class="form-column-side">
       <div class="form-card">
-        <h3>Organization</h3>
+        <h3>{{translations().productsManagement.productForm.generalInfo.organization.title}}</h3>
         <div class="form-group">
-          <label>Category *</label>
+          <label>{{translations().productsManagement.productForm.generalInfo.organization.category}}</label>
           <select name="productCategory" [(ngModel)]="productData!.categoryId"
             [class.input-error]="validationErrors['categoryId']">
-            <option [ngValue]="null">Select category</option>
-            <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+            <option [ngValue]="null">{{translations().productsManagement.productForm.generalInfo.organization.selectCategory}}</option>
+            @for(cat of categories; track cat.id){
+              <option [ngValue]="cat.id">{{ cat.name }}</option>
+            }
+            
           </select>
           @if (validationErrors['categoryId']) {
           <span class="field-error">{{ validationErrors['categoryId'] }}</span>
@@ -82,8 +88,8 @@
       </div>
 
       <div class="form-card">
-        <h3>Product Media</h3>
-        <label>Main Image</label>
+        <h3>{{translations().productsManagement.productForm.generalInfo.organization.productMedia}}</h3>
+        <label>{{translations().productsManagement.productForm.generalInfo.organization.MainImage}}</label>
         <input type="file" #mainImageInput accept="image/*" (change)="onMainImageSelected($event)" hidden>
 
         @if (productData?.mainImage) {
@@ -92,54 +98,58 @@
           <img [src]="productData!.mainImage" alt="Main image preview">
           <div class="image-overlay">
             <span class="material-icons">edit</span>
-            <p>Click to change</p>
+            <p>{{translations().productsManagement.productForm.generalInfo.organization.editeImage}}</p>
           </div>
         </div>
         } @else {
         <!-- Upload area shown only when no image -->
         <div class="upload-area" (click)="mainImageInput.click()">
           <span class="material-icons">cloud_upload</span>
-          <p>Click to upload main image</p>
+          <p>{{translations().productsManagement.productForm.generalInfo.organization.addImageButton}}</p>
         </div>
         }
 
-        <label class="mt-1">Gallery Images</label>
+        <label class="mt-1">{{translations().productsManagement.productForm.generalInfo.organization.galleryImages}}</label>
         <input type="file" #galleryImageInput accept="image/*" (change)="onGalleryImageSelected($event)" hidden>
         <div class="upload-area upload-area-small" (click)="galleryImageInput.click()">
           <span class="material-icons">add_photo_alternate</span>
-          <p>Add gallery image</p>
+          <p>{{translations().productsManagement.productForm.generalInfo.organization.addGalleryImage}}</p>
         </div>
-        <div class="gallery-preview" *ngIf="productData?.galleryImages?.length">
+        @if(productData?.galleryImages?.length){
+          <div class="gallery-preview">
+            <!-- @for(img of productData!.galleryImages; i = index){} -->
           <div class="gallery-item" *ngFor="let img of productData!.galleryImages; let i = index">
             <img [src]="img" alt="Gallery image">
             <button class="remove-btn" (click)="removeGalleryImage(i)">&times;</button>
           </div>
         </div>
+        }
+        
       </div>
 
       <div class="form-card">
-        <h3>Visibility</h3>
+        <h3>{{translations().productsManagement.productForm.generalInfo.visibility.title}}</h3>
         <div class="toggle-group">
           <div class="toggle-item">
             <div class="toggle-text">
-              <p class="toggle-label">Available</p>
-              <p class="toggle-desc">Product can be purchased</p>
+              <p class="toggle-label">{{translations().productsManagement.productForm.generalInfo.visibility.available}}</p>
+              <p class="toggle-desc">{{translations().productsManagement.productForm.generalInfo.visibility.availableSubtitle}}</p>
             </div>
             <label class="switch"><input type="checkbox" name="productAvailable"
                 [(ngModel)]="productData!.isAvailable"><span class="slider round"></span></label>
           </div>
           <div class="toggle-item">
             <div class="toggle-text">
-              <p class="toggle-label">New Arrival</p>
-              <p class="toggle-desc">Mark as 'New'</p>
+              <p class="toggle-label">{{translations().productsManagement.productForm.generalInfo.visibility.newArrival}}</p>
+              <p class="toggle-desc">{{translations().productsManagement.productForm.generalInfo.visibility.newArrivalSubtitle}}</p>
             </div>
             <label class="switch"><input type="checkbox" name="productIsNew" [(ngModel)]="productData!.isNew"><span
                 class="slider round"></span></label>
           </div>
           <div class="toggle-item">
             <div class="toggle-text">
-              <p class="toggle-label">Featured</p>
-              <p class="toggle-desc">Show on homepage</p>
+              <p class="toggle-label">{{translations().productsManagement.productForm.generalInfo.visibility.featured}}</p>
+              <p class="toggle-desc">{{translations().productsManagement.productForm.generalInfo.visibility.featuredSubtitle}}</p>
             </div>
             <label class="switch"><input type="checkbox" name="productFeatured"
                 [(ngModel)]="productData!.isFeatured"><span class="slider round"></span></label>

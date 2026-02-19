@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
 import { CustomerManagementService } from '../../../../core/services/customer/customer-management-services';
-import { Customer, CustomerFilter } from '../../../../core/models/customer';
+import { Customer } from '../../../../core/models/customer';
 import { OrderStatus } from '../../../../core/models/order';
-
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 /**
  * Customers Management Page (Admin)
  * Updated to use CustomerManagementService with Signals
@@ -29,6 +29,11 @@ import { OrderStatus } from '../../../../core/models/order';
 })
 export class CustomersPage implements OnInit {
   private customerService = inject(CustomerManagementService);
+  private translationService = inject(TranslationService);
+
+  // Expose translations
+  translations = this.translationService.translations;
+
 
   // Use Signals from CustomerManagementService
   customers = this.customerService.customers;

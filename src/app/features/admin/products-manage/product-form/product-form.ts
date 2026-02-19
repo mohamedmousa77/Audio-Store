@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Category } from '../../../../core/models/category';
-
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 @Component({
   selector: 'app-product-form',
   imports: [CommonModule, FormsModule],
@@ -10,6 +10,7 @@ import { Category } from '../../../../core/models/category';
   styleUrl: './product-form.css',
 })
 export class ProductForm implements OnInit {
+  private translationService = inject(TranslationService);
   @Input() productData: any;
   @Input() categories: Category[] = [];
 
@@ -17,6 +18,8 @@ export class ProductForm implements OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   validationErrors: { [key: string]: string } = {};
+  translations = this.translationService.translations;
+
 
   ngOnInit(): void {
     if (!this.productData) {

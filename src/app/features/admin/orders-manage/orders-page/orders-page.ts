@@ -8,7 +8,7 @@ import { Badge } from '../../../../shared/components/badge/badge';
 import { Order, OrderStatus } from '../../../../core/models/order';
 import { OrderServices } from '../../../../core/services/order/order-services';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog/confirm-dialog.service';
-
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 /**
  * Admin Orders Page Component
  * Updated to use OrderServices with Signals
@@ -34,6 +34,10 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog/c
 export class OrdersPage implements OnInit {
   private orderService = inject(OrderServices);
   private dialogService = inject(ConfirmDialogService);
+  private translationService = inject(TranslationService);
+
+  // Expose translations
+  translations = this.translationService.translations;
 
   // Use Signals from OrderServices
   orders = this.orderService.orders;
@@ -112,6 +116,9 @@ export class OrdersPage implements OnInit {
   /**
    * Update order status (admin)
    */
+  /**
+   * Update order status (admin)
+   */
   async updateStatus(newStatus: OrderStatus): Promise<void> {
     const order = this.selectedOrder();
     console.log('Updating order status:', { order, newStatus });
@@ -121,9 +128,13 @@ export class OrdersPage implements OnInit {
       await this.orderService.updateOrderStatus({ orderId: order.id, newStatus });
 
       // Show success dialog FIRST
+      const statusText = this.getStatusTranslation(newStatus);
       await this.dialogService.showSuccessAlert(
-        'Stato aggiornato',
-        `Lo stato dell\'ordine ${order.orderNumber} è stato aggiornato a "${this.getStatusText(newStatus)}".`
+        this.translations().common.success,
+        `Lo stato dell'ordine ${order.orderNumber} è stato aggiornato a "${statusText}".`
+        // Note: For full dynamic message we might need a parameterized translation, 
+        // but keeping it simple for now as requested by user pattern. 
+        // Ideally: this.translations().ordersManagement.messages.statusUpdated...
       );
 
       // AFTER user clicks OK:
@@ -151,8 +162,8 @@ export class OrdersPage implements OnInit {
 
       // Show error dialog
       await this.dialogService.showErrorAlert(
-        'Errore aggiornamento',
-        error?.message || 'Si è verificato un errore durante l\'aggiornamento dello stato dell\'ordine.'
+        this.translations().common.error,
+        error?.message || this.translations().errors.generic
       );
     }
   }
@@ -192,7 +203,7 @@ export class OrdersPage implements OnInit {
   getSelectedStatusText(): string {
     const s = this.selectedStatus();
     if (s === '') return '';
-    return this.getStatusText(parseInt(s) as OrderStatus);
+    return this.getStatusTranslation(parseInt(s) as OrderStatus);
   }
 
   /**
@@ -218,9 +229,9 @@ export class OrdersPage implements OnInit {
   }
 
   /**
-   * Get status text in Italian
+   * Get status text from translations
    */
-  getStatusText(status: OrderStatus | string | number): string {
+  getStatusTranslation(status: OrderStatus | string | number): string {
     // Handle string/number input
     let statusId: number;
 
@@ -233,21 +244,22 @@ export class OrdersPage implements OnInit {
         if (key) {
           statusId = (OrderStatus as any)[key];
         } else {
-          return 'Sconosciuto';
+          return 'Unknown';
         }
       }
     } else {
       statusId = status;
     }
 
+    const t = this.translations().ordersManagement.status;
     const statusMap: { [key: number]: string } = {
-      [OrderStatus.Pending]: 'In Attesa',
-      [OrderStatus.Processing]: 'In Elaborazione',
-      [OrderStatus.Shipped]: 'Spedito',
-      [OrderStatus.Delivered]: 'Consegnato',
-      [OrderStatus.Cancelled]: 'Annullato'
+      [OrderStatus.Pending]: t.pending,
+      [OrderStatus.Processing]: t.processing,
+      [OrderStatus.Shipped]: t.shipped,
+      [OrderStatus.Delivered]: t.delivered,
+      [OrderStatus.Cancelled]: t.cancelled
     };
-    return statusMap[statusId] || 'Sconosciuto';
+    return statusMap[statusId] || 'Unknown';
   }
 
   /**

@@ -124,7 +124,6 @@ export class DashboardPageComponent implements OnInit {
         color: '#ef4444'
       }
     ]
-    // .filter(item => item.count > 0); // Only show statuses with orders
   });
 
   // Computed category stats for chart
@@ -147,8 +146,6 @@ export class DashboardPageComponent implements OnInit {
     const data = this.dashboardStats();
     if (!data || !data.topProducts.length) return [];
 
-
-
     return data.topProducts.map(product => ({
       productId: product.productId,
       productName: product.productName,
@@ -158,7 +155,6 @@ export class DashboardPageComponent implements OnInit {
       totalQuantitySold: product.totalQuantitySold,
       brand: product.brand,
       productImage: product.productImage || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-      // icon: this.getCategoryIcon(product.categoria)
     }));
   });
 
@@ -171,27 +167,11 @@ export class DashboardPageComponent implements OnInit {
   }
 
   /**
-   * Get color for category chart based on index
-   */
+  * Get color for category chart based on index
+  */
   private getCategoryColor(index: number): string {
     const colors = ['#f49d25', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#06b6d4'];
     return colors[index % colors.length];
   }
 
-  /**
-   * Get icon for category
-   */
-  private getCategoryIcon(categoryName: string): string {
-    const iconMap: Record<string, string> = {
-      'Headphones': 'headphones',
-      'Speakers': 'speaker',
-      'Microphones': 'mic',
-      'Turntables': 'album',
-      'Amplifiers': 'graphic_eq',
-      'Cables & Accessories': 'cable',
-      'Mixing Consoles': 'tune',
-      'Studio Monitors': 'monitor'
-    };
-    return iconMap[categoryName] || 'category';
-  }
 }

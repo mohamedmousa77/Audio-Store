@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Order, OrderStatus } from '../../../../core/models/order';
-
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 @Component({
   selector: 'app-order-form',
   imports: [CommonModule, FormsModule],
@@ -10,6 +10,7 @@ import { Order, OrderStatus } from '../../../../core/models/order';
   styleUrl: './order-form.css',
 })
 export class OrderForm implements OnChanges {
+  private translationService = inject(TranslationService);
   // Riceve l'ordine selezionato dalla riga della tabella
   @Input() order: Order | null = null;
 
@@ -23,6 +24,8 @@ export class OrderForm implements OnChanges {
 
   // Expose OrderStatus to template
   OrderStatus = OrderStatus;
+
+  translations = this.translationService.translations;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['order'] && this.order) {

@@ -10,28 +10,28 @@
                 <div class="stat-card">
                     <div class="stat-icon icon-users"><span class="material-icons">group</span></div>
                     <div class="stat-content">
-                        <p class="stat-label">TOTAL CUSTOMERS</p>
+                        <p class="stat-label">{{ translations().customersManagement.stats.totalCustomers }}</p>
                         <h3 class="stat-value">{{ totalCount() }}</h3>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-active"><span class="material-icons">trending_up</span></div>
                     <div class="stat-content">
-                        <p class="stat-label">ACTIVE THIS MONTH</p>
+                        <p class="stat-label">{{ translations().customersManagement.stats.activeThisMonth }}</p>
                         <h3 class="stat-value">{{ summary()?.activeCustomers || 0 }}</h3>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-orders"><span class="material-icons">shopping_bag</span></div>
                     <div class="stat-content">
-                        <p class="stat-label">TOTAL REVENUE</p>
+                        <p class="stat-label">{{ translations().customersManagement.stats.totalRevenue }}</p>
                         <h3 class="stat-value">€{{ summary()?.totalRevenue?.toFixed(2) || '0.00' }}</h3>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon icon-top"><span class="material-icons">star</span></div>
                     <div class="stat-content">
-                        <p class="stat-label">AVG ORDER VALUE</p>
+                        <p class="stat-label">{{ translations().customersManagement.stats.avgOrderValue }}</p>
                         <h3 class="stat-value">€{{ summary()?.averageOrderValue?.toFixed(2) || '0.00' }}</h3>
                     </div>
                 </div>
@@ -41,29 +41,35 @@
                 <div class="filters-row">
                     <div class="search-box">
                         <span class="material-icons">search</span>
-                        <input type="text" placeholder="Search by name, email or phone..." [ngModel]="searchTerm()"
-                            (ngModelChange)="searchTerm.set($event)" class="search-input" />
+                        <input type="text" [placeholder]="translations().customersManagement.filters.searchPlaceholder"
+                            [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" class="search-input" />
                     </div>
                     <div class="filter-controls">
                         <select class="filter-select" [ngModel]="selectedSort()"
                             (ngModelChange)="selectedSort.set($event)">
-                            <option value="recent">Registration: Newest</option>
-                            <option value="oldest">Registration: Oldest</option>
+                            <option value="recent">{{ translations().customersManagement.filters.sort.newest }}</option>
+                            <option value="oldest">{{ translations().customersManagement.filters.sort.oldest }}</option>
                         </select>
 
                         <select class="filter-select" [ngModel]="selectedOrdersRange()"
                             (ngModelChange)="selectedOrdersRange.set($event)">
-                            <option value="all">Total Orders: All</option>
-                            <option value="10+">High Spenders (>10)</option>
-                            <option value="1-10">Regular (1-10)</option>
-                            <option value="none">No Orders (0)</option>
+                            <option value="all">{{ translations().customersManagement.filters.ordersRange.all }}
+                            </option>
+                            <option value="10+">{{ translations().customersManagement.filters.ordersRange.high }}
+                            </option>
+                            <option value="1-10">{{ translations().customersManagement.filters.ordersRange.regular }}
+                            </option>
+                            <option value="none">{{ translations().customersManagement.filters.ordersRange.none }}
+                            </option>
                         </select>
 
                         <select class="filter-select" [ngModel]="selectedStatus()"
                             (ngModelChange)="selectedStatus.set($event)">
-                            <option value="">Status: All</option>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
+                            <option value="">{{ translations().customersManagement.filters.status.all }}</option>
+                            <option value="Active">{{ translations().customersManagement.filters.status.active }}
+                            </option>
+                            <option value="Inactive">{{ translations().customersManagement.filters.status.inactive }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -74,12 +80,12 @@
                     <table class="customers-table">
                         <thead>
                             <tr>
-                                <th>CUSTOMER</th>
-                                <th>EMAIL</th>
-                                <th>REGISTRATION</th>
-                                <th>ORDERS</th>
-                                <th>TOTAL SPENT</th>
-                                <th>ACTIONS</th>
+                                <th>{{ translations().customersManagement.table.customer }}</th>
+                                <th>{{ translations().customersManagement.table.email }}</th>
+                                <th>{{ translations().customersManagement.table.registration }}</th>
+                                <th>{{ translations().customersManagement.table.orders }}</th>
+                                <th>{{ translations().customersManagement.table.totalSpent }}</th>
+                                <th>{{ translations().customersManagement.table.actions }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -110,21 +116,25 @@
                     </table>
                 </div>
                 <div class="table-footer">
-                    <p>Showing {{ filteredCustomers().length }} of {{ totalCount() }} results</p>
+                    <p>{{ translations().customersManagement.table.footer.showing }} {{ filteredCustomers().length }} {{
+                        translations().customersManagement.table.footer.of }} {{ totalCount() }} {{
+                        translations().customersManagement.table.footer.results }}</p>
                 </div>
             </div>
 
             @if (selectedCustomer()) {
             <div class="detail-section" id="customer-detail-section">
                 <div class="detail-header">
-                    <h2 class="detail-title">Customer Detail: <span>{{ selectedCustomer()!.firstName }} {{
+                    <h2 class="detail-title">{{ translations().customersManagement.details.title }} <span>{{
+                            selectedCustomer()!.firstName }} {{
                             selectedCustomer()!.lastName }}</span></h2>
                 </div>
 
                 <div class="detail-grid-container">
                     <div class="personal-card">
                         <div class="card-label-row">
-                            <span class="card-label">PERSONAL DATA</span>
+                            <span class="card-label">{{ translations().customersManagement.details.personalData
+                                }}</span>
                             <span class="badge-active">{{ selectedCustomer()!.status }}</span>
                         </div>
                         <div class="avatar-large" [style.background]="getColor(selectedCustomer()!.id)">
@@ -132,42 +142,46 @@
                         </div>
                         <h3 class="detail-name">{{ selectedCustomer()!.firstName }} {{ selectedCustomer()!.lastName }}
                         </h3>
-                        <p class="detail-id">ID: #{{ selectedCustomer()!.id }}</p>
+                        <p class="detail-id">{{ translations().customersManagement.details.id }} #{{
+                            selectedCustomer()!.id }}</p>
                         <p class="detail-email">{{ selectedCustomer()!.email }}</p>
                         @if (selectedCustomer()!.phone) {
-                        <p class="detail-phone">{{ selectedCustomer()!.phone }}</p>
+                        <p class="detail-phone">{{ selectedCustomer()!.phone }} {{ selectedCustomer()!.phone }}</p>
                         }
                     </div>
 
                     <div class="stats-and-history">
                         <div class="mini-stats-grid">
                             <div class="mini-stat">
-                                <p class="stat-label">TOTAL SPENT</p>
+                                <p class="stat-label">{{ translations().customersManagement.details.stats.totalSpent }}
+                                </p>
                                 <p class="stat-value-large">{{ formatPrice(selectedCustomer()!.totalSpent) }}</p>
                             </div>
                             <div class="mini-stat">
-                                <p class="stat-label">TOTAL ORDERS</p>
+                                <p class="stat-label">{{ translations().customersManagement.details.stats.totalOrders }}
+                                </p>
                                 <p class="stat-value-large">{{ selectedCustomer()!.totalOrders }}</p>
                             </div>
                             <div class="mini-stat">
-                                <p class="stat-label">REGISTRATION</p>
+                                <p class="stat-label">{{ translations().customersManagement.details.stats.registration
+                                    }}</p>
                                 <p class="stat-value-large">{{ formatDate(selectedCustomer()!.registrationDate) }}</p>
                             </div>
                         </div>
 
                         <div class="history-card">
                             <div class="history-header">
-                                <h4>Recent Order History</h4>
+                                <h4>{{ translations().customersManagement.details.history.title }}</h4>
                             </div>
                             @if (customerOrders().length > 0) {
                             <table class="history-table">
                                 <thead>
                                     <tr>
-                                        <th>Order ID</th>
-                                        <th>Date</th>
-                                        <th>Items</th>
-                                        <th>Status</th>
-                                        <th>Total</th>
+                                        <th>{{ translations().customersManagement.details.history.table.orderId }}</th>
+                                        <th>{{ translations().customersManagement.details.history.table.date }}</th>
+                                        <th>{{ translations().customersManagement.details.history.table.items }}</th>
+                                        <th>{{ translations().customersManagement.details.history.table.status }}</th>
+                                        <th>{{ translations().customersManagement.details.history.table.total }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -184,7 +198,7 @@
                                 </tbody>
                             </table>
                             } @else {
-                            <p class="no-orders">No orders found for this customer.</p>
+                            <p class="no-orders">{{ translations().customersManagement.details.history.noOrders }}</p>
                             }
                         </div>
                     </div>

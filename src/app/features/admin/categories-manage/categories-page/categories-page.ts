@@ -8,7 +8,7 @@ import { AdminNotificationService } from '../../layout/admin-notification/admin-
 import { CategoryServices } from '../../../../core/services/category/category-services';
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { Category } from '../../../../core/models/category';
-
+import { TranslationService } from '../../../../core/services/translation/translation.service';
 /**
  * Categories Management Page (Admin)
  * Full CRUD with image upload, notifications, and product count navigation
@@ -29,6 +29,11 @@ export class CategoriesPage implements OnInit {
   private productService = inject(ProductServices);
   private notification = inject(AdminNotificationService);
   private router = inject(Router);
+  private translationService = inject(TranslationService);
+
+  // Expose translations
+  translations = this.translationService.translations;
+
 
   // Signals from CategoryServices
   categories = this.categoryService.categories;
