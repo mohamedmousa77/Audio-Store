@@ -1,23 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
+
 .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -51,4 +50,106 @@ app-root {
   direction: ltr;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* ============================================
+   CUSTOM STYLED DROPDOWNS (Wrapper Method)
+   ============================================ */
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 180px;
+}
+
+/* Custom arrow via pseudo-element on wrapper */
+.select-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239c7a49'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.select-wrapper:hover::after {
+  transform: translateY(-50%) scale(1.15);
+}
+
+/* The actual select element */
+.filter-select,
+.sort-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 100%;
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+
+  background-color: white;
+  background-image: none;
+  border: 2px solid #e8ddce;
+  border-radius: 0.75rem;
+
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1c160d;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.filter-select:hover,
+.sort-select:hover {
+  border-color: #d68310;
+  background-color: #fffcf4;
+}
+
+.filter-select:focus,
+.sort-select:focus {
+  outline: none;
+  border-color: #f49d25;
+  box-shadow: 0 0 0 4px rgba(244, 157, 37, 0.15);
+  background-color: white;
+}
+
+.filter-select:disabled,
+.sort-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+/* Styled options */
+.filter-select option,
+.sort-select option {
+  background: white;
+  color: #1c160d;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+.filter-select option:checked,
+.sort-select option:checked {
+  background: linear-gradient(135deg, #f49d25, #d68310);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .select-wrapper {
+    width: 100%;
+    min-width: 100%;
+  }
 }

@@ -9,6 +9,7 @@ import { CategoryServices } from '../../../../core/services/category/category-se
 import { ProductServices } from '../../../../core/services/product/product-services';
 import { Category } from '../../../../core/models/category';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { CustomSelectComponent, SelectOption } from '../../../../shared/components/custom-select/custom-select';
 /**
  * Categories Management Page (Admin)
  * Full CRUD with image upload, notifications, and product count navigation
@@ -19,7 +20,8 @@ import { TranslationService } from '../../../../core/services/translation/transl
     CommonModule,
     FormsModule,
     AdminSidebar,
-    AdminHeader
+    AdminHeader,
+    CustomSelectComponent
   ],
   templateUrl: './categories-page.html',
   styleUrl: './categories-page.css',
@@ -44,11 +46,20 @@ export class CategoriesPage implements OnInit {
   searchTerm = signal<string>('');
   sortBy = signal<'name' | 'products'>('name');
   sortOrder = signal<'asc' | 'desc'>('asc');
-  viewMode = signal<'grid' | 'table'>('table');
+  viewMode = signal<'grid' | 'table'>('grid');
   isFormOpen = signal<boolean>(false);
   editingCategory = signal<Category | null>(null);
   formCategory = signal<Partial<Category>>({});
   saving = signal<boolean>(false);
+
+  // Dropdown options for custom-select
+  sortOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().categoriesManagement.controls.sort;
+    return [
+      { value: 'name', label: t.name },
+      { value: 'products', label: t.products }
+    ];
+  });
 
   // Track which category's product count should flash red
   flashCategoryId = signal<number | null>(null);

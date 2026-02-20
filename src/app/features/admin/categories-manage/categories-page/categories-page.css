@@ -21,6 +21,14 @@
   position: relative;
 }
 
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.clickable-row:hover {
+  background-color: #f9f9f9; /* Or your preferred hover color */
+}
+
 /* ============================================
    SAVING OVERLAY
    ============================================ */
@@ -515,6 +523,7 @@
     transform: translateY(-8px);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
     border-color: #f49d25;
+    cursor: pointer;
   }
 
   .card-image {

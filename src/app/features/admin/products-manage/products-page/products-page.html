@@ -20,24 +20,20 @@
         <div class="controls-row">
           <div class="search-box">
             <span class="material-icons">search</span>
-            <input type="text" placeholder="{{translations().productsManagement.searchPlaceholder}}" [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event)" class="search-input" />
+            <input type="text" placeholder="{{translations().productsManagement.searchPlaceholder}}"
+              [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" class="search-input" />
           </div>
 
           <div class="filter-controls">
-            <select [ngModel]="selectedCategory()" (ngModelChange)="onCategoryChange($event)" class="filter-select">
-              <option [ngValue]="null">{{ translations().productsManagement.categoriesSearchPlaceholder }}</option>
-              @for (cat of categories(); track cat.id) {
-              <option [ngValue]="cat.id">{{ cat.name }}</option>
-              }
-            </select>
+            <app-custom-select [options]="categoryOptions()"
+              [placeholder]="translations().productsManagement.categoriesSearchPlaceholder"
+              [ngModel]="selectedCategory()" (ngModelChange)="onCategoryChange($event)">
+            </app-custom-select>
 
-            <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" class="filter-select">
-              <option value="">{{ translations().productsManagement.filterByStatus.pleaseholder }}</option>
-              <option value="Available">{{ translations().productsManagement.filterByStatus.available }}</option>
-              <option value="Low Stock">{{ translations().productsManagement.filterByStatus.lowStock }}</option>
-              <option value="Unavailable">{{ translations().productsManagement.filterByStatus.unavailable }}</option>
-            </select>
+            <app-custom-select [options]="statusOptions()"
+              [placeholder]="translations().productsManagement.filterByStatus.pleaseholder" [ngModel]="selectedStatus()"
+              (ngModelChange)="selectedStatus.set($event)">
+            </app-custom-select>
 
             @if (searchTerm() || selectedCategory() || selectedStatus()) {
             <button class="btn btn-secondary" (click)="clearFilters()">
@@ -49,13 +45,14 @@
         </div>
 
         <div class="results-info">
-          <p>{{translations().productsManagement.showingResult}} 
-            <strong>{{ filteredProducts().length }}</strong> 
-            {{translations().productsManagement.showingResultOf}} 
+          <p>{{translations().productsManagement.showingResult}}
+            <strong>{{ filteredProducts().length }}</strong>
+            {{translations().productsManagement.showingResultOf}}
             <strong>{{ totalProducts() }}</strong>
-            {{translations().productsManagement.products}}</p>
-          
-            <button class="btn btn-primary" (click)="openAddProduct()">
+            {{translations().productsManagement.products}}
+          </p>
+
+          <button class="btn btn-primary" (click)="openAddProduct()">
             <span class="material-icons">add</span>
             {{translations().productsManagement.addNewProduct}}
           </button>
@@ -63,6 +60,7 @@
       </div>
 
       <div class="products-table-card">
+        @if (filteredProducts().length > 0) {
         <div class="table-container">
           <table class="products-table">
             <thead>
@@ -111,8 +109,8 @@
                 <td>
                   <div class="flags-container">
                     @if(product.isNew && product.isFeatured) {
-                      <span class="flag-pill featured">{{ translations().productsManagement.feature }}</span>
-                      <span class="flag-pill new">{{ translations().productsManagement.new }}</span>
+                    <span class="flag-pill featured">{{ translations().productsManagement.feature }}</span>
+                    <span class="flag-pill new">{{ translations().productsManagement.new }}</span>
                     }
                     @if (product.isFeatured) {
                     <span class="flag-pill featured">{{ translations().productsManagement.feature }}</span>
@@ -139,7 +137,8 @@
         <!-- Pagination -->
         <div class="pagination-bar">
           <div class="pagination-info">
-            {{translations().productsManagement.pagination.page}} <strong>{{ currentPage() }}</strong> {{translations().productsManagement.pagination.of}} <strong>{{ totalPages() }}</strong>
+            {{translations().productsManagement.pagination.page}} <strong>{{ currentPage() }}</strong>
+            {{translations().productsManagement.pagination.of}} <strong>{{ totalPages() }}</strong>
             &mdash; {{ totalProducts() }} {{translations().productsManagement.pagination.items}}
           </div>
           <div class="pagination-controls">
@@ -161,6 +160,31 @@
             </button>
           </div>
         </div>
+        } @else {
+        <div class="empty-state">
+          <div class="empty-icon">
+            <span class="material-icons">inventory_2</span>
+          </div>
+
+          @if (totalProducts() === 0) {
+          <!-- CASE 1: No products in the database -->
+          <h3>{{translations().productsManagement.emptyState.noProductsTitle}}</h3>
+          <p>{{translations().productsManagement.emptyState.noProductsSubtitle}}</p>
+          <button class="btn btn-primary" (click)="openAddProduct()">
+            <span class="material-icons">add</span>
+            {{translations().productsManagement.addNewProduct}}
+          </button>
+          } @else {
+          <!-- CASE 2: No results found for current filter -->
+          <h3>{{translations().productsManagement.emptyState.noResultsTitle}}</h3>
+          <p>{{translations().productsManagement.emptyState.noResultsSubtitle}}</p>
+          <button class="btn btn-secondary" (click)="clearFilters()">
+            <span class="material-icons">filter_alt_off</span>
+            {{translations().productsManagement.clearFilters}}
+          </button>
+          }
+        </div>
+        }
       </div>
 
       <div id="product-form-section">

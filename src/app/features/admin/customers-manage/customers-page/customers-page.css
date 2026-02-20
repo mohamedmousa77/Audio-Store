@@ -572,6 +572,15 @@ html {
     transform: translateY(0);
   }
 }
+.no-orders {
+    text-align: center;
+    color: #9c7a49;
+    font-style: italic;
+    padding: 2rem;
+    background: #f8f7f5;
+    border-radius: 8px;
+    border: 1px dashed #e8ddce;
+}
 
 /* ============================================
    RESPONSIVE DESIGN

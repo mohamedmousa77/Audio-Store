@@ -1,8 +1,7 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthServices } from '../services/auth/auth-services';
 import { catchError, switchMap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthServices);
@@ -18,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // If token is expiring soon, refresh it first
-  if (token && authService.isTokenExpiringSoon() && !authService.isTokenExpired()) {
+  if (token && authService.isTokenExpiringSoon()) {
     return authService.refreshToken().pipe(
       switchMap(() => {
         // After refresh, clone request with new token

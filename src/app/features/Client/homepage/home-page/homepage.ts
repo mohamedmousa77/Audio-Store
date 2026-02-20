@@ -11,6 +11,7 @@ import { FeaturedProducts } from '../components/featured-products/featured-produ
 import { Product } from '../../../../core/models/product';
 import { Category } from '../../../../core/models/category';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { AuthServices } from '../../../../core/services/auth/auth-services';
 
 /**
  * Homepage Component
@@ -33,6 +34,7 @@ export class Homepage implements OnInit {
   private productService = inject(ProductServices);
   private categoryService = inject(CategoryServices);
   private translationService = inject(TranslationService);
+  private authService = inject(AuthServices);
 
   // Local state for HomePage-specific data
   newProduct = signal<Product | undefined>(undefined);
@@ -46,10 +48,16 @@ export class Homepage implements OnInit {
   // Translations
   translations = this.translationService.translations;
 
+  isAuthenticatied = false;
 
 
   ngOnInit(): void {
     this.loadHomePageData();
+
+    this.isAuthenticatied = this.authService.isAuthenticated();
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticatied = isAuth;
+    });
   }
 
   /**

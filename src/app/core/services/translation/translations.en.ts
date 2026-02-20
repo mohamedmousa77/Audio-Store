@@ -31,6 +31,8 @@ export const TRANSLATIONS_EN: Translations = {
         menu: 'Menu',
         home: 'Home',
         support: 'Support',
+        noProductFound: 'No products found',
+        searching: 'Searching...'
     },
     hero: {
         shopNow: 'Shop Now',
@@ -451,6 +453,12 @@ export const TRANSLATIONS_EN: Translations = {
                     newArrivalSubtitle: 'Mark this product as a new arrival',
                 }
             }
+        },
+        emptyState: {
+            noProductsTitle: 'No Products Found',
+            noProductsSubtitle: 'There are no products in your catalog.',
+            noResultsTitle: 'No Results Found',
+            noResultsSubtitle: 'There are no products matching your search criteria.'
         }
     },
     ordersManagement: {
@@ -576,7 +584,7 @@ export const TRANSLATIONS_EN: Translations = {
             },
         },
         details: {
-            title: 'Customer Detail:',
+            title: 'Customer detail:',
             personalData: 'PERSONAL DATA',
             id: 'ID:',
             phone: 'Phone:',

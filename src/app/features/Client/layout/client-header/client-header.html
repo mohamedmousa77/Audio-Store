@@ -22,7 +22,7 @@
         @if (isSearching) {
         <div class="search-loading">
           <span class="material-icons spin">refresh</span>
-          <span>Searching...</span>
+          <span>{{translations().header.searching}}</span>
         </div>
         }
         @else if (searchResults().length > 0) {
@@ -42,7 +42,7 @@
         @else {
         <div class="search-empty">
           <span class="material-icons">search_off</span>
-          <span>No products found</span>
+          <span>{{translations().header.noProductFound}}</span>
         </div>
         }
       </div>

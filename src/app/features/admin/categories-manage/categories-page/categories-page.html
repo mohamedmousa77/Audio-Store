@@ -60,10 +60,10 @@
           </div>
 
           <div class="sort-controls">
-            <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)" class="sort-select">
-              <option value="name">{{ translations().categoriesManagement.controls.sort.name }}</option>
-              <option value="products">{{ translations().categoriesManagement.controls.sort.products }}</option>
-            </select>
+            <app-custom-select [options]="sortOptions()"
+              [placeholder]="translations().categoriesManagement.controls.sort.name" [ngModel]="sortBy()"
+              (ngModelChange)="sortBy.set($event)">
+            </app-custom-select>
 
             <button class="sort-toggle-btn" (click)="toggleSortOrder()"
               [title]="'Sort ' + (sortOrder() === 'asc' ? translations().categoriesManagement.controls.sort.asc : translations().categoriesManagement.controls.sort.desc)">
@@ -91,7 +91,8 @@
           <p>{{ translations().categoriesManagement.controls.resultsInfo.showing }} <strong>{{
               filteredCategories().length }}</strong> {{ translations().categoriesManagement.controls.resultsInfo.of }}
             <strong>{{ categories().length }}</strong>
-            {{ translations().categoriesManagement.controls.resultsInfo.categories }}</p>
+            {{ translations().categoriesManagement.controls.resultsInfo.categories }}
+          </p>
           <button class="btn btn-primary" (click)="openAddCategory()">
             <span class="material-icons">add</span>
             {{ translations().categoriesManagement.controls.addNew }}
@@ -113,7 +114,7 @@
           </thead>
           <tbody>
             @for (category of filteredCategories(); track category.id) {
-            <tr>
+            <tr (click)="editCategory(category)" class="clickable-row">
               <td>
                 <div class="table-image-box">
                   @if (category.imageUrl) {
@@ -131,18 +132,21 @@
               </td>
               <td>
                 <span class="prod-count-badge clickable" [class.flash-red]="flashCategoryId() === category.id"
-                  (click)="navigateToProducts(category.id, category.name)">
+                  (click)="$event.stopPropagation(); getProductCount(category.id) > 0 ? navigateToProducts(category.id, category.name) : null">
                   {{getProductCount(category.id)}}
+                  @if(getProductCount(category.id) > 0){
                   <span class="material-icons badge-arrow">arrow_forward</span>
+                  }
+
                 </span>
               </td>
               <td>
                 <div class="actions">
-                  <button class="action-btn edit-btn" (click)="editCategory(category)"
+                  <button class="action-btn edit-btn" (click)="$event.stopPropagation(); editCategory(category)"
                     [title]="translations().admin.edit">
                     <span class="material-icons">edit</span>
                   </button>
-                  <button class="action-btn delete-btn" (click)="deleteCategory(category)"
+                  <button class="action-btn delete-btn" (click)="$event.stopPropagation();deleteCategory(category)"
                     [title]="translations().admin.delete">
                     <span class="material-icons">delete</span>
                   </button>
@@ -159,7 +163,7 @@
       @if (viewMode() === 'grid') {
       <div class="categories-grid">
         @for (category of filteredCategories(); track category.id) {
-        <div class="category-card">
+        <div class="category-card" (click)="editCategory(category)">
           <div class="card-image">
             @if (category.imageUrl) {
             <img [src]="category.imageUrl" [alt]="category.name" />
@@ -184,10 +188,11 @@
           </div>
 
           <div class="card-actions">
-            <button class="action-btn edit-btn" (click)="editCategory(category)" [title]="translations().admin.edit">
+            <button class="action-btn edit-btn" (click)="$event.stopPropagation(); editCategory(category)"
+              [title]="translations().admin.edit">
               <span class="material-icons">edit</span>
             </button>
-            <button class="action-btn delete-btn" (click)="deleteCategory(category)"
+            <button class="action-btn delete-btn" (click)="$event.stopPropagation(); deleteCategory(category)"
               [title]="translations().admin.delete">
               <span class="material-icons">delete</span>
             </button>

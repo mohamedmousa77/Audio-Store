@@ -14,14 +14,10 @@
           </div>
 
           <div class="filter-controls">
-            <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)" class="filter-select">
-              <option value="">{{ translations().ordersManagement.actions.allStatus }}</option>
-              <option [value]="OrderStatus.Pending">{{ translations().ordersManagement.status.pending }}</option>
-              <option [value]="OrderStatus.Processing">{{ translations().ordersManagement.status.processing }}</option>
-              <option [value]="OrderStatus.Shipped">{{ translations().ordersManagement.status.shipped }}</option>
-              <option [value]="OrderStatus.Delivered">{{ translations().ordersManagement.status.delivered }}</option>
-              <option [value]="OrderStatus.Cancelled">{{ translations().ordersManagement.status.cancelled }}</option>
-            </select>
+            <app-custom-select [options]="statusOptions()"
+              [placeholder]="translations().ordersManagement.actions.allStatus" [ngModel]="selectedStatus()"
+              (ngModelChange)="selectedStatus.set($event)">
+            </app-custom-select>
             @if (searchTerm() || selectedStatus() !== '') {
             <button class="btn btn-secondary" (click)="clearFilters()">
               <span class="material-icons">clear</span> {{ translations().ordersManagement.actions.clearFilters }}

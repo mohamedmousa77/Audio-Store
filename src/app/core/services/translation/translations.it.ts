@@ -30,6 +30,8 @@ export const TRANSLATIONS_IT: Translations = {
         menu: 'Menu',
         home: 'Home',
         support: 'Supporto',
+        noProductFound: 'Nessun prodotto trovato',
+        searching: 'Cercando...'
     },
     hero: {
         shopNow: 'Acquista Ora',
@@ -448,6 +450,12 @@ export const TRANSLATIONS_IT: Translations = {
                     featuredSubtitle: 'Mostra sulla homepage',
                 }
             }
+        },
+        emptyState: {
+            noProductsTitle: 'Nessun prodotto trovato',
+            noProductsSubtitle: 'Non ci sono prodotti nel tuo catalogo. Inizia aggiungendo un nuovo prodotto.',
+             noResultsTitle: 'Nessun risultato trovato',
+             noResultsSubtitle: 'Non ci sono prodotti che corrispondono ai tuoi criteri di ricerca. Prova a modificare i filtri o la query di ricerca.',
         }
     },
     ordersManagement: {

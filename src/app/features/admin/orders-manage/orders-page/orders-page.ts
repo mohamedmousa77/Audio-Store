@@ -9,6 +9,7 @@ import { Order, OrderStatus } from '../../../../core/models/order';
 import { OrderServices } from '../../../../core/services/order/order-services';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog/confirm-dialog.service';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { CustomSelectComponent, SelectOption } from '../../../../shared/components/custom-select/custom-select';
 /**
  * Admin Orders Page Component
  * Updated to use OrderServices with Signals
@@ -26,7 +27,8 @@ import { TranslationService } from '../../../../core/services/translation/transl
     AdminSidebar,
     AdminHeader,
     OrderForm,
-    Badge
+    Badge,
+    CustomSelectComponent
   ],
   templateUrl: './orders-page.html',
   styleUrl: './orders-page.css',
@@ -49,6 +51,19 @@ export class OrdersPage implements OnInit {
   selectedOrder = signal<Order | null>(null);
   searchTerm = signal<string>('');
   selectedStatus = signal<string>('');
+
+  // Dropdown options for custom-select
+  statusOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().ordersManagement;
+    return [
+      { value: '', label: t.actions.allStatus },
+      { value: OrderStatus.Pending, label: t.status.pending },
+      { value: OrderStatus.Processing, label: t.status.processing },
+      { value: OrderStatus.Shipped, label: t.status.shipped },
+      { value: OrderStatus.Delivered, label: t.status.delivered },
+      { value: OrderStatus.Cancelled, label: t.status.cancelled }
+    ];
+  });
 
   // Computed filtered orders
   filteredOrders = computed(() => {

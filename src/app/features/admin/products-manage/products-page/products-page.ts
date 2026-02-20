@@ -9,18 +9,20 @@ import { CategoryServices } from '../../../../core/services/category/category-se
 import { AdminNotificationService } from '../../layout/admin-notification/admin-notification.service';
 import { Product, CreateProductRequest } from '../../../../core/models/product';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
-
+import { ActivatedRoute } from '@angular/router';
+import { CustomSelectComponent, SelectOption } from '../../../../shared/components/custom-select/custom-select';
 /**
  * Products Management Page (Admin)
  * With pagination, status derived from stockQuantity, and clean filters
  */
 @Component({
   selector: 'app-products-page',
-  imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, ProductForm],
+  imports: [CommonModule, FormsModule, AdminSidebar, AdminHeader, ProductForm, CustomSelectComponent],
   templateUrl: './products-page.html',
   styleUrl: './products-page.css',
 })
 export class ProductsPage implements OnInit {
+  private route = inject(ActivatedRoute);
   private productService = inject(ProductServices);
   private categoryService = inject(CategoryServices);
   private notification = inject(AdminNotificationService);
@@ -44,6 +46,26 @@ export class ProductsPage implements OnInit {
   // Pagination
   currentPage = signal<number>(1);
   pageSize = signal<number>(5);
+
+  // Dropdown options for custom-select
+  categoryOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().productsManagement;
+    const cats = this.categories();
+    return [
+      { value: null, label: t.categoriesSearchPlaceholder },
+      ...cats.map(c => ({ value: c.id, label: c.name }))
+    ];
+  });
+
+  statusOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().productsManagement.filterByStatus;
+    return [
+      { value: '', label: t.pleaseholder },
+      { value: 'Available', label: t.available },
+      { value: 'Low Stock', label: t.lowStock },
+      { value: 'Unavailable', label: t.unavailable }
+    ];
+  });
 
   // Derive status from stockQuantity
   getProductStatus(product: Product): string {
@@ -107,7 +129,19 @@ export class ProductsPage implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     await this.loadData();
+
+    this.route.queryParams.subscribe(params => {
+      const categoryId = params['categoryId'];
+      if (categoryId) {
+        this.selectedCategory.set(Number(categoryId));
+      }
+    });
+
   }
 
   /**

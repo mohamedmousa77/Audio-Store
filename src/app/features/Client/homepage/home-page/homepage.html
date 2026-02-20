@@ -28,9 +28,12 @@
   <div class="homepage-section">
     <app-category-showcase [categories]="topCategories()" />
   </div>
-  <div class="homepage-section">
-    <app-newsletter-signup />
-  </div>
+  @if(!isAuthenticatied) {
+    <div class="homepage-section">
+      <app-newsletter-signup />
+    </div>
+  }
+  
   }
 </main>
 

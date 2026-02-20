@@ -45,32 +45,20 @@
                             [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" class="search-input" />
                     </div>
                     <div class="filter-controls">
-                        <select class="filter-select" [ngModel]="selectedSort()"
-                            (ngModelChange)="selectedSort.set($event)">
-                            <option value="recent">{{ translations().customersManagement.filters.sort.newest }}</option>
-                            <option value="oldest">{{ translations().customersManagement.filters.sort.oldest }}</option>
-                        </select>
+                        <app-custom-select [options]="sortOptions()"
+                            [placeholder]="translations().customersManagement.filters.sort.newest"
+                            [ngModel]="selectedSort()" (ngModelChange)="selectedSort.set($event)">
+                        </app-custom-select>
 
-                        <select class="filter-select" [ngModel]="selectedOrdersRange()"
-                            (ngModelChange)="selectedOrdersRange.set($event)">
-                            <option value="all">{{ translations().customersManagement.filters.ordersRange.all }}
-                            </option>
-                            <option value="10+">{{ translations().customersManagement.filters.ordersRange.high }}
-                            </option>
-                            <option value="1-10">{{ translations().customersManagement.filters.ordersRange.regular }}
-                            </option>
-                            <option value="none">{{ translations().customersManagement.filters.ordersRange.none }}
-                            </option>
-                        </select>
+                        <app-custom-select [options]="ordersRangeOptions()"
+                            [placeholder]="translations().customersManagement.filters.ordersRange.all"
+                            [ngModel]="selectedOrdersRange()" (ngModelChange)="selectedOrdersRange.set($event)">
+                        </app-custom-select>
 
-                        <select class="filter-select" [ngModel]="selectedStatus()"
-                            (ngModelChange)="selectedStatus.set($event)">
-                            <option value="">{{ translations().customersManagement.filters.status.all }}</option>
-                            <option value="Active">{{ translations().customersManagement.filters.status.active }}
-                            </option>
-                            <option value="Inactive">{{ translations().customersManagement.filters.status.inactive }}
-                            </option>
-                        </select>
+                        <app-custom-select [options]="customerStatusOptions()"
+                            [placeholder]="translations().customersManagement.filters.status.all"
+                            [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event)">
+                        </app-custom-select>
                     </div>
                 </div>
             </div>
@@ -125,16 +113,15 @@
             @if (selectedCustomer()) {
             <div class="detail-section" id="customer-detail-section">
                 <div class="detail-header">
-                    <h2 class="detail-title">{{ translations().customersManagement.details.title }} <span>{{
-                            selectedCustomer()!.firstName }} {{
-                            selectedCustomer()!.lastName }}</span></h2>
+                    <h2 class="detail-title">{{ translations().customersManagement.details.title }}
+                        <span>{{selectedCustomer()!.firstName }} {{ selectedCustomer()!.lastName }}</span>
+                    </h2>
                 </div>
 
                 <div class="detail-grid-container">
                     <div class="personal-card">
                         <div class="card-label-row">
-                            <span class="card-label">{{ translations().customersManagement.details.personalData
-                                }}</span>
+                            <span class="card-label">{{ translations().customersManagement.details.personalData}}</span>
                             <span class="badge-active">{{ selectedCustomer()!.status }}</span>
                         </div>
                         <div class="avatar-large" [style.background]="getColor(selectedCustomer()!.id)">

@@ -7,6 +7,7 @@ import { CustomerManagementService } from '../../../../core/services/customer/cu
 import { Customer } from '../../../../core/models/customer';
 import { OrderStatus } from '../../../../core/models/order';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { CustomSelectComponent, SelectOption } from '../../../../shared/components/custom-select/custom-select';
 /**
  * Customers Management Page (Admin)
  * Updated to use CustomerManagementService with Signals
@@ -22,7 +23,8 @@ import { TranslationService } from '../../../../core/services/translation/transl
     CommonModule,
     FormsModule,
     AdminSidebar,
-    AdminHeader
+    AdminHeader,
+    CustomSelectComponent
   ],
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
@@ -49,6 +51,34 @@ export class CustomersPage implements OnInit {
   selectedOrdersRange = signal<string>('all');
   selectedStatus = signal<string>('');
   showDetailSection = signal<boolean>(false);
+
+  // Dropdown options for custom-select
+  sortOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().customersManagement.filters.sort;
+    return [
+      { value: 'recent', label: t.newest },
+      { value: 'oldest', label: t.oldest }
+    ];
+  });
+
+  ordersRangeOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().customersManagement.filters.ordersRange;
+    return [
+      { value: 'all', label: t.all },
+      { value: '10+', label: t.high },
+      { value: '1-10', label: t.regular },
+      { value: 'none', label: t.none }
+    ];
+  });
+
+  customerStatusOptions = computed<SelectOption[]>(() => {
+    const t = this.translations().customersManagement.filters.status;
+    return [
+      { value: '', label: t.all },
+      { value: 'Active', label: t.active },
+      { value: 'Inactive', label: t.inactive }
+    ];
+  });
 
   // Computed filtered customers
   filteredCustomers = computed(() => {
@@ -129,6 +159,7 @@ export class CustomersPage implements OnInit {
    * Select customer to view details
    */
   async selectCustomer(customer: Customer): Promise<void> {
+    console.log(customer);
     await this.customerService.loadCustomerDetail(customer.id);
     await this.customerService.loadCustomerOrders(customer.id);
     this.showDetailSection.set(true);
@@ -145,13 +176,6 @@ export class CustomersPage implements OnInit {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
-  }
-
-  /**
-   * Apply filters (reactive via computed)
-   */
-  applyFilters(): void {
-    // Filters are automatically applied via computed signal
   }
 
   /**

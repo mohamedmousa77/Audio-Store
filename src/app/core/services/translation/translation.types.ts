@@ -31,6 +31,8 @@ export interface Translations {
         menu: string;
         home: string;
         support: string;
+        noProductFound: string;
+        searching: string; 
     };
     hero: {
         shopNow: string;
@@ -450,7 +452,14 @@ export interface Translations {
                     featuredSubtitle: string;
                 }
             }
+        },
+        emptyState: {
+            noProductsTitle: string;
+            noProductsSubtitle: string;
+            noResultsTitle: string; 
+            noResultsSubtitle: string;
         }
+
 
     };
     categoriesManagement: {

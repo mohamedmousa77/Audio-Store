@@ -54,7 +54,7 @@ export class ClientHeader implements OnInit {
   }
 
   onSearch(): void {
-    if (this.searchTerm.trim()) {
+    if (this.searchTerm.trim().toLowerCase()) {
       this.closeDropdown();
       this.productService.setSearch(this.searchTerm);
       this.router.navigate(['/category', 'all']);
