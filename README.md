@@ -1,76 +1,144 @@
-# Audio Store E-Commerce Web App.
+ 🎧 Audio Store - Frontend SPA
+
+> Modern **Angular 17** e-commerce frontend with **feature-based architecture**, **NgRx state management**, and **responsive design**.
+
+[![Angular](https://img.shields.io/badge/Angular-17-DD0031?logo=angular)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+**Live Demo**: [Coming Soon]  
+**Backend API**: [Audio Store Backend](https://github.com/mohamedmousa77/Audio_Store_E-commerce)
+
 ---
-```
 
-src/app 
+## 🎯 What is this?
 
-├── 📂 core/                         # (Singleton: caricati una volta sola all'avvio) 
-│   ├── 🛡️ guards/                   # Protezione rotte 
-│   │   ├── auth.guard.ts            # Protegge /user [cite: 19] 
-│   │   └── admin.guard.ts           # Protegge /admin [cite: 23] 
-│   ├── 🔌 interceptors/ 
-│   │   ├── jwt.interceptor.ts       # Appende il Token JWT a ogni richiesta [cite: 112] 
-│   │   └── error.interceptor.ts     # Gestione globale errori 
-│   └── ⚙️ services/ 
-│       └── local-storage.service.ts # Per salvare token e carrello guest [cite: 57] 
-│
-├── 📂 shared/                       # (Componenti Dumb riutilizzabili ovunque) 
-│   ├── 🧩 components/ 
-│   │   ├── product-card/            # [Input: Product] -> Mostra foto/prezzo 
-│   │   ├── badge/                   # [Input: Status] -> Colore stato ordine 
-│   │   ├── paginator/               # Navigazione liste 
-│   │   └── breadcrumb/              
-│   └── 🎨 ui/                       # Design System (Bottoni, Input, Alert) 
-│
-├── 📂 features/                     # (Bounded Contexts - Il cuore dell'app) 
-│ 
-│   ├── 🔐 auth/                     # Contesto: Gestione Identità [cite: 15] 
-│   │   ├── components/              # (Presentation) 
-│   │   │   ├── login-form/          # Smart Component 
-│   │   │   ├── register-form/       # Smart Component [cite: 16] 
-│   │   │   └── change-password/     # [cite: 22] 
-│   │   ├── state/                   # (State - NgRx/Signals) 
-│   │   │   ├── auth.store.ts        # Gestisce User, Token, Role 
-│   │   └── services/                # (Infrastructure) 
-│   │       └── auth-api.service.ts  # Chiamate: login, register, refresh-token 
-│   │ 
-│   ├── 🎧 catalog/                  # Contesto: Prodotti [cite: 24] 
-│   │   ├── components/ 
-│   │   │   ├── product-list/        # Griglia prodotti con filtri [cite: 25] 
-│   │   │   ├── product-detail/      # Pagina dettaglio completa [cite: 27] 
-│   │   │   └── related-products/    # Carosello correlati [cite: 33] 
-│   │   ├── state/ 
-│   │   │   ├── catalog.store.ts     # Filtri attivi, lista prodotti caricata 
-│   │   └── services/ 
-│   │       └── catalog-api.service.ts # GET products, GET categories.
-│   ├── 🛒 cart/                     # Contesto: Carrello [cite: 49] 
-│   │   ├── components/ 
-│   │   │   ├── cart-page/           # Tabella riepilogo 
-│   │   │   └── cart-widget/         # Icona header con contatore 
-│   │   ├── state/ 
-│   │   │   ├── cart.store.ts        # Calcola Totale, IVA in tempo reale [cite: 56] 
-│   │   └── services/ 
-│   │       └── cart.service.ts      # Logica sync Guest/User + localStorage 
-│   ├── 💳 checkout/                 # Contesto: Ordine e Spedizione [cite: 60] 
-│   │   ├── components/ 
-│   │   │   ├── shipping-step/       # Form Indirizzo [cite: 63] 
-│   │   │   ├── summary-step/        # Riepilogo finale [cite: 64] 
-│   │   │   └── confirmation-page/   # "Grazie per l'ordine" [cite: 82] 
-│   │   ├── state/ 
-│   │   │   ├── checkout.store.ts    # Dati temporanei del wizard 
-│   │   └── services/ 
-│   │       └── order-api.service.ts # POST createOrder  
-│   ├── 📦 orders/                   # Contesto: Storico Cliente [cite: 140] 
-│   │   ├── components/ 
-│   │   │   └── order-history/       # Tabella ordini personali 
-│   │   └── services/ 
-│   │       └── user-orders.service.ts 
-│   └── 👔 admin/                    # Contesto: Back-office [cite: 34, 91] 
-│       ├── dashboard/               # Statistiche (Grafici vendite) [cite: 92] 
-│       ├── products-manage/         # CRUD Prodotti (Tabella + Edit Form) [cite: 35] 
-│       ├── categories-manage/       # CRUD Categorie [cite: 44] 
-│       ├── orders-manage/           # Cambio stato ordini [cite: 88] 
-│       └── services/ 
-│           └── admin-api.service.ts # API privilegiate 
-└── 📄 app.routes.ts                 # Lazy Loading di tutte le feature sopra 
+A production-ready Angular SPA showcasing **modern frontend architecture** and best practices for enterprise applications. Features lazy loading, state management, and component-driven design.
+
+**Perfect for**: Learning Angular patterns, interview preparation, frontend architecture reference
+
+---
+
+## ✨ Key Features
+
+- ⚡ **Angular 17** with Standalone Components & Signals
+- 🏗️ **Feature-based architecture** (8 modules, lazy-loaded)
+- 🔄 **NgRx** for global state management
+- 🎨 **Smart/Dumb component pattern** (30+ reusable components)
+- 🔐 **Authentication guards** & JWT interceptors
+- 💳 **Multi-step checkout wizard** (Shipping → Payment → Confirmation)
+- 📱 **Fully responsive** (mobile-first design)
+- 🛒 **Real-time shopping cart** with calculations
+
+---
+
+## 🛠️ Tech Stack
+
+**Framework**: Angular 17, TypeScript 5  
+**State Management**: NgRx 17  
+**Styling**: Tailwind CSS, Bootstrap 5, SCSS  
+**UI Components**: Angular Material  
+**Forms**: Reactive Forms with custom validators  
+**HTTP**: Interceptors for JWT, loading, errors
+
+---
+
+## 📁 Project Structure
+
 ```
+src/app/
+│
+├── features/                    # Lazy-loaded feature modules
+│   ├── auth/                    # Login, Register, Guards
+│   ├── catalog/                 # Products, Categories, Filters
+│   ├── cart/                    # Shopping Cart
+│   ├── checkout/                # Multi-step Checkout
+│   ├── orders/                  # Order History
+│   └── admin/                   # Admin Dashboard
+│
+├── shared/                      # Reusable components & UI
+│   ├── components/              # Product Card, Paginator, etc.
+│   └── ui/                      # Button, Input, Alert
+│
+└── core/                        # Singleton services
+    ├── guards/                  # Auth Guard, Admin Guard
+    ├── interceptors/            # JWT, Error, Loading
+    └── services/                # LocalStorage, Notification
+```
+Architecture: Feature-based with lazy loading for optimal bundle size.
+
+## 🔐 Authentication Flow
+User logs in → JWT token stored in localStorage
+
+JWT Interceptor adds token to all API requests
+
+Auth Guard protects authenticated routes
+
+Admin Guard restricts admin-only pages
+
+Token refresh on expiry (silent renewal)
+
+## 🛒 State Management (NgRx)
+**Stores:**
+
+- Auth Store: User, token, isAuthenticated
+
+- Catalog Store: Products, filters, pagination, loading
+
+- Cart Store: Items, totals, quantity
+
+- Checkout Store: Shipping info, payment data
+
+**Why NgRx?**
+Predictable state, time-travel debugging, easier testing for complex state logic.
+
+## 📦 Features Overview
+**Customer Features**
+
+✅ User authentication & registration
+
+✅ Product browsing with filters, search, sort
+
+✅ Shopping cart with real-time calculations
+
+✅ Multi-step checkout (shipping, payment, confirmation)
+
+✅ Order history & tracking
+
+✅ User profile management
+
+  **Admin Features**
+
+✅ Sales dashboard with statistics
+
+✅ Product CRUD operations
+
+✅ Category management
+
+✅ Order status updates
+
+✅ Customer list
+
+## 📝 License
+MIT © [Mohamed Mousa](https://github.com/mohamedmousa77)
+
+
+## 📞 Contact
+
+**Mohamed Mousa** - Senior Full-Stack .NET Developer
+
+📧 [mohamed.mousa.contact@gmail.com](mohamed.mousa.contact@gmail.com)
+
+💼 [LinkedIn](https://www.linkedin.com/in/mohamedmousa-/)
+
+🌐 [Portfolio](mohamedmousa.it)
+
+💻 [GitHub](https://github.com/mohamedmousa77)
+
+## 🌟 Related Projects
+
+**Backend API:** [Audio Store Backend (ASP.NET Core 8)](https://github.com/mohamedmousa77/Audio_Store_E-commerce)
+
+    ⭐ If you find this project helpful for learning, please star the repo!
+
+        Built with ❤️ using Clean Architecture & Domain-Driven Design
