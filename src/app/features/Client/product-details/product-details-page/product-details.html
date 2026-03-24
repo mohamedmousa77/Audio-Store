@@ -64,11 +64,12 @@
         <!-- Price -->
         <div class="product-price-section">
           <span class="current-price">${{ product.price.toFixed(2) }}</span>
-          @if (product.price < 400) { <span class="original-price">
+          <!-- @if (product.price < 400) { 
+            <span class="original-price">
             ${{ (product.price * 1.15).toFixed(2) }}
             </span>
             <span class="discount">{{ translations().product.save }} 13%</span>
-            }
+            } -->
         </div>
 
         <!-- Description -->
