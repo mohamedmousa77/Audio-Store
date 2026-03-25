@@ -9,6 +9,8 @@ import { ClientHeader } from "../../layout/client-header/client-header";
 import { AuthServices } from '../../../../core/services/auth/auth-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
 import { ProfileApiService } from '../../../../core/services/profile/profile-api.service';
+import { PromoCodeService } from '../../../../core/services/promo-code/promo-code.service';
+import { PromoCodeValidationResult } from '../../../../core/models/promo-code';
 
 /**
  * Checkout Page Component (OrderPage)
@@ -34,6 +36,8 @@ export class OrderPage implements OnInit {
   private profileApi = inject(ProfileApiService);
   private router = inject(Router);
   private translationService = inject(TranslationService);
+    private promoCodeService = inject(PromoCodeService);
+
 
   // Use Signals from CartServices
   cart = this.cartService.cart;
@@ -54,6 +58,13 @@ export class OrderPage implements OnInit {
   currentStep: 'shipping' | 'payment' | 'review' = 'shipping';
   shippingCost = 5.99;
   taxRate = 0.10;
+
+  // promo code state:
+  promoCode            = '';
+  promoResult          = signal<PromoCodeValidationResult | null>(null);
+  promoLoading         = signal(false);
+  promoError           = signal('');
+  appliedPromoCodeId   = signal<number | null>(null);
 
   // Loading/error states
   isProcessing = signal<boolean>(false);
@@ -124,8 +135,60 @@ export class OrderPage implements OnInit {
    */
   goBackToPayment(): void {
     this.currentStep = 'payment';
+  }  
+
+
+  // computed final total (overrides getTotalAmount when promo applied):
+  getFinalTotal(): number {
+    const result = this.promoResult();
+    if (result?.isValid) {
+      // finalAmount from BE = subtotal - discount; add shipping + tax on top
+      return result.finalAmount + this.shippingCost + this.getTaxAmount();
+    }
+    return this.getTotalAmount();
   }
 
+  getDiscountAmount(): number {
+    return this.promoResult()?.discountAmount ?? 0;
+  }
+
+  // ADD validate method:
+  async applyPromoCode(): Promise<void> {
+    const code = this.promoCode.trim().toUpperCase();
+    if (!code) {
+      this.promoError.set('Please enter a promo code.');
+      return;
+    }
+
+    this.promoLoading.set(true);
+    this.promoError.set('');
+    this.promoResult.set(null);
+
+    try {
+      const subtotal = this.totalPrice();  // cart subtotal without shipping/tax
+      const result = await this.promoCodeService.validate(code, subtotal);
+
+      if (result.isValid) {
+        this.promoResult.set(result);
+        this.appliedPromoCodeId.set(result.promoCodeId ?? null);
+        this.promoError.set('');
+      } else {
+        this.promoError.set(result.message || 'Invalid promo code.');
+        this.promoResult.set(null);
+      }
+    } catch (err: any) {
+      this.promoError.set('Could not validate promo code. Please try again.');
+    } finally {
+      this.promoLoading.set(false);
+    }
+  }
+
+  removePromoCode(): void {
+    this.promoCode = '';
+    this.promoResult.set(null);
+    this.promoError.set('');
+    this.appliedPromoCodeId.set(null);
+  }
   /**
    * Place order
    * Creates order via OrderServices, clears cart, and navigates to confirmation
@@ -167,7 +230,10 @@ export class OrderPage implements OnInit {
         CustomerFirstName: formData.firstName,
         CustomerLastName: formData.lastName,
         CustomerEmail: formData.email,
-        CustomerPhone: formData.phone
+        CustomerPhone: formData.phone,
+
+        // Pass promoCodeId if applied
+        PromoCodeId: this.appliedPromoCodeId()
       };
 
       console.log('📦 Creating order:', orderRequest);

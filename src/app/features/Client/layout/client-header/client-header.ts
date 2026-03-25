@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
 import { Product } from '../../../../core/models/product';
+import { NotificationService } from '../../../../core/services/notification/notification.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-client-header',
@@ -20,13 +22,17 @@ export class ClientHeader implements OnInit {
   private authService = inject(AuthServices);
   private router = inject(Router);
   private translationService = inject(TranslationService);
-
+  private notificationService = inject(NotificationService);
   
   cartItemCount = this.cartService.totalItems;
 
   // Translation signals
   currentLanguage = this.translationService.currentLanguage;
   translations = this.translationService.translations;
+  unreadCount     = this.notificationService.unreadCount;
+  hasUnread       = this.notificationService.hasUnread;
+  showNotifPanel  = false;
+  notifications   = this.notificationService.notifications;
 
   searchTerm = '';
   mobileMenuOpen = false;
@@ -37,13 +43,42 @@ export class ClientHeader implements OnInit {
   showDropdown = false;
   isSearching = false;
 
+  private pollSub?: Subscription;
+
+
   ngOnInit(): void {
     // Initialize authentication state
     this.isLoggedIn = this.authService.isAuthenticated();
     this.authService.isAuthenticated$.subscribe(isAuth => {
       this.isLoggedIn = isAuth;
     });
+    if (this.authService.isAuthenticated()) {
+      this.notificationService.loadUnreadCount();
+
+      // Poll unread count every 60 seconds while user is logged in
+      this.pollSub = interval(60_000).subscribe(() => {
+          if (this.authService.isAuthenticated()) {
+            this.notificationService.loadUnreadCount();
+          }
+        });
+      }
   }
+
+  toggleNotifPanel(): void {
+    this.showNotifPanel = !this.showNotifPanel;
+    if (this.showNotifPanel) {
+      this.notificationService.loadNotifications();
+    }
+  }
+
+  markAllRead(): void {
+    this.notificationService.markAllAsRead();
+  }
+
+  markRead(id: number): void {
+    this.notificationService.markAsRead(id);
+  }
+
 
   goToCart(): void {
     this.router.navigate(['/client/cart']);

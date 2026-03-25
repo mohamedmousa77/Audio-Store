@@ -94,6 +94,9 @@ export interface CreateOrderRequest {
 
   // Optional notes
   Notes?: string;
+
+  // Optional promo code ID (if applied)
+  PromoCodeId?: number | null;
 }
 
 /**

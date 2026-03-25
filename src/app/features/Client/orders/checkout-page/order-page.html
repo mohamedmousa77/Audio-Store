@@ -150,7 +150,55 @@
         </div>
       </div>
 
+      <div class="promo-section">
+        <h4 class="promo-title">🎁 Promo Code</h4>
+
+        <!-- Input row — hidden once a valid code is applied -->
+        @if (!promoResult()?.isValid) {
+          <div class="promo-input-row">
+            <input
+              type="text"
+              [(ngModel)]="promoCode"
+              placeholder="Enter promo code"
+              class="promo-input"
+              [disabled]="promoLoading()"
+              (keyup.enter)="applyPromoCode()"
+            />
+            <button
+              class="promo-apply-btn"
+              (click)="applyPromoCode()"
+              [disabled]="promoLoading() || !promoCode.trim()"
+            >
+              @if (promoLoading()) { <span class="btn-spinner"></span> }
+              @else { Apply }
+            </button>
+          </div>
+
+          @if (promoError()) {
+            <p class="promo-error">❌ {{ promoError() }}</p>
+          }
+        }
+
+        <!-- Applied badge — shown when a valid code is active -->
+        @if (promoResult()?.isValid) {
+          <div class="promo-applied-badge">
+            <span>✅ {{ promoCode.toUpperCase() }} applied</span>
+            <span class="promo-saved">
+              You save ${{ getDiscountAmount() | number:'1.2-2' }}
+            </span>
+            <button class="promo-remove-btn" (click)="removePromoCode()">Remove</button>
+          </div>
+        }
+      </div>
+
+
       <div class="total-section">
+        @if (promoResult()?.isValid) {
+          <div class="total-row discount-row">
+            <span>Discount</span>
+            <span class="discount-value">-${{ getDiscountAmount() | number:'1.2-2' }}</span>
+          </div>
+        }
         <div class="total-row">
           <span class="total-label">{{ translations().checkout.orderTotal }}</span>
           <div class="total-amount-group">

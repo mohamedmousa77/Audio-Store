@@ -1,0 +1,59 @@
+<app-client-header />
+
+<div class="notifications-container">
+  <div class="notifications-header">
+    <h1>My Notifications</h1>
+    @if (hasUnread()) {
+      <button class="mark-all-btn" (click)="markAllAsRead()">
+        Mark all as read ({{ unreadCount() }})
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Loading notifications...</p>
+    </div>
+  }
+
+  @if (!loading() && notifications().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">🔔</span>
+      <h3>No notifications yet</h3>
+      <p>We'll notify you about your orders and special offers.</p>
+      <a routerLink="/client/home" class="btn-primary">Continue Shopping</a>
+    </div>
+  }
+
+  @if (!loading() && notifications().length > 0) {
+    <div class="notifications-list">
+      @for (notif of notifications(); track notif.id) {
+        <div
+          class="notification-card"
+          [class.unread]="!notif.isRead"
+          (click)="markAsRead(notif.id)"
+        >
+          <div class="notif-icon">{{ getNotifIcon(notif.type) }}</div>
+          <div class="notif-content">
+            <div class="notif-title">{{ notif.title }}</div>
+            <div class="notif-message">{{ notif.message }}</div>
+            <div class="notif-meta">
+              <span class="notif-type-badge type-{{ notif.type | lowercase }}">
+                {{ notif.type }}
+              </span>
+              <span class="notif-time">
+                {{ notif.createdAt | date:'MMM d, y · h:mm a' }}
+              </span>
+            </div>
+          </div>
+          @if (!notif.isRead) {
+            <div class="unread-dot"></div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<app-client-footer />
