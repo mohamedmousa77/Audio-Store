@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NotificationService } from '../../../../../core/services/notification/notification.service';
+import { NotificationService } from '../../../../../core/services/notification/notification-service';
 import { ClientHeader } from '../../client-header/client-header';
 import { ClientFooter } from '../../client-footer/client-footer';
 

@@ -76,7 +76,7 @@ export const routes: Routes = [
       {
         path: 'promo-codes',
         loadComponent: () =>
-          import('./features/admin/promo-codes/promo-codes-page/promo-codes-page.ts')
+          import('./features/admin/promo-codes/promo-codes-page/promo-codes-page.ts/promo-codes-page')
             .then(m => m.PromoCodesPage)
       },
       {

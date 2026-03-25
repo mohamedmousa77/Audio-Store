@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CartServices } from '../../../../core/services/cart/cart-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
 import { Product } from '../../../../core/models/product';
-import { NotificationService } from '../../../../core/services/notification/notification.service';
+import { NotificationService } from '../../../../core/services/notification/notification-service';
 import { interval, Subscription } from 'rxjs';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { PromoCodeService } from '../../../../../core/services/promo-code/promo-code.service';
+import { PromoCodeService } from '../../../../../core/services/promo-code/promo-code-service';
 import { PromoCodeResponse, CreatePromoCodeRequest} from '../../../../../core/models/promo-code';
 
 @Component({

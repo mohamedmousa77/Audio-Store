@@ -9,7 +9,7 @@ import { ClientHeader } from "../../layout/client-header/client-header";
 import { AuthServices } from '../../../../core/services/auth/auth-services';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
 import { ProfileApiService } from '../../../../core/services/profile/profile-api.service';
-import { PromoCodeService } from '../../../../core/services/promo-code/promo-code.service';
+import { PromoCodeService } from '../../../../core/services/promo-code/promo-code-service';
 import { PromoCodeValidationResult } from '../../../../core/models/promo-code';
 
 /**
