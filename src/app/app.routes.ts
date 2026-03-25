@@ -74,6 +74,12 @@ export const routes: Routes = [
             .then(m => m.CategoriesPage)
       },
       {
+        path: 'promo-codes',
+        loadComponent: () =>
+          import('./features/admin/promo-codes/promo-codes-page/promo-codes-page.ts')
+            .then(m => m.PromoCodesPage)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
@@ -92,6 +98,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/Client/homepage/home-page/homepage')
             .then(m => m.Homepage)
+      },
+      {
+        path: 'notifications',
+        canActivate: [authGuard],          // requires login
+        loadComponent: () =>
+          import('./features/Client/layout/notifications/notifications-page/notifications-page')
+            .then(m => m.NotificationsPage)
       },
       {
         path: 'category/:id',

@@ -1,0 +1,153 @@
+<div class="promo-page">
+
+  <div class="page-header">
+    <h1>Promo Codes</h1>
+    <button class="btn-primary" (click)="showForm.set(!showForm())">
+      {{ showForm() ? '✕ Cancel' : '+ New Promo Code' }}
+    </button>
+  </div>
+
+  <!-- Feedback Messages -->
+  @if (successMsg()) {
+    <div class="alert success">✅ {{ successMsg() }}
+      <button (click)="clearMessages()">✕</button>
+    </div>
+  }
+  @if (errorMsg()) {
+    <div class="alert error">❌ {{ errorMsg() }}
+      <button (click)="clearMessages()">✕</button>
+    </div>
+  }
+
+  <!-- Create Form -->
+  @if (showForm()) {
+    <div class="form-card">
+      <h2>Create New Promo Code</h2>
+      <form [formGroup]="createForm" (ngSubmit)="create()" class="form-grid">
+
+        <div class="form-group">
+          <label>Code *</label>
+          <input formControlName="code" placeholder="e.g. SUMMER25"
+                 style="text-transform:uppercase" />
+          @if (createForm.get('code')?.invalid && createForm.get('code')?.touched) {
+            <span class="field-error">Code is required (min 3 chars)</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Discount Type *</label>
+          <select formControlName="discountType">
+            <option value="Percentage">Percentage (%)</option>
+            <option value="FixedAmount">Fixed Amount ($)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Discount Value *</label>
+          <input type="number" formControlName="discountValue"
+                 placeholder="e.g. 20" min="1" />
+          @if (createForm.get('discountValue')?.invalid && createForm.get('discountValue')?.touched) {
+            <span class="field-error">Value must be at least 1</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Min Order Amount</label>
+          <input type="number" formControlName="minOrderAmount"
+                 placeholder="e.g. 50 (optional)" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="datetime-local" formControlName="expiresAt" />
+        </div>
+
+        <div class="form-group">
+          <label>Max Usages</label>
+          <input type="number" formControlName="maxUsages"
+                 placeholder="Leave empty for unlimited" min="1" />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary"
+                  [disabled]="createForm.invalid || submitting()">
+            @if (submitting()) { <span class="btn-spinner"></span> Creating... }
+            @else { Create Promo Code }
+          </button>
+        </div>
+
+      </form>
+    </div>
+  }
+
+  <!-- Promo Codes Table -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading promo codes...</p>
+    </div>
+  }
+
+  @if (!loading() && promoCodes().length === 0) {
+    <div class="empty-state">
+      <p>No promo codes found. Create your first one above.</p>
+    </div>
+  }
+
+  @if (!loading() && promoCodes().length > 0) {
+    <div class="table-wrapper">
+      <table class="promo-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Min Order</th>
+            <th>Used / Assigned</th>
+            <th>Expires</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of promoCodes(); track p.id) {
+            <tr [class.inactive]="!p.isActive">
+              <td><strong>{{ p.code }}</strong></td>
+              <td>
+                <span class="badge" [class.pct]="p.discountType === 'Percentage'">
+                  {{ p.discountType === 'Percentage' ? 'Percentage' : 'Fixed' }}
+                </span>
+              </td>
+              <td>
+                {{ p.discountType === 'Percentage'
+                   ? p.discountValue + '%'
+                   : '$' + p.discountValue }}
+              </td>
+              <td>{{ p.minOrderAmount ? '$' + p.minOrderAmount : '—' }}</td>
+              <td>{{ p.totalUsed }} / {{ p.totalAssigned || '∞' }}</td>
+              <td>{{ p.expiresAt ? (p.expiresAt | date:'mediumDate') : 'No expiry' }}</td>
+              <td>
+                <span class="status-badge"
+                      [class.active]="p.isActive"
+                      [class.inactive]="!p.isActive">
+                  {{ p.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                @if (p.isActive) {
+                  <button class="btn-danger-sm"
+                          (click)="deactivate(p.id, p.code)">
+                    Deactivate
+                  </button>
+                } @else {
+                  <span class="text-muted">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

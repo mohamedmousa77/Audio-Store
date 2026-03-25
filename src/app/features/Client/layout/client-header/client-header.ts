@@ -64,6 +64,10 @@ export class ClientHeader implements OnInit {
       }
   }
 
+  ngOnDestroy(): void {
+    this.pollSub?.unsubscribe();
+  }
+
   toggleNotifPanel(): void {
     this.showNotifPanel = !this.showNotifPanel;
     if (this.showNotifPanel) {
