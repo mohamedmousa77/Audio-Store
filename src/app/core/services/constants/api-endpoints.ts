@@ -14,6 +14,13 @@ export const API_ENDPOINTS = {
     logout: 'auth/logout'
   },
 
+  notifications: {
+    base: 'notifications',
+    unreadCount: 'notifications/unread-count',
+    markAsRead: (id: number) => `notifications/${id}/read`,
+    markAllAsRead: 'notifications/read-all'
+
+  },
   // Products endpoints
   products: {
     base: 'products',

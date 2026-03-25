@@ -36,7 +36,7 @@ export class OrderPage implements OnInit {
   private profileApi = inject(ProfileApiService);
   private router = inject(Router);
   private translationService = inject(TranslationService);
-    private promoCodeService = inject(PromoCodeService);
+  private promoCodeService = inject(PromoCodeService);
 
 
   // Use Signals from CartServices
@@ -60,11 +60,11 @@ export class OrderPage implements OnInit {
   taxRate = 0.10;
 
   // promo code state:
-  promoCode            = '';
-  promoResult          = signal<PromoCodeValidationResult | null>(null);
-  promoLoading         = signal(false);
-  promoError           = signal('');
-  appliedPromoCodeId   = signal<number | null>(null);
+  promoCode = '';
+  promoResult = signal<PromoCodeValidationResult | null>(null);
+  promoLoading = signal(false);
+  promoError = signal('');
+  appliedPromoCodeId = signal<number | null>(null);
 
   // Loading/error states
   isProcessing = signal<boolean>(false);
@@ -135,7 +135,7 @@ export class OrderPage implements OnInit {
    */
   goBackToPayment(): void {
     this.currentStep = 'payment';
-  }  
+  }
 
 
   // computed final total (overrides getTotalAmount when promo applied):
@@ -152,7 +152,7 @@ export class OrderPage implements OnInit {
     return this.promoResult()?.discountAmount ?? 0;
   }
 
-  // ADD validate method:
+  // validate method:
   async applyPromoCode(): Promise<void> {
     const code = this.promoCode.trim().toUpperCase();
     if (!code) {
@@ -167,7 +167,11 @@ export class OrderPage implements OnInit {
     try {
       const subtotal = this.totalPrice();  // cart subtotal without shipping/tax
       const result = await this.promoCodeService.validate(code, subtotal);
-
+      if (!result) {
+        this.promoError.set('Errore di validazione del codice promozionale.');
+        this.promoResult.set(null);
+        return;
+      }
       if (result.isValid) {
         this.promoResult.set(result);
         this.appliedPromoCodeId.set(result.promoCodeId ?? null);
