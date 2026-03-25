@@ -6,7 +6,7 @@ export interface Notification {
   type: NotificationType;
   isRead: boolean;
   createdAt: string;
-  readAt?: string;
+  readAt?: string | null;
 }
 
 export type NotificationType =
