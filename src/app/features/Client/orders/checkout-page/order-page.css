@@ -260,11 +260,11 @@
 
 /* ─── Promo Code Section ──────────────────────────────────────── */
 .promo-section {
-  border: 1px dashed #c9c5ff;
+  border: 2px dashed var(--primary-orange);
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1.25rem;
-  background: #faf9ff;
+  background: #fffdfa;
 }
 
 .promo-title {
@@ -290,12 +290,12 @@
   outline: none;
   transition: border-color 0.2s;
 }
-.promo-input:focus { border-color: #6c63ff; }
+.promo-input:focus { border-color: var(--primary-orange); }
 .promo-input:disabled { background: #f5f5f5; color: #aaa; }
 
 .promo-apply-btn {
   padding: 0.6rem 1.25rem;
-  background: #6c63ff;
+  background: linear-gradient(135deg, #f49d25 0%, #d68310 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -305,10 +305,13 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  transition: background 0.2s;
+  transition: all 0.2s;
   white-space: nowrap;
 }
-.promo-apply-btn:hover:not(:disabled) { background: #574fd6; }
+.promo-apply-btn:hover:not(:disabled) { 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 157, 37, 0.3);
+}
 .promo-apply-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* Inline spinner inside button */

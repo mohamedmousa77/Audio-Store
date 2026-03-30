@@ -333,6 +333,7 @@ export const TRANSLATIONS_IT: Translations = {
         categories: 'Categorie',
         orders: 'Ordini',
         customers: 'Clienti',
+        promoCodes: 'Codici Promozionali',
         signOut: 'Esci',
         settings: 'Impostazioni',
         addNew: 'Aggiungi Nuovo',
@@ -661,6 +662,10 @@ export const TRANSLATIONS_IT: Translations = {
             save: 'Salva Categoria',
             saving: 'Salvataggio in corso...',
         },
+    },
+    PromoCodesManagement: {
+        headerTitle: 'Codici Promozionali',
+        headerSubtitle: 'Crea e monitora la fidabilita` dei tuoi clienti'
     },
     footer: {
         aboutUs: 'Chi Siamo',

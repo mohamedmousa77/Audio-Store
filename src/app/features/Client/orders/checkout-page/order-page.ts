@@ -110,17 +110,29 @@ export class OrderPage implements OnInit {
   }
 
   /**
-   * Calculate tax amount
+   * Calculate subtotal (discounted if promo applies)
    */
-  getTaxAmount(): number {
-    return this.totalPrice() * this.taxRate;
+  getDiscountedSubtotal(): number {
+    const result = this.promoResult();
+    if (result?.isValid) {
+      return result.finalAmount;
+    }
+    return this.totalPrice();
   }
 
   /**
-   * Calculate total amount (subtotal + shipping + tax)
+   * Calculate tax amount
+   */
+  getTaxAmount(): number {
+    return this.getDiscountedSubtotal() * this.taxRate;
+  }
+
+  /**
+   * Calculate base total amount (no promo code)
    */
   getTotalAmount(): number {
-    return this.totalPrice() + this.shippingCost + this.getTaxAmount();
+    const originalTax = this.totalPrice() * this.taxRate;
+    return this.totalPrice() + this.shippingCost + originalTax;
   }
 
   /**
@@ -137,15 +149,9 @@ export class OrderPage implements OnInit {
     this.currentStep = 'payment';
   }
 
-
-  // computed final total (overrides getTotalAmount when promo applied):
+  // computed final total (includes active promo code):
   getFinalTotal(): number {
-    const result = this.promoResult();
-    if (result?.isValid) {
-      // finalAmount from BE = subtotal - discount; add shipping + tax on top
-      return result.finalAmount + this.shippingCost + this.getTaxAmount();
-    }
-    return this.getTotalAmount();
+    return this.getDiscountedSubtotal() + this.shippingCost + this.getTaxAmount();
   }
 
   getDiscountAmount(): number {

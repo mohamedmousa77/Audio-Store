@@ -335,6 +335,7 @@ export const TRANSLATIONS_EN: Translations = {
         categories: 'Categories',
         orders: 'Orders',
         customers: 'Customers',
+        promoCodes: 'Promo Codes',
         signOut: 'Sign Out',
         settings: 'Settings',
         addNew: 'Add New',
@@ -664,6 +665,10 @@ export const TRANSLATIONS_EN: Translations = {
             save: 'Save Category',
             saving: 'Saving...',
         },
+    },
+    PromoCodesManagement: {
+        headerTitle: 'Promo Codes',
+        headerSubtitle: 'Create and monitor your customers loyalty'
     },
     footer: {
         aboutUs: 'About Us',

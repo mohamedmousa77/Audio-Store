@@ -1,26 +1,49 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { PromoCodeService } from '../../../../core/services/promo-code/promo-code-service';
 import { PromoCodeResponse, CreatePromoCodeRequest} from '../../../../core/models/promo-code';
+import { CustomerManagementService } from '../../../../core/services/customer/customer-management-services';
+import { Customer } from '../../../../core/models/customer';
+import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
+import { AdminHeader } from '../../layout/admin-header/header';
+import { ErrorDialogService } from '../../../../core/services/error/error-dialog.service';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-promo-codes-page',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, AdminSidebar, AdminHeader, ConfirmDialogComponent],
   templateUrl: './promo-codes-page.html',
   styleUrl: './promo-codes-page.css',
 })
-export class PromoCodesPage {
+export class PromoCodesPage implements OnInit, OnDestroy {
   private promoCodeService = inject(PromoCodeService);
   private fb               = inject(FormBuilder);
+  private errorDialog      = inject(ErrorDialogService);
+  customerService  = inject(CustomerManagementService);
 
   // ── State ─────────────────────────────────────────────────────────────────
   promoCodes   = signal<PromoCodeResponse[]>([]);
   loading      = signal(false);
   submitting   = signal(false);
-  errorMsg     = signal('');
-  successMsg   = signal('');
   showForm     = signal(false);
+  searchTerm   = signal('');
+
+  // Search debounce
+  private searchSubject = new Subject<string>();
+  private searchSub?: Subscription;
+
+  // Dialog State
+  showConfirmDialog = signal(false);
+  confirmDialogData = signal<ConfirmDialogData>({ title: '', message: '' });
+  confirmDialogAction = signal<(() => void) | null>(null);
+
+  // ── Assign Form ───────────────────────────────────────────────────────────
+  showAssignForm   = signal(false);
+  assignPromo      = signal<PromoCodeResponse | null>(null);
+  assignUserId     = signal<number | null>(null);
+  assignSubmitting = signal(false);
 
   // ── Create Form ───────────────────────────────────────────────────────────
   createForm = this.fb.group({
@@ -33,16 +56,36 @@ export class PromoCodesPage {
   });
 
   ngOnInit(): void {
+    this.customerService.loadAllCustomers({ pageSize: 1000 });
     this.loadAll();
+    this.searchSub = this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.searchTerm.set(term);
+      this.loadAll(term || undefined);
+    });
   }
 
-  async loadAll(): Promise<void> {
+  ngOnDestroy(): void {
+    this.searchSub?.unsubscribe();
+  }
+
+  onSearch(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value);
+  }
+
+  async loadAll(search?: string): Promise<void> {
     this.loading.set(true);
     try {
-      const data = await this.promoCodeService.promoCodes();
-      this.promoCodes.set(data);
+      await this.promoCodeService.loadAllPromoCodes(search);
+      this.promoCodes.set(this.promoCodeService.promoCodes());
     } catch {
-      this.errorMsg.set('Failed to load promo codes.');
+      this.errorDialog.showError({
+        title: 'Errore',
+        message: 'Impossibile caricare i codici promozionali.'
+      });
     } finally {
       this.loading.set(false);
     }
@@ -52,8 +95,6 @@ export class PromoCodesPage {
     if (this.createForm.invalid) return;
 
     this.submitting.set(true);
-    this.errorMsg.set('');
-    this.successMsg.set('');
 
     try {
       const val = this.createForm.value;
@@ -65,32 +106,185 @@ export class PromoCodesPage {
         expiresAt:      val.expiresAt ?? undefined,
         maxUsages:      val.maxUsages ?? undefined
       };
-      await this.promoCodeService.create(dto);
-      this.successMsg.set(`Promo code "${dto.code}" created successfully.`);
-      this.createForm.reset({ discountType: 'Percentage' });
-      this.showForm.set(false);
-      await this.loadAll();
+      
+      const created = await this.promoCodeService.create(dto);
+      
+      if (created) {
+         this.confirmDialogData.set({
+             title: 'Promo Code Creato',
+             message: `Il codice promozionale "${dto.code}" è stato creato con successo.`,
+             confirmText: 'OK'
+         });
+         this.showConfirmDialog.set(true);
+         
+         this.createForm.reset({ discountType: 'Percentage' });
+         this.showForm.set(false);
+         await this.loadAll();
+      } else {
+         const errMsg = this.promoCodeService.errorSignal() || 'Impossibile creare il codice promozionale.';
+         this.errorDialog.showError({
+            title: 'Creazione Fallita',
+            message: errMsg
+         });
+      }
     } catch (err: any) {
-      this.errorMsg.set(err?.error?.error ?? 'Failed to create promo code.');
+      this.errorDialog.showError({
+         title: 'Creazione Fallita',
+         message: err?.error?.error || 'Impossibile creare il codice promozionale.'
+      });
     } finally {
       this.submitting.set(false);
     }
   }
 
-  async deactivate(id: number, code: string): Promise<void> {
-    if (!confirm(`Deactivate promo code "${code}"?`)) return;
-    try {
-      await this.promoCodeService.deactivate(id);
-      this.successMsg.set(`"${code}" deactivated.`);
-      await this.loadAll();
-    } catch {
-      this.errorMsg.set('Failed to deactivate.');
+  deactivate(id: number, code: string): void {
+    this.confirmDialogData.set({
+       title: 'Disattiva Promo Code',
+       message: `Vuoi disattivare il codice promozionale "${code}"?`,
+       confirmText: 'Disattiva',
+       cancelText: 'Annulla',
+       isDangerous: true
+    });
+    
+    this.confirmDialogAction.set(async () => {
+      try {
+        const ok = await this.promoCodeService.deactivate(id);
+        if (ok) {
+           this.confirmDialogData.set({
+               title: 'Promo Code Disattivato',
+               message: `Il codice promozionale "${code}" è stato disattivato.`,
+               confirmText: 'OK',
+               isDangerous: false,
+               cancelText: undefined
+           });
+           this.confirmDialogAction.set(null); // Just close on next OK
+           this.showConfirmDialog.set(true);
+           await this.loadAll();
+        } else {
+           const errMsg = this.promoCodeService.errorSignal() || 'Impossibile disattivare il codice promozionale.';
+           this.errorDialog.showError({
+              title: 'Disattivazione Fallita',
+              message: errMsg
+           });
+        }
+      } catch {
+        this.errorDialog.showError({
+           title: 'Errore',
+           message: 'Impossibile disattivare il codice promozionale.'
+        });
+      }
+    });
+
+    this.showConfirmDialog.set(true);
+  }
+
+  activateCode(id: number, code: string): void {
+    this.confirmDialogData.set({
+       title: 'Attiva Promo Code',
+       message: `Vuoi riattivare il codice promozionale "${code}"?`,
+       confirmText: 'Attiva',
+       cancelText: 'Annulla',
+       isDangerous: false
+    });
+    
+    this.confirmDialogAction.set(async () => {
+      try {
+        const ok = await this.promoCodeService.activate(id);
+        if (ok) {
+           this.confirmDialogData.set({
+               title: 'Promo Code Attivato',
+               message: `Il codice promozionale "${code}" è stato riattivato.`,
+               confirmText: 'OK',
+               isDangerous: false,
+               cancelText: undefined
+           });
+           this.confirmDialogAction.set(null);
+           this.showConfirmDialog.set(true);
+           await this.loadAll();
+        } else {
+           const errMsg = this.promoCodeService.errorSignal() || 'Impossibile attivare il codice promozionale.';
+           this.errorDialog.showError({
+              title: 'Attivazione Fallita',
+              message: errMsg
+           });
+        }
+      } catch {
+        this.errorDialog.showError({
+           title: 'Errore',
+           message: 'Impossibile attivare il codice promozionale.'
+        });
+      }
+    });
+
+    this.showConfirmDialog.set(true);
+  }
+
+  onConfirmDialog(): void {
+    const action = this.confirmDialogAction();
+    if (action) {
+      action();
+    } else {
+      this.closeConfirmDialog();
     }
   }
 
-  clearMessages(): void {
-    this.errorMsg.set('');
-    this.successMsg.set('');
+  closeConfirmDialog(): void {
+    this.showConfirmDialog.set(false);
+    this.confirmDialogAction.set(null);
   }
 
+  // ── Assign Logic ──────────────────────────────────────────────────────────
+
+  openAssign(promo: PromoCodeResponse): void {
+    this.assignPromo.set(promo);
+    this.assignUserId.set(null);
+    this.showAssignForm.set(true);
+  }
+
+  closeAssign(): void {
+    this.showAssignForm.set(false);
+    this.assignPromo.set(null);
+    this.assignUserId.set(null);
+  }
+
+  async confirmAssign(): Promise<void> {
+    const promo = this.assignPromo();
+    const userId = this.assignUserId();
+    
+    if (!promo || !userId) {
+      this.errorDialog.showError({
+         title: 'Errore',
+         message: 'Seleziona un cliente per l\'assegnazione.'
+      });
+      return;
+    }
+
+    this.assignSubmitting.set(true);
+    try {
+      const ok = await this.promoCodeService.assignToUser(promo.id, userId);
+      if (ok) {
+         this.confirmDialogData.set({
+             title: 'Promo Code Assegnato',
+             message: `Il codice promozionale "${promo.code}" è stato assegnato con successo.`,
+             confirmText: 'OK'
+         });
+         this.showConfirmDialog.set(true);
+         this.closeAssign();
+         await this.loadAll();
+      } else {
+         const errMsg = this.promoCodeService.errorSignal() || 'Impossibile assegnare il codice promozionale.';
+         this.errorDialog.showError({
+            title: 'Assegnazione Fallita',
+            message: errMsg
+         });
+      }
+    } catch {
+      this.errorDialog.showError({
+         title: 'Errore',
+         message: 'Impossibile completare l\'assegnazione.'
+      });
+    } finally {
+      this.assignSubmitting.set(false);
+    }
+  }
 }

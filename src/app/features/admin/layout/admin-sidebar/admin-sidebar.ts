@@ -32,7 +32,8 @@ export class AdminSidebar {
     { label: this.translations().admin.products, icon: 'inventory_2', path: '/admin/products' },
     { label: this.translations().admin.orders, icon: 'shopping_cart', path: '/admin/orders' },
     { label: this.translations().admin.customers, icon: 'group', path: '/admin/customers' },
-    { label: this.translations().admin.categories, icon: 'category', path: '/admin/categories' }
+    { label: this.translations().admin.categories, icon: 'category', path: '/admin/categories' },
+    { label: this.translations().admin.promoCodes, icon: 'local_offer',    path: '/admin/promo-codes' },
   ]);
 
   onLogout(): void {

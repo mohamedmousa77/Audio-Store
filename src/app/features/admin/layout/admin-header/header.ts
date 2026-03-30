@@ -61,6 +61,7 @@ export class AdminHeader {
     if (url.includes('/orders')) return this.translations().ordersManagement.header.title;
     if (url.includes('/customers')) return this.translations().customersManagement.header.title;
     if (url.includes('/categories')) return this.translations().categoriesManagement.header.title;
+    if (url.includes('/promo-codes')) return this.translations().PromoCodesManagement.headerTitle;
     return this.translations().admin.headerTitle;
   }
 
@@ -70,6 +71,7 @@ export class AdminHeader {
     if (url.includes('/orders')) return this.translations().ordersManagement.header.subtitle;
     if (url.includes('/customers')) return this.translations().customersManagement.header.subtitle;
     if (url.includes('/categories')) return this.translations().categoriesManagement.header.subtitle;
+        if (url.includes('/promo-codes')) return this.translations().PromoCodesManagement.headerSubtitle;
     return this.translations().admin.headerTitle;
   }
 

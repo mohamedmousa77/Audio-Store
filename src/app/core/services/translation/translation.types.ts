@@ -334,6 +334,7 @@ export interface Translations {
         categories: string;
         orders: string;
         customers: string;
+        promoCodes: string;
         signOut: string;
         settings: string;
         addNew: string;
@@ -665,6 +666,10 @@ export interface Translations {
                 noOrders: string;
             };
         };
+    };
+    PromoCodesManagement: { 
+        headerTitle: string,
+        headerSubtitle: string,
     };
     footer: {
         aboutUs: string;

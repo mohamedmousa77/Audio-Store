@@ -139,11 +139,11 @@ export class PromoCodeService {
    * Load all promo codes (Admin only)
    * GET api/v1/PromoCode
    */
-  async loadAllPromoCodes(): Promise<void> {
+  async loadAllPromoCodes(search?: string): Promise<void> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     try {
-      const codes = await firstValueFrom(this.promoCodeApi.getAll());
+      const codes = await firstValueFrom(this.promoCodeApi.getAll(search));
       this._promoCodes.set(codes ?? []);
       console.log(`✅ Loaded ${codes?.length ?? 0} promo codes (admin)`);
     } catch (error) {
@@ -286,6 +286,41 @@ export class PromoCodeService {
         error?.error?.message ||
         error?.message ||
         'Failed to deactivate promo code';
+      this.errorSignal.set(msg);
+      return false;
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  /**
+   * Riattiva un promo code (Admin only)
+   * POST api/v1/PromoCode/{id}/activate
+   * @param promoCodeId  ID of the promo code to activate
+   */
+  async activate(promoCodeId: number): Promise<boolean> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.successMessage.set(null);
+    try {
+      await firstValueFrom(
+        this.promoCodeApi.activate(promoCodeId)
+      );
+      // Optimistic update — set isActive: true without full reload
+      this._promoCodes.update(codes =>
+        codes.map(c =>
+          c.id === promoCodeId ? { ...c, isActive: true } : c
+        )
+      );
+      this.successMessage.set('Promo code attivato con successo');
+      console.log(`✅ PromoCode ${promoCodeId} activated`);
+      return true;
+    } catch (error: any) {
+      console.error('Failed to activate promo code:', error);
+      const msg =
+        error?.error?.message ||
+        error?.message ||
+        'Failed to activate promo code';
       this.errorSignal.set(msg);
       return false;
     } finally {
