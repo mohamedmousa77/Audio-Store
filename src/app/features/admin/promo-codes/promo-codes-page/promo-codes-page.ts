@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -10,10 +10,12 @@ import { AdminSidebar } from '../../layout/admin-sidebar/admin-sidebar';
 import { AdminHeader } from '../../layout/admin-header/header';
 import { ErrorDialogService } from '../../../../core/services/error/error-dialog.service';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { TranslationService } from '../../../../core/services/translation/translation.service';
+import { CustomSelectComponent, SelectOption } from '../../../../shared/components/custom-select/custom-select';
 
 @Component({
   selector: 'app-promo-codes-page',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, AdminSidebar, AdminHeader, ConfirmDialogComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, AdminSidebar, AdminHeader, ConfirmDialogComponent, CustomSelectComponent],
   templateUrl: './promo-codes-page.html',
   styleUrl: './promo-codes-page.css',
 })
@@ -22,6 +24,7 @@ export class PromoCodesPage implements OnInit, OnDestroy {
   private fb               = inject(FormBuilder);
   private errorDialog      = inject(ErrorDialogService);
   customerService  = inject(CustomerManagementService);
+  private translationService = inject(TranslationService);
 
   // ── State ─────────────────────────────────────────────────────────────────
   promoCodes   = signal<PromoCodeResponse[]>([]);
@@ -33,6 +36,8 @@ export class PromoCodesPage implements OnInit, OnDestroy {
   // Search debounce
   private searchSubject = new Subject<string>();
   private searchSub?: Subscription;
+  translations = this.translationService.translations;
+
 
   // Dialog State
   showConfirmDialog = signal(false);
@@ -44,6 +49,14 @@ export class PromoCodesPage implements OnInit, OnDestroy {
   assignPromo      = signal<PromoCodeResponse | null>(null);
   assignUserId     = signal<number | null>(null);
   assignSubmitting = signal(false);
+
+  // Computed options for custom select
+  customerOptions = computed<SelectOption[]>(() => {
+    return this.customerService.customers().map(c => ({
+      value: c.id,
+      label: `${c.firstName} ${c.lastName} (${c.email})`
+    }));
+  });
 
   // ── Create Form ───────────────────────────────────────────────────────────
   createForm = this.fb.group({

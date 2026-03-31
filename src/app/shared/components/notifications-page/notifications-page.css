@@ -20,8 +20,8 @@
 
 .mark-all-btn {
   background: transparent;
-  border: 1px solid #6c63ff;
-  color: #6c63ff;
+  border: 1px solid #f49d25;
+  color: #f49d25;
   padding: 0.4rem 1rem;
   border-radius: 6px;
   cursor: pointer;
@@ -29,7 +29,7 @@
   transition: all 0.2s;
 }
 .mark-all-btn:hover {
-  background: #6c63ff;
+  background: #f49d25;
   color: white;
 }
 
@@ -45,8 +45,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #f0f0f0;
-  border-top-color: #6c63ff;
+  border: 3px solid #f8f7f5;
+  border-top-color: #f49d25;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -62,7 +62,7 @@
 .empty-state p  { color: #888; margin-bottom: 1.5rem; }
 .btn-primary {
   display: inline-block;
-  background: #6c63ff;
+  background: #f49d25;
   color: white;
   padding: 0.75rem 2rem;
   border-radius: 8px;
@@ -70,7 +70,7 @@
   font-weight: 600;
   transition: background 0.2s;
 }
-.btn-primary:hover { background: #574fd6; }
+.btn-primary:hover { background: #d68310; }
 
 /* Notification Cards */
 .notifications-list {
@@ -92,12 +92,12 @@
   position: relative;
 }
 .notification-card:hover {
-  border-color: #6c63ff;
-  box-shadow: 0 2px 12px rgba(108, 99, 255, 0.1);
+  border-color: #f49d25;
+  box-shadow: 0 2px 12px rgba(244, 157, 37, 0.2);
 }
 .notification-card.unread {
-  background: #f8f7ff;
-  border-left: 4px solid #6c63ff;
+  background: #fffcf8;
+  border-left: 4px solid #f49d25;
 }
 
 .notif-icon { font-size: 1.75rem; flex-shrink: 0; }
@@ -142,7 +142,7 @@
 .unread-dot {
   width: 10px;
   height: 10px;
-  background: #6c63ff;
+  background: #f49d25;
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 4px;

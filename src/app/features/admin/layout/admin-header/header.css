@@ -377,3 +377,120 @@
     height: 36px;
   }
 }
+
+/* ============================================
+   NOTIFICATION DROPDOWN
+   ============================================ */
+
+.notif-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  width: 360px;
+  background: white;
+  border: 1px solid #e8ddce;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: notifFadeIn 0.2s ease-out;
+}
+
+@keyframes notifFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.notif-panel-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e8ddce;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: #fdfaf5;
+  color: #1c160d;
+}
+
+.mark-all-btn {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: #f49d25;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.mark-all-btn:hover { text-decoration: underline; color: #d68310; }
+
+.notif-list {
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f8f7f5;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: #faf9f6; }
+.notif-item.unread {
+  background: #fffcf8;
+  border-left: 3px solid #f49d25;
+  padding-left: calc(1.25rem - 3px);
+}
+
+.notif-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #1c160d;
+}
+
+.notif-message {
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.notif-time {
+  font-size: 0.7rem;
+  color: #9c7a49;
+  font-weight: 500;
+}
+
+.notif-see-all {
+  display: block;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #f49d25;
+  text-decoration: none;
+  border-top: 1px solid #e8ddce;
+  background: #fff;
+  transition: background 0.2s;
+}
+.notif-see-all:hover {
+  background: #fdfaf5;
+}
+
+.notif-empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9rem;
+  font-weight: 500;
+}

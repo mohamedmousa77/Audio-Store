@@ -1,4 +1,6 @@
-<app-client-header />
+@if (!isAdminMode) {
+  <app-client-header />
+}
 
 <div class="notifications-container">
   <div class="notifications-header">
@@ -56,4 +58,6 @@
   }
 </div>
 
-<app-client-footer />
+@if (!isAdminMode) {
+  <app-client-footer />
+}

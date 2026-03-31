@@ -1,19 +1,28 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { TranslationService } from '../../../../core/services/translation/translation.service';
 import { AuthServices } from '../../../../core/services/auth/auth-services';
+import { NotificationService } from '../../../../core/services/notification/notification-service';
 @Component({
   selector: 'app-admin-header',
   imports: [CommonModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class AdminHeader {
+export class AdminHeader implements OnInit, OnDestroy {
   private router = inject(Router);
   private translationService = inject(TranslationService);
   private authService = inject(AuthServices);
+  private notificationService = inject(NotificationService);
+
+  // Notification state
+  notifications = this.notificationService.notifications;
+  unreadCount = this.notificationService.unreadCount;
+  hasUnread = this.notificationService.hasUnread;
+  showNotifPanel = false;
+  private pollingInterval: any = null;
 
   adminName = '';
   adminEmail = '';
@@ -48,6 +57,18 @@ export class AdminHeader {
         map(() => this.router.url)
       )
       .subscribe(url => this.updatePageInfo(url));
+
+    // Load notifications and start polling
+    this.notificationService.loadNotifications();
+    this.pollingInterval = setInterval(() => {
+      this.notificationService.loadUnreadCount();
+    }, 30_000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   private updatePageInfo(url: string): void {
@@ -85,5 +106,21 @@ export class AdminHeader {
 
   NavigateToProfile(): void {
     this.router.navigate(['/client/profile']);
+  }
+
+  // ── Notification Actions ──
+  toggleNotifPanel(): void {
+    this.showNotifPanel = !this.showNotifPanel;
+    if (this.showNotifPanel) {
+      this.notificationService.loadNotifications();
+    }
+  }
+
+  markRead(id: number): void {
+    this.notificationService.markAsRead(id);
+  }
+
+  markAllRead(): void {
+    this.notificationService.markAllAsRead();
   }
 }

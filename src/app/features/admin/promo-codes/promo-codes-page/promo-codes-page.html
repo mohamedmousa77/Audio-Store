@@ -11,16 +11,19 @@
            <!-- <h1 style="font-size: 1.6rem; font-weight: 700; color: #1a1a2e; margin:0">Promo Codes</h1> -->
            <div class="search-box">
              <span class="material-icons search-icon">search</span>
-             <input type="text" class="search-input" placeholder="Search by code, customer name or email..."
+             <input type="text" class="search-input" [placeholder]="translations().PromoCodesManagement.searchPlaceHolder"
                     (input)="onSearch($event)" />
            </div>
         </div>
         <div class="results-info">
-          <p>Showing <strong>{{ promoCodes().length }}</strong> promo codes</p>
-          <button class="btn btn-primary" (click)="showForm.set(true)" *ngIf="!showForm()">
+          <p>{{translations().PromoCodesManagement.showing}} <strong>{{ promoCodes().length }}</strong> {{ translations().PromoCodesManagement.showingResult }}</p>
+          @if (!showForm()) {
+          <button class="btn btn-primary" (click)="showForm.set(true)">
             <span class="material-icons">add</span>
-            New Promo Code
+            {{ translations().PromoCodesManagement.createNew.newCodeButton }}
           </button>
+          }
+          
         </div>
       </div>
 
@@ -37,17 +40,19 @@
       @if (loading()) {
         <div class="loading-state">
           <div class="spinner"></div>
-          <p>Loading promo codes...</p>
+          <p>{{ translations().PromoCodesManagement.loading }}</p>
         </div>
       }
 
+      <!-- Empty State -->
       @if (!loading() && promoCodes().length === 0 && !showForm()) {
         <div class="empty-state" style="padding: 4rem 2rem;">
           <span class="material-icons empty-icon" style="font-size: 48px; color:#ccc;">local_offer</span>
-          <h3 style="margin-top: 1rem; color: #555;">No promo codes found.</h3>
-          <p style="margin-bottom: 1.5rem;">There are no active promo codes yet.</p>
+          <h3 style="margin-top: 1rem; color: #555;">{{ translations().PromoCodesManagement.emptyState.title }}</h3>
+          <p style="margin-bottom: 1.5rem;">{{ translations().PromoCodesManagement.emptyState.subtitle }}</p>
           <button class="btn btn-primary" (click)="showForm.set(true)">
-             <span class="material-icons">add</span> New Promo Code
+             <span class="material-icons">add</span> 
+            {{ translations().PromoCodesManagement.createNew.newCodeButton }}
           </button>
         </div>
       }
@@ -57,14 +62,14 @@
           <table class="promo-table">
             <thead>
               <tr>
-                <th>Code</th>
-                <th>Type</th>
-                <th>Value</th>
-                <th>Min Order</th>
-                <th>Used / Assigned</th>
-                <th>Expires</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{{translations().PromoCodesManagement.table.code}}</th>
+                <th>{{translations().PromoCodesManagement.table.type}}</th>
+                <th>{{translations().PromoCodesManagement.table.value}}</th>
+                <th>{{translations().PromoCodesManagement.table.minOrder}}</th>
+                <th>{{translations().PromoCodesManagement.table.usedAssigned}}</th>
+                <th>{{translations().PromoCodesManagement.table.expires}}</th>
+                <th>{{translations().PromoCodesManagement.table.status}}</th>
+                <th>{{translations().PromoCodesManagement.table.actions}}</th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +93,7 @@
                     <span class="status-badge"
                           [class.active]="p.isActive"
                           [class.inactive]="!p.isActive">
-                      {{ p.isActive ? 'Active' : 'Inactive' }}
+                      {{ p.isActive ? translations().PromoCodesManagement.active : translations().PromoCodesManagement.inactive }}
                     </span>
                   </td>
                   <td>
@@ -117,63 +122,63 @@
         </div>
       }
 
-            <!-- Create Form -->
+      <!-- Create Form -->
       @if (showForm()) {
         <div class="form-card">
-          <h2>Create New Promo Code</h2>
+          <h2>{{ translations().PromoCodesManagement.createNew.title}}</h2>
           <form [formGroup]="createForm" (ngSubmit)="create()" class="form-grid">
 
             <div class="form-group">
-              <label>Code *</label>
-              <input formControlName="code" placeholder="e.g. SUMMER25"
+              <label>{{ translations().PromoCodesManagement.createNew.codeLabel }}</label>
+              <input formControlName="code" placeholder="{{ translations().PromoCodesManagement.createNew.codePlaceholder }}"
                      style="text-transform:uppercase" />
               @if (createForm.get('code')?.invalid && createForm.get('code')?.touched) {
-                <span class="field-error">Code is required (min 3 chars)</span>
+                <span class="field-error">{{ translations().PromoCodesManagement.createNew.codeError }}</span>
               }
             </div>
 
             <div class="form-group">
-              <label>Discount Type *</label>
+              <label>{{ translations().PromoCodesManagement.createNew.discountTypeLabel }}</label>
               <select formControlName="discountType">
-                <option value="Percentage">Percentage (%)</option>
-                <option value="FixedAmount">Fixed Amount ($)</option>
+                <option value="Percentage">{{ translations().PromoCodesManagement.createNew.percentageOption }}</option>
+                <option value="FixedAmount">{{ translations().PromoCodesManagement.createNew.fixedAmountOption }}</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label>Discount Value *</label>
+              <label>{{ translations().PromoCodesManagement.createNew.discountValueLabel }}</label>
               <input type="number" formControlName="discountValue"
-                     placeholder="e.g. 20" min="1" />
+                     placeholder="{{ translations().PromoCodesManagement.createNew.discountValuePlaceholder }}" min="1" />
               @if (createForm.get('discountValue')?.invalid && createForm.get('discountValue')?.touched) {
-                <span class="field-error">Value must be at least 1</span>
+                <span class="field-error">{{ translations().PromoCodesManagement.createNew.discountValueError }}</span>
               }
             </div>
 
             <div class="form-group">
-              <label>Min Order Amount</label>
+              <label>{{ translations().PromoCodesManagement.createNew.minOrderLabel }}</label>
               <input type="number" formControlName="minOrderAmount"
-                     placeholder="e.g. 50 (optional)" min="0" />
+                     placeholder="{{ translations().PromoCodesManagement.createNew.minOrderPlaceholder }}" min="0" />
             </div>
 
             <div class="form-group">
-              <label>Expiry Date</label>
+              <label>{{ translations().PromoCodesManagement.createNew.expiryDateLabel }}</label>
               <input type="datetime-local" formControlName="expiresAt" />
             </div>
 
             <div class="form-group">
-              <label>Max Usages</label>
+              <label>{{ translations().PromoCodesManagement.createNew.maxUsagesLabel }}</label>
               <input type="number" formControlName="maxUsages"
-                     placeholder="Leave empty for unlimited" min="1" />
+                     placeholder="{{ translations().PromoCodesManagement.createNew.maxUsagesPlaceholder }}" min="1" />
             </div>
 
             <div class="form-actions">
               <button type="button" class="btn btn-secondary" (click)="showForm.set(false)">
-                <span class="material-icons">close</span> Cancel
+                <span class="material-icons">close</span> {{translations().PromoCodesManagement.createNew.cancelButton}}
               </button>
               <button type="submit" class="btn btn-primary"
                       [disabled]="createForm.invalid || submitting()">
-                @if (submitting()) { <span class="btn-spinner"></span> Creating... }
-                @else { <span class="material-icons">save</span> Create Promo Code }
+                @if (submitting()) { <span class="btn-spinner"></span> {{translations().PromoCodesManagement.createNew.submittingButton}} }
+                @else { <span class="material-icons">save</span> {{translations().PromoCodesManagement.createNew.submitButton}} }
               </button>
             </div>
 
@@ -184,27 +189,27 @@
       <!-- Assign Form -->
       @if (showAssignForm()) {
         <div class="form-card" style="margin-top: 2rem;">
-          <h2>Assign Promo Code: <span style="color: #f49d25;">{{ assignPromo()?.code }}</span></h2>
+          <h2>{{translations().PromoCodesManagement.assignForm.title}} <span style="color: #f49d25;">{{ assignPromo()?.code }}</span></h2>
           <div class="form-grid" style="grid-template-columns: 1fr;">
             <div class="form-group">
-              <label>Select Customer *</label>
-              <select [ngModel]="assignUserId()" (ngModelChange)="assignUserId.set($event)">
-                <option [ngValue]="null" disabled>Select a customer...</option>
-                @for (c of customerService.customers(); track c.id) {
-                  <option [ngValue]="c.id">{{ c.firstName }} {{ c.lastName }} ({{ c.email }})</option>
-                }
-              </select>
+              <label>{{translations().PromoCodesManagement.assignForm.selectCustomerLabel}}</label>
+              <app-custom-select
+                [options]="customerOptions()"
+                [placeholder]="translations().PromoCodesManagement.assignForm.selectCustomerPlaceholder"
+                [ngModel]="assignUserId()"
+                (ngModelChange)="assignUserId.set($event)">
+              </app-custom-select>
             </div>
             
             <div class="form-actions" style="justify-content: flex-start; gap: 0.5rem; padding-top: 1rem;">
               <button type="button" class="btn btn-secondary" (click)="closeAssign()">
-                <span class="material-icons">close</span> Cancel
+                <span class="material-icons">close</span> {{translations().PromoCodesManagement.assignForm.cancelButton}}
               </button>
               <button type="button" class="btn btn-primary"
                       [disabled]="!assignUserId() || assignSubmitting()"
                       (click)="confirmAssign()">
-                @if (assignSubmitting()) { <span class="btn-spinner"></span> Assigning... }
-                @else { <span class="material-icons">check</span> Confirm Assignment }
+                @if (assignSubmitting()) { <span class="btn-spinner"></span> {{translations().PromoCodesManagement.assignForm.loading}} }
+                @else { <span class="material-icons">check</span> {{translations().PromoCodesManagement.assignForm.confirmButton}} }
               </button>
             </div>
           </div>

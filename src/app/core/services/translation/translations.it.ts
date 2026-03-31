@@ -27,6 +27,7 @@ export const TRANSLATIONS_IT: Translations = {
         searchPlaceholder: 'Cerca prodotti...',
         account: 'Account',
         cart: 'Carrello',
+        notifications: 'Notifiche',
         menu: 'Menu',
         home: 'Home',
         support: 'Supporto',
@@ -665,7 +666,56 @@ export const TRANSLATIONS_IT: Translations = {
     },
     PromoCodesManagement: {
         headerTitle: 'Codici Promozionali',
-        headerSubtitle: 'Crea e monitora la fidabilita` dei tuoi clienti'
+        headerSubtitle: 'Crea e monitora la fidabilita` dei tuoi clienti',
+        searchPlaceHolder: 'Cerca per codice, nome cliente o email...',
+        showingResult: 'codice promozionali',
+        loading: 'Caricamento codici promozionali...',
+        active: 'Attivo',
+        inactive: 'Inattivo',
+        showing: 'visualizza',
+        emptyState: {
+            title: 'Nessun codice promozionale trovato',
+            subtitle: 'Non sono presenti codici promozionali ancora.',        
+        },
+        table: {
+            code: 'Codice',
+            type: 'Tipo',
+            value: 'Valore',
+            minOrder: 'Ordine Min.',
+            usedAssigned: 'Usati / Assegnati',
+            expires: 'Scadenza',
+            status: 'Stato',
+            actions: 'Azioni'
+        },
+        createNew: {
+            newCodeButton: 'Nuovo Codice Promozionale',
+            title: 'Crea Codice Promozionale',
+            codeLabel: 'Codice *',
+            codePlaceholder: 'es. ESTATE25',
+            codeError: 'Il codice è richiesto (min 3 caratteri)',
+            discountTypeLabel: 'Tipo di Sconto *',
+            percentageOption: 'Percentuale (%)',
+            fixedAmountOption: 'Importo Fisso ($)',
+            discountValueLabel: 'Valore dello Sconto *',
+            discountValuePlaceholder: 'es. 20',
+            discountValueError: 'Il valore deve essere almeno 1',
+            minOrderLabel: 'Importo Minimo Ordine',
+            minOrderPlaceholder: 'es. 50 (opzionale)',
+            expiryDateLabel: 'Data di Scadenza',
+            maxUsagesLabel: 'Utilizzi Massimi',
+            maxUsagesPlaceholder: 'Lascia vuoto per illimitati',
+            cancelButton: 'Annulla',
+            submitButton: 'Crea Codice Promo',
+            submittingButton: 'Creazione in corso...'
+        },
+        assignForm: {
+            title: 'Assegna Codice Promozionale:',
+            selectCustomerLabel: 'Seleziona Cliente *',
+            selectCustomerPlaceholder: 'Seleziona un cliente...',
+            cancelButton: 'Annulla',
+            confirmButton: 'Conferma Assegnazione',
+            loading: 'Assegnando...'
+        }
     },
     footer: {
         aboutUs: 'Chi Siamo',

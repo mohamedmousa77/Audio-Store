@@ -27,6 +27,7 @@ export interface Translations {
         logoText: string;
         searchPlaceholder: string;
         account: string;
+        notifications: string;
         cart: string;
         menu: string;
         home: string;
@@ -670,6 +671,56 @@ export interface Translations {
     PromoCodesManagement: { 
         headerTitle: string,
         headerSubtitle: string,
+        searchPlaceHolder: string;
+        showing: string;
+        showingResult: string;
+        loading: string;
+        active: string;
+        inactive: string;        
+        emptyState: {
+            title: string;
+            subtitle: string;
+        
+        };
+        table: {
+            code: string;
+            type: string;
+            value: string;
+            minOrder:string;
+            usedAssigned:string;
+            expires:string;
+            status: string;
+            actions: string;            
+        };
+        createNew: {
+            newCodeButton: string;
+            title: string;
+            codeLabel: string;
+            codePlaceholder: string;
+            codeError: string;
+            discountTypeLabel: string;
+            percentageOption: string;
+            fixedAmountOption: string;
+            discountValueLabel: string;
+            discountValuePlaceholder: string;
+            discountValueError: string;
+            minOrderLabel: string;
+            minOrderPlaceholder: string;
+            expiryDateLabel: string;
+            maxUsagesLabel: string;
+            maxUsagesPlaceholder: string;
+            cancelButton: string;
+            submitButton: string;
+            submittingButton: string;
+        }
+        assignForm: {
+            title: string;
+            selectCustomerLabel: string;
+            selectCustomerPlaceholder: string;
+            cancelButton: string;
+            confirmButton: string;
+            loading: string;
+        }
     };
     footer: {
         aboutUs: string;

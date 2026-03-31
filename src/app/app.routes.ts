@@ -80,6 +80,12 @@ export const routes: Routes = [
             .then(m => m.PromoCodesPage)
       },
       {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./shared/components/notifications-page/notifications-page')
+            .then(m => m.NotificationsPage)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
@@ -103,7 +109,7 @@ export const routes: Routes = [
         path: 'notifications',
         canActivate: [authGuard],          // requires login
         loadComponent: () =>
-          import('./features/Client/layout/notifications/notifications-page/notifications-page')
+          import('./shared/components/notifications-page/notifications-page')
             .then(m => m.NotificationsPage)
       },
       {

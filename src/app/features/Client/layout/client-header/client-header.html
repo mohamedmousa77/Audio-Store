@@ -77,13 +77,10 @@
         <div class="notif-wrapper" (clickOutside)="showNotifPanel = false">
 
           <!-- Bell Button with badge -->
-          <button class="notif-btn" (click)="toggleNotifPanel()" aria-label="Notifications">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2a7 7 0 0 0-7 7v3l-2 3v1h18v-1l-2-3V9a7 7 0 0 0-7-7zm0 20a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2z"/>
-            </svg>
+          <button class="action-btn notif-btn" (click)="toggleNotifPanel()" aria-label="Notifications" [title]="translations().header.notifications || 'Notifications'">
+            <span class="material-icons">notifications</span>
             @if (hasUnread()) {
-              <span class="notif-badge">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
+              <span class="cart-badge" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
             }
           </button>
 

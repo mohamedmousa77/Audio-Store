@@ -27,6 +27,7 @@ export const TRANSLATIONS_EN: Translations = {
         logoText: 'Audio Store',
         searchPlaceholder: 'Search products...',
         account: 'Account',
+        notifications: 'Notifications',
         cart: 'Cart',
         menu: 'Menu',
         home: 'Home',
@@ -46,7 +47,7 @@ export const TRANSLATIONS_EN: Translations = {
         title: 'Shop by Category',
         exploreCategory: 'Explore',
         emptyCategoryTitle: 'No Products Found',
-        emptyCategorySubtitle: "We don't have any products in this category yet.",
+        emptyCategorySubtitle: 'We don\'t have any products in this category yet.',
         backToHomepage: 'Back to Homepage',
         sortTitle: 'Sort By',
         sortOptions: {
@@ -186,7 +187,7 @@ export const TRANSLATIONS_EN: Translations = {
         confirmPassword: 'Confirm Password',
         forgotPassword: 'Forgot Password?',
         rememberMe: 'Remember Me',
-        noAccount: "Don't have an account?",
+        noAccount: 'Don\'t have an account?',
         haveAccount: 'Already have an account?',
         signUp: 'Sign Up',
         signIn: 'Sign In',
@@ -668,7 +669,56 @@ export const TRANSLATIONS_EN: Translations = {
     },
     PromoCodesManagement: {
         headerTitle: 'Promo Codes',
-        headerSubtitle: 'Create and monitor your customers loyalty'
+        headerSubtitle: 'Create and monitor your customers loyalty',
+        searchPlaceHolder: 'Search by code, customer name or email...',
+        showingResult: 'promo codes',
+        loading: 'Loading promo codes...',
+        active: 'Active',
+        inactive: 'Inactive',
+        showing: 'Showing',
+        emptyState: {
+            title: 'No promo codes found.',
+            subtitle: 'There are no active promo codes yet.',        
+        },
+        table: {
+            code: 'Code',
+            type: 'Type',
+            value: 'Value',
+            minOrder: 'Min Order',
+            usedAssigned: 'Used / Assigned',
+            expires: 'Expires',
+            status: 'Status',
+            actions: 'Actions'
+        },
+        createNew: {
+            newCodeButton: 'New Promo Code',
+            title: 'Create Promo Code',
+            codeLabel: 'Code *',
+            codePlaceholder: 'e.g. SUMMER25',
+            codeError: 'Code is required (min 3 chars)',
+            discountTypeLabel: 'Discount Type *',
+            percentageOption: 'Percentage (%)',
+            fixedAmountOption: 'Fixed Amount ($)',
+            discountValueLabel: 'Discount Value *',
+            discountValuePlaceholder: 'e.g. 20',
+            discountValueError: 'Value must be at least 1',
+            minOrderLabel: 'Min Order Amount',
+            minOrderPlaceholder: 'e.g. 50 (optional)',
+            expiryDateLabel: 'Expiry Date',
+            maxUsagesLabel: 'Max Usages',
+            maxUsagesPlaceholder: 'Leave empty for unlimited',
+            cancelButton: 'Cancel',
+            submitButton: 'Create Promo Code',
+            submittingButton: 'Creating...'
+        },
+        assignForm: {
+            title: 'Assign Promo Code:',
+            selectCustomerLabel: 'Select Customer *',
+            selectCustomerPlaceholder: 'Select a customer...',
+            cancelButton: 'Cancel',
+            confirmButton: 'Confirm Assignment',
+            loading: 'Assigning...'
+        }
     },
     footer: {
         aboutUs: 'About Us',
