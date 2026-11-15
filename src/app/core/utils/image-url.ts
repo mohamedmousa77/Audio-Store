@@ -9,7 +9,7 @@ const PLACEHOLDER_IMAGE = '/product-placeholder.png';
  * If empty/null/undefined, returns the placeholder image.
  *
  * Example:
- *   '/images/products/abc.jpg' → 'http://localhost:7117/images/products/abc.jpg'
+ *   '/images/products/abc.jpg' → `${environment.serverUrl}/images/products/abc.jpg`
  *   'data:image/jpeg;base64,...' → unchanged (still base64)
  *   'https://example.com/img.jpg' → unchanged
  *   '' or null → '/product-placeholder.png'

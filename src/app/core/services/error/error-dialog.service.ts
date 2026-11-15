@@ -1,4 +1,5 @@
 import { Injectable, inject, ApplicationRef, createComponent, EnvironmentInjector } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import { ErrorDialogComponent } from '../../../shared/components/error-dialog/error-dialog.component';
 
 /**
@@ -80,7 +81,7 @@ export class ErrorDialogService {
         this.showError({
             title: 'Server Non Disponibile',
             message: 'Impossibile connettersi al server. Verifica che il backend sia attivo.',
-            details: 'Il server potrebbe essere offline o non raggiungibile. Controlla che il backend sia in esecuzione su http://localhost:5000',
+            details: `Il server potrebbe essere offline o non raggiungibile. Controlla che il backend sia in esecuzione su ${environment.serverUrl}`,
             canRetry: true,
             isCritical: true
         });

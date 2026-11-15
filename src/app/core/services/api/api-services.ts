@@ -19,6 +19,8 @@ export class BaseApiServices {
   }
 
   protected buildUrl(endpoint: string): string {
-    return `${this.baseUrl}/${endpoint}`;
+    const base = this.baseUrl.replace(/\/+$/, '');
+    const path = endpoint.replace(/^\/+/, '');
+    return `${base}/${path}`;
   }
 }
