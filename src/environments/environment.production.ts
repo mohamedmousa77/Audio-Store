@@ -1,7 +1,7 @@
 export const environment = {
-    isProduction: true,
-    apiUrl: 'http://your-production-api.com/api/v1.0',
-    serverUrl: 'http://your-production-api.com',
-    apiVersion: 'v1.0',
-    enableLogging: false
+  isProduction: true,
+  apiUrl: 'https://audiostore-api-demo-dwgfcmgvadh5dtct.spaincentral-01.azurewebsites.net/api/v1',
+  serverUrl: 'https://audiostore-api-demo-dwgfcmgvadh5dtct.spaincentral-01.azurewebsites.net',
+  apiVersion: 'v1',
+  enableLogging: false
 };
