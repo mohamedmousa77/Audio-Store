@@ -122,8 +122,31 @@
   font-size: 0.8125rem;
   color: #666;
 
+  .copyright-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
   .copyright {
     margin: 0;
+  }
+
+  .author-credit {
+    margin: 0;
+    font-size: 0.75rem;
+
+    a {
+      color: #9c7a49;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.3s, border-color 0.3s;
+
+      &:hover {
+        color: #f49d25;
+        border-bottom-color: #f49d25;
+      }
+    }
   }
 
   .footer-bottom-links {

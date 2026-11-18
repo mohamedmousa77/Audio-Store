@@ -724,7 +724,10 @@ export const TRANSLATIONS_IT: Translations = {
         termsOfService: 'Termini di Servizio',
         followUs: 'Seguici',
         copyright: '© 2026 Audio Store. Tutti i diritti riservati.',
-        description: 'La tua destinazione d\'eccellenza per apparecchiature audio ad alta fedeltà. Portiamo l\'esperienza dello studio direttamente a casa tua con una selezione di prodotti premium.'
+        description: 'La tua destinazione d\'eccellenza per apparecchiature audio ad alta fedeltà. Portiamo l\'esperienza dello studio direttamente a casa tua con una selezione di prodotti premium.',
+        contact: 'Contatti',
+        location: 'Italia',
+        madeBy: 'Realizzato da'
     },
     errors: {
         generic: 'Si è verificato un errore. Riprova più tardi.',

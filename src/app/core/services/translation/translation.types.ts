@@ -730,6 +730,9 @@ export interface Translations {
         followUs: string;
         copyright: string;
         description: string;
+        contact: string;
+        location: string;
+        madeBy: string;
     };
     errors: {
         generic: string;

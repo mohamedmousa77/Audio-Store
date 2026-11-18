@@ -6,6 +6,7 @@ import { TranslationService } from '../../../../core/services/translation/transl
 interface FooterLink {
   label: string;
   href: string;
+  external?: boolean;
 }
 
 interface FooterSection {
@@ -24,6 +25,7 @@ export class ClientFooter {
 
   translations = this.translationService.translations;
   currentYear = new Date().getFullYear();
+  readonly portfolioUrl = 'https://www.mohamedmousa.it';
 
   // socialLinks = [
   //   { icon: 'facebook', label: 'Facebook', href: '#' },
@@ -53,11 +55,12 @@ export class ClientFooter {
       //   ]
       // },
       {
-        title: 'Contact',
+        title: t.footer.contact,
         links: [
-          { label: 'Italia, Foggia.', href: '#' },
+          { label: t.footer.location, href: '#' },
           { label: '+39 333-686-3167', href: 'tel:+393336863167' },
-          { label: 'mohamed.mousa.contact@gmail.com', href: 'mailto:mohamed.mousa.contact@gmail.com' }
+          { label: 'mohamed.mousa.contact@gmail.com', href: 'mailto:mohamed.mousa.contact@gmail.com' },
+          { label: 'www.mohamedmousa.it', href: this.portfolioUrl, external: true }
         ]
       }
     ];

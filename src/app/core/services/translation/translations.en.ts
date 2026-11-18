@@ -727,7 +727,10 @@ export const TRANSLATIONS_EN: Translations = {
         termsOfService: 'Terms of Service',
         followUs: 'Follow Us',
         copyright: '© 2026 Audio Store. All rights reserved.',
-        description: 'Your premier destination for high-fidelity audio equipment. We bring the studio experience to your home with curated premium products.'
+        description: 'Your premier destination for high-fidelity audio equipment. We bring the studio experience to your home with curated premium products.',
+        contact: 'Contact',
+        location: 'Italy',
+        madeBy: 'Made by'
     },
     errors: {
         generic: 'An error occurred. Please try again later.',

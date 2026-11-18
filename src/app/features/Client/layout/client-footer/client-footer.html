@@ -25,9 +25,15 @@
         <ul class="section-links">
           @for (link of section.links; track link.label) {
           <li>
+            @if (link.external) {
+            <a [href]="link.href" target="_blank" rel="noopener noreferrer">
+              {{ link.label }}
+            </a>
+            } @else {
             <a [href]="link.href" [routerLink]="link.href.startsWith('/') ? link.href : null">
               {{ link.label }}
             </a>
+            }
           </li>
           }
         </ul>
@@ -37,9 +43,15 @@
 
     <!-- Footer Bottom -->
     <div class="footer-bottom">
-      <p class="copyright">
-        {{ translations().footer.copyright }}
-      </p>
+      <div class="copyright-block">
+        <p class="copyright">
+          {{ translations().footer.copyright }}
+        </p>
+        <p class="author-credit">
+          {{ translations().footer.madeBy }}
+          <a [href]="portfolioUrl" target="_blank" rel="noopener noreferrer">M.Mousa</a>
+        </p>
+      </div>
       <div class="footer-bottom-links">
         <a href="/privacy">{{ translations().footer.privacyPolicy }}</a>
         <a href="/terms">{{ translations().footer.termsOfService }}</a>
